@@ -1,0 +1,38 @@
+# Local environments and credentials
+.venv/
+.venv-*/
+venv/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials*.json
+
+# Python and tooling output
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+
+# Runtime data and generated artifacts
+runtime/
+outputs/
+logs/
+*.log
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+
+# Machine-specific editor and OS files
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

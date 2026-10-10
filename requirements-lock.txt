@@ -1,0 +1,14 @@
+# Resolved and installed on 2026-10-10: Windows 10 x64, CPython 3.11.0.
+# External runtime/dev/build tools only; generated from pip list --format=freeze --exclude-editable.
+# Install this file first, then: python -m pip install --no-build-isolation --no-deps -e .
+# No local paths, editable VCS references, hashes, or cross-platform guarantee.
+colorama==0.4.6
+iniconfig==2.3.1
+packaging==26.3
+pip==26.2.1
+pluggy==1.6.0
+Pygments==2.21.0
+pytest==9.1.1
+ruff==0.17.0
+setuptools==84.0.0
+wheel==0.48.0
