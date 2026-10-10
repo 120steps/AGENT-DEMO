@@ -1,11 +1,11 @@
 # AGENT-DEMO — Agent 学习与工程实施路线图
 
-> 版本：v2.0，实施版  
-> 更新日期：2026-10-10  
-> 当前状态：**Phase 0 本地技术验收通过；BLOCKED：等待首个本地提交授权，尚未标 DONE**  
-> 当前阶段：**Phase 0 — 环境与静态契约调查完成，待版本提交**  
-> 下一任务：**确认是否创建首个本地提交；推送另行确认。完成后再进入 Phase 1 的模型与 SDK 选定。**  
-> 唯一进度入口：本文件。后续按本文任务与验收证据推进。  
+> 版本：v2.0，实施版<br>
+> 更新日期：2026-10-10<br>
+> 当前状态：**Phase 0 DONE — 本地环境、静态契约调查与首个本地提交已完成**<br>
+> 当前阶段：**Phase 0 已验收；Phase 1 尚未开始**<br>
+> 下一任务：**Phase 1：选定实际可用的模型、SDK 与 API 协议。推送仍未授权，单独确认。**<br>
+> 唯一进度入口：本文件。后续按本文任务与验收证据推进。<br>
 > 边界：AGENT-DEMO 独立开发；RAG-DEMO 只读检查，未经明确授权不修改。
 
 ## 0. 使用方式与当前事实
@@ -17,12 +17,12 @@
 截至 2026-10-10 的本地只读检查：
 
 - 工程目录：`D:\workspace\AI\AGENT-DEMO`。
-- 已存在 `.git`，当前分支为 `main`，没有提交。
+- 已存在 `.git`，当前分支为 `main`；经用户授权完成首个本地提交 `08dc5b4`。
 - 已配置远端：`https://github.com/120steps/AGENT-DEMO.git`。
 - 本地上游仍为 `[gone]`；使用命令级 OpenSSL 后端查询远端成功，退出 0，未返回 HEAD 或分支引用。不能认定远端不存在。
 - 已建立 src 工程、主 `.venv` 和全新 `.venv-phase0-check`，均为 Windows x64 / Python 3.11.0；安装、6 项测试、Ruff、示例和依赖检查通过。
 - RAG-DEMO 已定位于 `D:\workspace\AI\rag-demo`，V1/V3 静态接口调查完成；真实请求、授权和业务资料尚未验证。
-- 技术证据见 `docs/phase00_validation.md`，接口调查见 `docs/rag_contract.md`。未创建本地提交或推送，不提前标记阶段 DONE。
+- 技术证据见 `docs/phase00_validation.md`，接口调查见 `docs/rag_contract.md`。本地提交已完成；未推送。Phase 0 已验收，真实 RAG 集成留待 Phase 6。
 
 ### 0.2 每次继续时的流程
 
@@ -44,7 +44,7 @@
 
 | Phase | 主题 | 状态 | 核心交付物 | 完成日期 |
 |---|---|---|---|---|
-| 0 | 仓库、环境、RAG 契约摸底 | BLOCKED（待本地提交授权） | 可安装工程、离线测试、接口调查已验证 | — |
+| 0 | 仓库、环境、RAG 契约摸底 | DONE | 可安装工程、离线测试、接口调查及本地提交已完成 | 2026-10-10 |
 | 1 | 原生 Tool Calling | TODO | 单次工具调用闭环 | — |
 | 2 | 原生 Agent Loop | TODO | 有预算和终止控制的多步执行 | — |
 | 3 | LangChain 标准 Agent | TODO | 共享业务工具的框架实现 | — |
@@ -184,15 +184,25 @@ AGENT-DEMO/
 - [x] 重点确认原文片段、文档标识、型号、版本、页码语义、筛选能力；区分检索 API 与问答 API。
 - [x] 已定位旧工程；明确记录仅静态核实及真实契约未验证项，不猜测接口，Phase 6 真实验收保持待办。
 - [x] 核实 `.env`、`.venv`、运行数据已忽略；全新环境安装和验证通过。
-- [ ] 经明确授权创建首个本地提交；推送另行授权，不自动执行。
+- [x] 经明确授权创建首个本地提交 `08dc5b4`；推送未授权，未执行。
 
 **计划验证入口：** 可编辑安装、`python -m pytest`、`python -m ruff check .`、运行 `examples/phase00_hello.py`。实际 Windows 命令写入 README。
 
 **验收：** 在新的虚拟环境按 README 安装并运行成功；契约调查有明确结论或未解决项；未修改 RAG-DEMO。
 
-**2026-10-10 实际结果：** 上述技术验收通过；主环境 6 passed，全新验证环境 6 passed，Ruff 与依赖检查通过。提交尚未获授权，按统一完成标准保留 BLOCKED；推送不是本次本地技术验收的前提。详见 `docs/phase00_validation.md`。
+**2026-10-10 实际结果：** 上述技术验收通过；主环境 6 passed，全新验证环境 6 passed，Ruff 与依赖检查通过。复查仍为 6 passed；用户明确授权本地提交及完成记录，已完成首个提交 `08dc5b4`，Phase 0 标记 DONE。推送不属于本次授权，也不是本地验收前提。详见 `docs/phase00_validation.md`。
 
 **不能忽略的结果：** 若旧接口无法提供证据，记录缺口及可选方案：使用现有更底层检索接口、独立只读服务包装已有能力，或另行提出旧项目变更申请。包装不得虚构不存在的数据。
+
+### 4.1 Phase 0 完成标准核查
+
+- [x] 本阶段必做任务完成；真实 RAG 请求和部署明确属于后续阶段。
+- [x] README 有实际安装、运行和排错步骤，示例可重复执行。
+- [x] 离线测试通过，并在第二个全新虚拟环境按固定版本清单复现。
+- [x] README 已解释 venv、src 布局和 editable install；验证记录解释安装等待、VCS 检测等失败案例。
+- [x] 学习日志和验证记录保存结果、已知限制及下一任务。
+- [x] 交付范围和忽略规则已核查；旧工程只读状态前后保持一致。
+- [x] 实现已形成可追踪的本地提交；完成状态另提交留痕。没有推送。
 
 ## 5. Phase 1 — 原生 Tool Calling
 
@@ -492,6 +502,20 @@ AGENT-DEMO/
 - 建议 commit：`chore: initialize Phase 0 Python project and document RAG contract`。
 - 下一任务：请求首个本地提交授权，推送另行确认；提交后复核 Phase 0 完成标准，再进入 Phase 1 选定实际模型、SDK 与 API 协议。
 
+### 2026-10-10 — Phase 0 / 授权提交与验收收尾
+
+- 状态：DONE。
+- 用户授权：明确回复“授权本地提交及完成记录，不推送”。
+- 本次完成：复核 Phase 0 清单、运行检查、提交范围和 Git 身份；创建本地根提交，并同步完成状态。
+- 验证命令：主环境 `-m pytest -q`、`-m ruff check .`、`-m pip check`、`examples/phase00_hello.py`；Git `diff --cached --stat`、`diff --cached --name-only`、`status --short`；旧工程 `--no-optional-locks ... status --porcelain`。
+- 结果：`6 passed in 0.33s`，Ruff/依赖检查/示例均成功；旧工程 Git 状态为空；初次暂存仅包含 12 个计划交付文件。
+- Git 提交：`08dc5b4` — `chore: initialize Phase 0 Python project and document RAG contract`，12 个文件，1040 行；无 push。
+- 本次修改文件：路线图、README、docs/phase00_validation.md；只更新状态、验收及交付记录。
+- 权限处理：沙箱默认拒绝写 `.git/index.lock`；在已有用户授权基础上通过工具权限审查执行 git add/commit，未变更旧仓库或永久 Git 配置。
+- 文档检查：初次 diff 检查指出 Markdown 顶部用于换行的行尾双空格；收尾改为显式 `<br>`，保持显示并消除该提示。
+- 已知限制：真实 RAG 服务、凭据和业务资料未验证，属于 Phase 6；第二台电脑和 Linux 未验证；远端尚未推送。
+- 下一任务：Phase 1 第一项，选定真实模型、SDK 与协议；本次不提前实施。
+
 ## 17. 架构决策记录（ADR）
 
 | ID | 日期 | 决策 | 原因 | 复审点 |
@@ -520,4 +544,4 @@ AGENT-DEMO/
 
 本路线制定时核对了 LangChain Agent、LangGraph 持久化与中断文档。其他库在引入阶段再核实官方文档和兼容版本；链接内容更新不代表本地依赖自动升级。
 
-**下一任务：确认首个本地提交授权。Phase 1 尚未开始，推送需另行确认。**
+**Phase 0 已完成。下一任务是 Phase 1 的模型、SDK 与协议选定；推送仍需另行确认。**

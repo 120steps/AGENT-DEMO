@@ -60,7 +60,7 @@ $env:AGENT_DEMO_LOG_LEVEL = "DEBUG"
 
 ## Git
 
-提交前检查 `git status --short`、`git ls-files` 和忽略规则。`.env`、虚拟环境、缓存、日志、runtime、outputs、数据库不提交。当前未提交或推送；需要用户确认后才执行这些动作。
+提交前检查 `git status --short`、`git ls-files` 和忽略规则。`.env`、虚拟环境、缓存、日志、runtime、outputs、数据库不提交。Phase 0 已经用户授权完成本地提交，尚未推送；后续提交和推送按用户授权执行。
 
 初次远端检查默认 Schannel 后端遇到 `SEC_E_NO_CREDENTIALS`。以下只读命令改用单次 OpenSSL 后端并成功，不改变持久 Git 配置：
 

@@ -4,15 +4,15 @@
 
 ## 1. 实际结论
 
-本地环境、包安装、离线测试、源码静态接口调查和敏感文件排除检查已完成。两个独立虚拟环境均通过验证。没有实施 Phase 1，也没有提交、推送、启动或修改旧 RAG 工程。
+本地环境、包安装、离线测试、源码静态接口调查和敏感文件排除检查已完成。两个独立虚拟环境均通过验证。经用户明确授权，已创建本地根提交 `08dc5b4`；没有推送，没有实施 Phase 1，没有启动或修改旧 RAG 工程。
 
-技术验收通过；路线图统一完成标准要求可追踪提交，当前按用户要求等待提交确认，因此 Phase 0 尚未标记 DONE。
+技术验收与本地版本交付均已完成，路线图 Phase 0 标记 DONE。以下保留初次调查和安装验证的历史记录；授权后收尾记录见第 7 节。
 
 ## 2. 仓库与解释器调查
 
 实际执行了 `Get-Location`、`git status --short --branch`、`git log -3 --oneline`、`git remote -v`、`git show-ref`。
 
-- 当前目录正确，main 尚无提交；`git log` 因无提交退出 128，这是仓库现状而非代码失败。
+- 初次调查时目录正确，main 尚无提交；当时 `git log` 因无提交退出 128，这是仓库现状而非代码失败。
 - 远端 origin 为 `https://github.com/120steps/AGENT-DEMO.git`。
 - 上游显示 `origin/main [gone]`；本地另有工具生成的 `refs/codex/...` 引用，没有修改它们。
 - `git ls-remote --symref origin HEAD 'refs/heads/*'` 首次因 Schannel `SEC_E_NO_CREDENTIALS` 失败。
@@ -94,10 +94,25 @@ git --no-optional-locks -c safe.directory=D:/workspace/AI/rag-demo -C D:\workspa
 
 本次没有向旧工程执行写命令、导入其模块、启动服务、读写数据库、运行测试或安装依赖。Git 状态相同是工作区检查证据，不被表述为对所有被忽略文件的全盘哈希审计。
 
-新仓库执行 `git status --short --untracked-files=all`、`git ls-files`、`git check-ignore --verbose`。当前 index 为空，所有交付文件尚未跟踪；以下模式已实测被忽略：`.env`、`.env.local`、两套 venv、runtime/checkpoint.sqlite3、outputs/result.xlsx、logs/run.log、Python 缓存。`.env.example` 可被纳入版本控制，只包含非敏感样例。
+新仓库执行 `git status --short --untracked-files=all`、`git ls-files`、`git check-ignore --verbose`。初次交付前 index 为空，所有交付文件尚未跟踪；以下模式已实测被忽略：`.env`、`.env.local`、两套 venv、runtime/checkpoint.sqlite3、outputs/result.xlsx、logs/run.log、Python 缓存。`.env.example` 只包含非敏感样例，授权后已纳入版本控制。
 
 建议 commit message：`chore: initialize Phase 0 Python project and document RAG contract`。
 
 最终核查共 12 个交付文件（11 个新建，路线图修改）；常见私钥、AWS Access Key、GitHub Token 模式扫描未发现匹配，非 Markdown 文件未发现行尾空白。这是有限模式检查，不是全面凭据审计。两套环境的 10 个外部包均逐项与固定版本清单比较一致。
 
 仅在用户确认后创建本地提交；推送另行确认。本阶段不存在远端删除、force push 或发布操作。
+
+## 7. 授权后的本地交付收尾
+
+用户明确回复：授权本地提交及完成记录，不推送。
+
+- 再次复核工程状态：仍为 12 个计划文件；无已暂存的其他用户内容。
+- 再次运行主环境测试：6 passed in 0.33s；Ruff、pip check 和 hello 均成功；旧工程只读 Git 状态为空。
+- 使用已有 Git 身份，未修改用户配置；Git hooks 仅有 `.sample` 文件。
+- 默认沙箱无法创建 `.git/index.lock`，在已有授权基础上通过工具权限审查完成暂存及本地提交。
+- 根提交：`08dc5b4`，提交信息 `chore: initialize Phase 0 Python project and document RAG contract`，12 个文件，1040 行。
+- 顶部 Markdown 硬换行的双空格曾被 diff 检查提示，收尾改为 `<br>`；不影响业务代码。
+- 完成状态、README 和本记录以另一个本地文档提交保存；最终哈希通过 `git log -2 --oneline` 获取，不在提交自身内容中循环记录自身哈希。
+- 最终检查包含 `git diff --cached --check`、提交文件列表、忽略规则和 `git status --porcelain`；没有 push。
+
+Phase 0 的环境和静态调查任务均已完成。真实 RAG 请求、设备资料及 API 授权留待 Phase 6，不作为本阶段缺失功能。
