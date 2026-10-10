@@ -4,6 +4,8 @@
 
 学习顺序和唯一进度入口见 [AGENT_LEARNING_ROADMAP.md](AGENT_LEARNING_ROADMAP.md)。旧 RAG 工程的静态接口调查见 [docs/rag_contract.md](docs/rag_contract.md)。
 
+阶段学习总结从 [Phase 0 总结](docs/phase00_summary.md) 开始。每个 Phase 验收时必须新增 `docs/phaseNN_summary.md`，具体规则与模板见路线图第 15.1 节。
+
 ## 环境
 
 当前选择 CPython 3.11（本机为 3.11.0）、Windows 10 x64。本机只有这一套真实解释器；`py -0p` 未发现注册版本，因此使用 `python`，不依赖 `py` 启动器。
