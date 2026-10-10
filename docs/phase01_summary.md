@@ -1,6 +1,6 @@
 # Phase 1 总结：原生 Tool Calling
 
-记录日期：2026-10-10。状态：技术验收通过，DOING（待授权本地提交）；真实 API 验收结果见[技术记录](phase01_tool_calling.md)。交付状态以路线图为准。环境：Windows x64 / Python 3.11.0 / google-genai 2.29.0 / gemini-3.5-flash-lite。
+完成日期：2026-10-10。状态：DONE（技术验收及授权本地交付完成）；真实 API 验收结果见[技术记录](phase01_tool_calling.md)。交付状态以路线图为准。环境：Windows x64 / Python 3.11.0 / google-genai 2.29.0 / gemini-3.5-flash-lite。
 
 ## 1. 这一阶段做了什么
 
@@ -33,7 +33,7 @@ tests/test_phase00.py + tests/test_phase01.py
 
 主环境和独立 `.venv-phase1-check` 均通过 42 项离线测试，包括原 Phase 0 的 6 项。两套环境的 Ruff、pip check、Phase 0 示例与 Phase 1 Mock 示例均通过；35 项外部包已固定版本，并在新环境真实安装。
 
-真实模型实际完成加法闭环（15+27=42）、规格闭环（MOCK-SW-48，48个GE、4个10GE）、问候直接回答；三个真实示例均退出 0。完整命令、轨迹及失败修复见[技术说明](phase01_tool_calling.md)。Mock 通过只能证明控制器与工具工作，不能代替真实 API。当前代码未提交，本阶段提交需独立授权。
+真实模型实际完成加法闭环（15+27=42）、规格闭环（MOCK-SW-48，48个GE、4个10GE）、问候直接回答；三个真实示例均退出 0。完整命令、轨迹及失败修复见[技术说明](phase01_tool_calling.md)。Mock 通过只能证明控制器与工具工作，不能代替真实 API。经本阶段明确授权，本地实现提交为 `7a67a36`；完成记录另提交，不推送。
 
 ## 5. 问题、限制与容易误解的地方
 
@@ -43,4 +43,4 @@ tests/test_phase00.py + tests/test_phase01.py
 
 ## 6. 下一阶段怎么接着做
 
-先完成 Phase 1 的授权版本交付。随后进入 Phase 2：为多步“查询规格 → 计算/比较 → 回答”增加有上限的循环、超时、预算、usage 和终止测试，再补离线 CI。复用当前工具、校验和 SDK 适配器，不复制业务规则。
+Phase 1 授权本地版本交付完成。下一任务是 Phase 2：为多步“查询规格 → 计算/比较 → 回答”增加有上限的循环、超时、预算、usage 和终止测试，再补离线 CI。复用当前工具、校验和 SDK 适配器，不复制业务规则。

@@ -2,9 +2,9 @@
 
 > 版本：v2.0，实施版<br>
 > 更新日期：2026-10-10<br>
-> 当前状态：**Phase 1 DOING — 原生 Tool Calling 技术验收通过，待授权本地提交**<br>
+> 当前状态：**Phase 1 DONE — 技术验收与授权本地版本交付完成**<br>
 > 当前阶段：**Phase 0 保持 DONE；Phase 1 离线与真实模型验证均通过**<br>
-> 下一任务：**完成 Phase 1 授权版本交付，再进入 Phase 2 有上限的 Agent Loop。当前不提交或推送。**<br>
+> 下一任务：**Phase 2：实现有轮数、调用数与总期限上限的 Agent Loop。推送未授权，不推送。**<br>
 > 唯一进度入口：本文件。后续按本文任务与验收证据推进。<br>
 > 边界：AGENT-DEMO 独立开发；RAG-DEMO 只读检查，未经明确授权不修改。
 
@@ -17,13 +17,13 @@
 截至 2026-10-10 的本地只读检查：
 
 - 工程目录：`D:\workspace\AI\AGENT-DEMO`。
-- 已存在 `.git`，当前分支为 `phase-1`，HEAD 为 `c3e5f2e`；Phase 0 经用户授权完成首个本地提交 `08dc5b4` 及完成记录 `f87ec8d`，历史保留。
+- 已存在 `.git`，当前分支为 `phase-1`；Phase 1 实现提交为 `7a67a36`，完成记录另提交。Phase 0 的 `08dc5b4`、`f87ec8d` 与后续 `c3e5f2e` 历史保留。
 - 已配置远端：`https://github.com/120steps/AGENT-DEMO.git`。
 - Phase 1 重新只读查询远端成功，HEAD 指向 `main`，`main` / `phase-1` 均存在并指向 `c3e5f2e`。当前分支跟踪 `origin/phase-1`；早期 `[gone]` 与空引用属于历史记录。
 - 已建立 src 工程、主 `.venv` 和全新 `.venv-phase0-check`，均为 Windows x64 / Python 3.11.0；安装、6 项测试、Ruff、示例和依赖检查通过。
 - RAG-DEMO 已定位于 `D:\workspace\AI\rag-demo`，V1/V3 静态接口调查完成；真实请求、授权和业务资料尚未验证。
 - 技术证据见 `docs/phase00_validation.md`，接口调查见 `docs/rag_contract.md`。本地提交已完成；未推送。Phase 0 已验收，真实 RAG 集成留待 Phase 6。
-- Phase 1 使用 google-genai 2.29.0 / gemini-3.5-flash-lite，主环境和独立新环境各 42 项离线测试通过；真实加法、MOCK 规格和问候验证通过。当前变更未提交，本次未推送，详见 docs/phase01_tool_calling.md。
+- Phase 1 使用 google-genai 2.29.0 / gemini-3.5-flash-lite，主环境和独立新环境各 42 项离线测试通过；真实加法、MOCK 规格和问候验证通过。已授权本地提交为 7a67a36，本次未推送，详见 docs/phase01_tool_calling.md。
 
 ### 0.2 每次继续时的流程
 
@@ -46,7 +46,7 @@
 | Phase | 主题 | 状态 | 核心交付物 | 完成日期 |
 |---|---|---|---|---|
 | 0 | 仓库、环境、RAG 契约摸底 | DONE | 可安装工程、离线测试、接口调查及本地提交已完成 | 2026-10-10 |
-| 1 | 原生 Tool Calling | DOING | 单轮闭环、42 项测试及真实验证通过；待授权提交 | — |
+| 1 | 原生 Tool Calling | DONE | 单轮闭环、42 项测试、真实验证及授权本地提交完成 | 2026-10-10 |
 | 2 | 原生 Agent Loop | TODO | 有预算和终止控制的多步执行 | — |
 | 3 | LangChain 标准 Agent | TODO | 共享业务工具的框架实现 | — |
 | 4 | LangGraph 显式工作流 | TODO | 要求、证据、判断的分支流程 | — |
@@ -234,9 +234,9 @@ AGENT-DEMO/
 - [x] 真实模型触发两种工具并完成闭环，问候直接回答。
 - [x] 日志与阶段总结保存结果、失败修复及限制。
 - [x] 敏感文件与旧工程只读状态已检查。
-- [ ] 本阶段代码形成经用户授权的本地提交；当前未提交，不推送。
+- [x] 本阶段代码形成经用户授权的本地提交 7a67a36；完成记录另提交，不推送。
 
-仅剩授权版本交付，保持 DOING；不能沿用 Phase 0 的提交授权。
+本阶段用户另行明确授权本地提交及完成记录，版本交付完成，标记 DONE。
 
 ## 6. Phase 2 — 原生 Agent Loop
 
@@ -485,7 +485,7 @@ AGENT-DEMO/
 - 总结不替代验证报告、接口契约、学习日志或提交授权；已有详情通过链接引用。
 - 生成文档后核查引用、图与代码一致性、验证结果和敏感信息，再按用户授权处理提交。
 
-当前阶段总结：[Phase 0](docs/phase00_summary.md)、[Phase 1 技术验收快照](docs/phase01_summary.md)（待授权版本交付）。后续完成阶段时在此追加链接。
+当前阶段总结：[Phase 0](docs/phase00_summary.md)、[Phase 1](docs/phase01_summary.md)。后续完成阶段时在此追加链接。
 
 ## 16. 学习日志
 
@@ -574,6 +574,17 @@ AGENT-DEMO/
 - 建议 commit：`feat: implement manual Gemini tool calling with validated local tools`。
 - 下一任务：授权本地提交及完成记录，然后 Phase 2 的有上限模型/工具循环；当前不提前实现。
 
+### 2026-10-10 — Phase 1 / 授权本地提交与验收收尾
+
+- 状态：DONE。用户明确授权“Phase 1 本地提交及完成记录，不推送”。
+- 复核：提交前为 phase-1 / c3e5f2e，变更与前次交付一致；暂存仅 15 个已核查文件，cached diff --check 通过，无密钥、虚拟环境或运行数据。
+- 实现提交：`7a67a36` — `feat: implement manual Gemini tool calling with validated local tools`，15 个文件，1021 行新增、22 行删除。
+- 完成记录：更新顶部、进度总览、完成日期、Phase 1 验收项、阶段总结、技术说明和 README；保留等待授权与失败修复的历史日志，完成记录另提交。
+- 验证依据：此前两套环境各 42 passed，Ruff/pip check/离线示例通过；真实 Gemini 加法、MOCK 规格与问候通过。此次仅状态文档变更，不重复 API 或代码测试，检查文档格式、差异及最终 Git 状态。
+- 收尾修复：首个文档更新脚本因 PowerShell 管道使用 ASCII，匹配中文失败，未写入任何文件；改用直接 UTF-8 补丁更新。
+- 权限：按本阶段授权通过工具权限审查写入新工程 Git 索引和本地历史；没有 push，没有修改旧工程。
+- 下一任务：Phase 2 首项——实现有轮数、调用数与总期限上限的 Agent Loop；本次不提前实施。
+
 ## 17. 架构决策记录（ADR）
 
 | ID | 日期 | 决策 | 原因 | 复审点 |
@@ -604,4 +615,4 @@ AGENT-DEMO/
 
 本路线制定时核对了 LangChain Agent、LangGraph 持久化与中断文档。其他库在引入阶段再核实官方文档和兼容版本；链接内容更新不代表本地依赖自动升级。
 
-**Phase 0 已完成；Phase 1 技术验收通过，待授权本地提交。版本交付后进入 Phase 2；推送仍需另行确认。**
+**Phase 0、Phase 1 已完成。下一任务是 Phase 2 有上限的 Agent Loop；推送仍需另行确认。**

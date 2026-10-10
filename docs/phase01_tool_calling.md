@@ -1,6 +1,6 @@
 # Phase 1：原生 Tool Calling 实现与验证
 
-日期：2026-10-10。技术验收通过；DOING（待授权本地提交）。当前交付状态以[路线图](../AGENT_LEARNING_ROADMAP.md)为准。
+完成日期：2026-10-10。DONE；技术验收与授权本地版本交付完成。当前交付状态以[路线图](../AGENT_LEARNING_ROADMAP.md)为准。
 
 ## 1. 当前实现的数据流程
 
@@ -201,8 +201,8 @@ status: completed
 
 ## 7. Git 与后续
 
-当前 `phase-1` 分支基于 `c3e5f2e`；远端只读查询已成功，`main` 与 `phase-1` 均指向同一提交。旧工程只读 Git 状态为空。本阶段未执行 git add、commit、push，不沿用 Phase 0 的一次性提交授权。
+实施开始时 `phase-1` 分支基于 `c3e5f2e`；远端只读查询成功，`main` 与 `phase-1` 均指向同一提交。旧工程只读 Git 状态为空。随后用户明确授权本阶段本地提交及完成记录，已创建实现提交 `7a67a36`（15 个文件），完成记录另提交。本地分支领先远端，未推送，不沿用 Phase 0 的一次性授权。
 
 最终核查：15 个源码/配置/文档交付文件；`git ls-files` 未包含密钥文件、venv、runtime、outputs 或运行数据库；`git check-ignore` 确认相关路径忽略。用实际 Gemini 密钥在内存中比对交付文件，无匹配；未输出密钥。新旧验证环境的外部包版本完全一致。文档本地链接及 `git diff --check` 通过；Git 的 LF/CRLF 提示是行尾转换提示，不是差异错误。最初简易链接正则误把代码 `TOOL_REGISTRY[name](**validated)` 当链接，排除代码块后复核通过，文件链接实际无缺失。
 
-建议提交：`feat: implement manual Gemini tool calling with validated local tools`。技术验收已通过，本地提交仍需本阶段授权。下一阶段再实现有明确终止、预算和故障处理的 Agent Loop，复用现有工具及适配器。
+实现提交：`7a67a36` — `feat: implement manual Gemini tool calling with validated local tools`。技术验收与授权本地交付完成。下一阶段再实现有明确终止、预算和故障处理的 Agent Loop，复用现有工具及适配器。

@@ -1,6 +1,6 @@
 # AGENT-DEMO
 
-这是从原生工具调用逐步学习受控 Agent 工作流的独立 Python 工程。Phase 0 已验收；Phase 1 已实现手动 Tool Calling、两个本地工具与离线验证。真实模型验收状态见路线图。尚未实现持续 Agent Loop、LangChain、LangGraph 或 Web API。
+这是从原生工具调用逐步学习受控 Agent 工作流的独立 Python 工程。Phase 0、Phase 1 已验收并完成授权本地提交；Phase 1 包括手动 Tool Calling、两个本地工具、离线与真实模型验证。当前进度见路线图。尚未实现持续 Agent Loop、LangChain、LangGraph 或 Web API。
 
 学习顺序和唯一进度入口见 [AGENT_LEARNING_ROADMAP.md](AGENT_LEARNING_ROADMAP.md)。旧 RAG 工程的静态接口调查见 [docs/rag_contract.md](docs/rag_contract.md)。
 
