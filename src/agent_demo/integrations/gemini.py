@@ -69,7 +69,15 @@ class GeminiClient:
             elif not part.thought and not part.thought_signature:
                 raise ResponseFormatError("Unsupported response part")
         # Preserve the original content object, including opaque thought signatures.
-        return ModelReply("".join(text), tuple(calls), content, response.model_version)
+        metadata = getattr(response, "usage_metadata", None)
+        usage = {}
+        if metadata:
+            usage = {
+                "input_tokens": metadata.prompt_token_count or 0,
+                "output_tokens": metadata.candidates_token_count or 0,
+                "total_tokens": metadata.total_token_count or 0,
+            }
+        return ModelReply("".join(text), tuple(calls), content, response.model_version, usage)
 
     @staticmethod
     def _user(prompt):
@@ -83,24 +91,37 @@ class GeminiClient:
         )
 
     def finish(self, prompt, first, outputs, definitions):
-        if len(first.calls) != len(outputs):
+        return self.continue_turn(prompt, [first], outputs, definitions)
+
+    def continue_turn(self, prompt, history, outputs, definitions):
+        last = history[-1][0] if isinstance(history[-1], tuple) else history[-1]
+        if len(last.calls) != len(outputs):
             raise ResponseFormatError("Tool output count mismatch")
         responses = []
-        for call, output in zip(first.calls, outputs, strict=True):
+        for call, output in zip(last.calls, outputs, strict=True):
             response = types.FunctionResponse(name=call.name, response=output)
             if call.call_id is not None:
                 response.id = call.call_id
             responses.append(types.Part(function_response=response))
+        contents = [self._user(prompt)]
+        for item in history:
+            prior, prior_outputs = item if isinstance(item, tuple) else (item, None)
+            contents.append(prior.context)
+            if prior_outputs is not None:
+                prior_parts = []
+                for prior_call, prior_output in zip(prior.calls, prior_outputs, strict=True):
+                    prior_response = types.FunctionResponse(
+                        name=prior_call.name, response=prior_output
+                    )
+                    if prior_call.call_id is not None:
+                        prior_response.id = prior_call.call_id
+                    prior_parts.append(types.Part(function_response=prior_response))
+                contents.append(types.Content(role="user", parts=prior_parts))
+        contents.append(types.Content(role="user", parts=responses))
         return self._parse(
             self.sdk.models.generate_content(
                 model=self.model,
-                contents=[
-                    self._user(prompt),
-                    first.context,
-                    # Gemini API Content roles are user/model; a function response
-                    # is supplied by the application on the user side of the turn.
-                    types.Content(role="user", parts=responses),
-                ],
+                contents=contents,
                 config=self._config(definitions),
             )
         )
