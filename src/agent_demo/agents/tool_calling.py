@@ -26,6 +26,7 @@ class ModelReply:
     calls: tuple[ToolCall, ...] = ()
     context: object = field(default=None, repr=False)
     model_version: str | None = None
+    usage: dict | None = None
 
 
 @dataclass
