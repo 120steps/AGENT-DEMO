@@ -2,9 +2,9 @@
 
 > 版本：v2.0，实施版<br>
 > 更新日期：2026-10-10<br>
-> 当前状态：**Phase 0 DONE — 本地环境、静态契约调查与首个本地提交已完成**<br>
-> 当前阶段：**Phase 0 已验收；Phase 1 尚未开始**<br>
-> 下一任务：**Phase 1：选定实际可用的模型、SDK 与 API 协议。推送仍未授权，单独确认。**<br>
+> 当前状态：**Phase 1 DONE — 技术验收与授权本地版本交付完成**<br>
+> 当前阶段：**Phase 0 保持 DONE；Phase 1 离线与真实模型验证均通过**<br>
+> 下一任务：**Phase 2：实现有轮数、调用数与总期限上限的 Agent Loop。推送未授权，不推送。**<br>
 > 唯一进度入口：本文件。后续按本文任务与验收证据推进。<br>
 > 边界：AGENT-DEMO 独立开发；RAG-DEMO 只读检查，未经明确授权不修改。
 
@@ -17,12 +17,13 @@
 截至 2026-10-10 的本地只读检查：
 
 - 工程目录：`D:\workspace\AI\AGENT-DEMO`。
-- 已存在 `.git`，当前分支为 `main`；经用户授权完成首个本地提交 `08dc5b4`。
+- 已存在 `.git`，当前分支为 `phase-1`；Phase 1 实现提交为 `7a67a36`，完成记录另提交。Phase 0 的 `08dc5b4`、`f87ec8d` 与后续 `c3e5f2e` 历史保留。
 - 已配置远端：`https://github.com/120steps/AGENT-DEMO.git`。
-- 本地上游仍为 `[gone]`；使用命令级 OpenSSL 后端查询远端成功，退出 0，未返回 HEAD 或分支引用。不能认定远端不存在。
+- Phase 1 重新只读查询远端成功，HEAD 指向 `main`，`main` / `phase-1` 均存在并指向 `c3e5f2e`。当前分支跟踪 `origin/phase-1`；早期 `[gone]` 与空引用属于历史记录。
 - 已建立 src 工程、主 `.venv` 和全新 `.venv-phase0-check`，均为 Windows x64 / Python 3.11.0；安装、6 项测试、Ruff、示例和依赖检查通过。
 - RAG-DEMO 已定位于 `D:\workspace\AI\rag-demo`，V1/V3 静态接口调查完成；真实请求、授权和业务资料尚未验证。
 - 技术证据见 `docs/phase00_validation.md`，接口调查见 `docs/rag_contract.md`。本地提交已完成；未推送。Phase 0 已验收，真实 RAG 集成留待 Phase 6。
+- Phase 1 使用 google-genai 2.29.0 / gemini-3.5-flash-lite，主环境和独立新环境各 42 项离线测试通过；真实加法、MOCK 规格和问候验证通过。已授权本地提交为 7a67a36，本次未推送，详见 docs/phase01_tool_calling.md。
 
 ### 0.2 每次继续时的流程
 
@@ -45,7 +46,7 @@
 | Phase | 主题 | 状态 | 核心交付物 | 完成日期 |
 |---|---|---|---|---|
 | 0 | 仓库、环境、RAG 契约摸底 | DONE | 可安装工程、离线测试、接口调查及本地提交已完成 | 2026-10-10 |
-| 1 | 原生 Tool Calling | TODO | 单次工具调用闭环 | — |
+| 1 | 原生 Tool Calling | DONE | 单轮闭环、42 项测试、真实验证及授权本地提交完成 | 2026-10-10 |
 | 2 | 原生 Agent Loop | TODO | 有预算和终止控制的多步执行 | — |
 | 3 | LangChain 标准 Agent | TODO | 共享业务工具的框架实现 | — |
 | 4 | LangGraph 显式工作流 | TODO | 要求、证据、判断的分支流程 | — |
@@ -211,17 +212,31 @@ AGENT-DEMO/
 
 **必做任务**
 
-- [ ] 选定模型、SDK 和实际 API 协议，验证一次最小真实请求；不假设各供应商消息结构相同。
-- [ ] 实现 `add(a, b)` 和 `lookup_product_spec(model)` 两个只读业务函数。
-- [ ] 定义工具参数 schema、允许列表和分发器；拒绝未知工具及无效参数。
-- [ ] 完成模型请求 → 工具调用 → 校验 → 执行 → 结果回传 → 最终回答。
-- [ ] 正确保留调用 ID 和工具结果对应关系；处理普通回答、工具异常、无效 JSON。
-- [ ] 建立固定用例和脚本化模型响应，区分离线测试与真实模型验证。
-- [ ] 记录最小事件：运行 ID、调用 ID、工具名、参数、结果状态、耗时；敏感字段脱敏。
+- [x] 选定模型、SDK 和实际 API 协议，验证一次最小真实请求；不假设各供应商消息结构相同。
+- [x] 实现 `add(a, b)` 和 `lookup_product_spec(model)` 两个只读业务函数。
+- [x] 定义工具参数 schema、允许列表和分发器；拒绝未知工具及无效参数。
+- [x] 完成模型请求 → 工具调用 → 校验 → 执行 → 结果回传 → 最终回答。
+- [x] 正确保留调用 ID 和工具结果对应关系；处理普通回答、工具异常、无效 JSON。
+- [x] 建立固定用例和脚本化模型响应，区分离线测试与真实模型验证。
+- [x] 记录最小事件：运行 ID、调用 ID、工具名、参数、结果状态、耗时；敏感字段脱敏。
 
 **交付：** `examples/phase01_tool_calling.py`、共用工具、离线用例、真实请求验证记录。
 
 **验收：** 计算任务能够完成工具闭环；问候不强制调用；非法调用不执行；模型请求和应用执行可分别解释。至少一次真实模型闭环成功，不能只以 mock 验收。
+
+**2026-10-10 实际结果：** 技术验收通过。两套环境各 42 passed（含 Phase 0 的 6 项），Ruff / pip check / 原示例 / Mock 示例通过；真实加法、MOCK 规格查询及问候均退出 0。google-genai 2.29.0，gemini-3.5-flash-lite，SDK 自动执行关闭，结果以 user 角色回传，保留实际 ID 和原始 Content。第二次响应再请求工具明确停止。证据见[技术说明](docs/phase01_tool_calling.md)和[总结](docs/phase01_summary.md)。
+
+### 5.1 Phase 1 完成标准核查
+
+- [x] 必做任务与十个学习问题说明完成。
+- [x] 可运行入口与依赖清单在新环境验证通过。
+- [x] 离线安全、故障及协议测试通过，Phase 0 正常。
+- [x] 真实模型触发两种工具并完成闭环，问候直接回答。
+- [x] 日志与阶段总结保存结果、失败修复及限制。
+- [x] 敏感文件与旧工程只读状态已检查。
+- [x] 本阶段代码形成经用户授权的本地提交 7a67a36；完成记录另提交，不推送。
+
+本阶段用户另行明确授权本地提交及完成记录，版本交付完成，标记 DONE。
 
 ## 6. Phase 2 — 原生 Agent Loop
 
@@ -470,7 +485,7 @@ AGENT-DEMO/
 - 总结不替代验证报告、接口契约、学习日志或提交授权；已有详情通过链接引用。
 - 生成文档后核查引用、图与代码一致性、验证结果和敏感信息，再按用户授权处理提交。
 
-当前阶段总结：[Phase 0](docs/phase00_summary.md)。后续完成阶段时在此追加链接。
+当前阶段总结：[Phase 0](docs/phase00_summary.md)、[Phase 1](docs/phase01_summary.md)。后续完成阶段时在此追加链接。
 
 ## 16. 学习日志
 
@@ -543,6 +558,33 @@ AGENT-DEMO/
 - Git：本次文档变更尚未提交，未推送；不影响此前已完成的阶段代码提交。
 - 下一任务：后续验收执行第 15.1 节；实施下一任务仍为 Phase 1 的模型/SDK/协议选择。
 
+### 2026-10-10 — Phase 1 / 原生 Tool Calling 实施与真实验收
+
+- 状态：DOING；技术验收通过，待本阶段本地提交授权，不推送。Phase 0 保持 DONE。
+- 核心理解：模型仅提出请求，应用按白名单校验并执行，再按供应商协议回传结果。
+- 实现：两个本地工具、Schema/Registry/Dispatcher、Gemini 官方 SDK 适配、单轮控制器、事件、真实/Mock 示例及 36 项新增测试。
+- 修改文件：pyproject.toml、requirements-lock.txt、config.py、.env.example、README、本路线图；新增 tools/、agents/、integrations/ 实际模块、examples/phase01_tool_calling.py、tests/test_phase01.py、docs/phase01_tool_calling.md、docs/phase01_summary.md。
+- 实际命令：`pip --isolated install --index-url https://pypi.org/simple --timeout 15 --retries 1 --disable-pip-version-check --no-cache-dir google-genai`；`pip ... --no-build-isolation --no-deps -e .`；主环境 pytest、Ruff check/format、pip check、Phase 0 示例、Phase 1 --mock；pip list 导出 35 个版本；新建 .venv-phase1-check 安装锁定清单、editable 包并重复检查。完整命令见技术说明第 4 节。
+- 结果：两套环境各 42 passed，Ruff/依赖/离线示例通过。无密钥真实入口退出 1 configuration_error，不误报成功。
+- 真实依赖：用户明确授权只读复用旧工程 Gemini 密钥，仅在进程中使用。真实示例的加法、MOCK-SW-48 和 Hello 均 completed/退出 0；模型与响应版本 gemini-3.5-flash-lite，SDK google-genai 2.29.0。未请求真实 RAG 或部署。
+- 轨迹：加法 run_id=bfff1900fe34464d8f0869823e2318dc，call_97714 / add(15,27) → 42 → 最终回答；规格 call_42746 / lookup_product_spec → MOCK 48GE+4×10GE；问候无工具调用。完整 JSON 位于忽略目录 outputs/，文档保留脱敏摘录。
+- 失败修复：Ruff 长行、无用导入与文档代码块格式失败后修复；最新别名两次 ServerError，改选稳定模型；SDK 示例 tool 角色回传导致真实 HTTP 400，按安装版 Content 约束改为 user 并补断言，真实闭环通过。历史失败保留在技术说明，不以 Mock 代替真实验收。
+- 限制：只有一轮工具，同轮至多四项顺序执行；无持续循环、预算/usage 累计或复杂工具超时取消；规格为 MOCK；其他平台和模型组合未验证。
+- Git：当前 phase-1，HEAD c3e5f2e；远端 main/phase-1 查询成功且一致。本阶段未 add/commit/push；旧工程只读 status --porcelain 为空；敏感内容未进入跟踪范围。
+- 建议 commit：`feat: implement manual Gemini tool calling with validated local tools`。
+- 下一任务：授权本地提交及完成记录，然后 Phase 2 的有上限模型/工具循环；当前不提前实现。
+
+### 2026-10-10 — Phase 1 / 授权本地提交与验收收尾
+
+- 状态：DONE。用户明确授权“Phase 1 本地提交及完成记录，不推送”。
+- 复核：提交前为 phase-1 / c3e5f2e，变更与前次交付一致；暂存仅 15 个已核查文件，cached diff --check 通过，无密钥、虚拟环境或运行数据。
+- 实现提交：`7a67a36` — `feat: implement manual Gemini tool calling with validated local tools`，15 个文件，1021 行新增、22 行删除。
+- 完成记录：更新顶部、进度总览、完成日期、Phase 1 验收项、阶段总结、技术说明和 README；保留等待授权与失败修复的历史日志，完成记录另提交。
+- 验证依据：此前两套环境各 42 passed，Ruff/pip check/离线示例通过；真实 Gemini 加法、MOCK 规格与问候通过。此次仅状态文档变更，不重复 API 或代码测试，检查文档格式、差异及最终 Git 状态。
+- 收尾修复：首个文档更新脚本因 PowerShell 管道使用 ASCII，匹配中文失败，未写入任何文件；改用直接 UTF-8 补丁更新。
+- 权限：按本阶段授权通过工具权限审查写入新工程 Git 索引和本地历史；没有 push，没有修改旧工程。
+- 下一任务：Phase 2 首项——实现有轮数、调用数与总期限上限的 Agent Loop；本次不提前实施。
+
 ## 17. 架构决策记录（ADR）
 
 | ID | 日期 | 决策 | 原因 | 复审点 |
@@ -559,6 +601,7 @@ AGENT-DEMO/
 | ADR-010 | 2026-10-10 | Phase 0 技术验收与 Git 授权分开记录；默认不提交/推送 | 用户明确要求提交和推送先确认；技术通过不冒充版本交付完成 | 首个本地提交确认 |
 | ADR-011 | 2026-10-10 | 当前选择 Python 3.11 系列；依赖用 pip list 排除 editable 导出 | 本机 3.11.0 可用且满足已查声明；pip freeze 在无提交仓库仍触发 VCS 警告 | Python 补丁升级或 Phase 3 引入框架 |
 | ADR-012 | 2026-10-10 | 每阶段验收生成 docs/phaseNN_summary.md，按模板讲解工作、重点与框架 | 用户要求固定保存阶段学习知识，便于复习与后续推进 | 每个 Phase 验收 |
+| ADR-013 | 2026-10-10 | Phase 1 使用 google-genai 2.29.0 / gemini-3.5-flash-lite，关闭自动执行；结果用 user 角色，保留 ID 和原始 Content | 最新别名两次 ServerError；稳定型号真实通过。SDK 示例 tool 角色被 API 400 拒绝，安装版 Content 只支持 user/model；以真实协议为准 | Phase 2 或模型/SDK 更新 |
 
 ## 18. 官方资料与版本核实
 
@@ -572,4 +615,4 @@ AGENT-DEMO/
 
 本路线制定时核对了 LangChain Agent、LangGraph 持久化与中断文档。其他库在引入阶段再核实官方文档和兼容版本；链接内容更新不代表本地依赖自动升级。
 
-**Phase 0 已完成。下一任务是 Phase 1 的模型、SDK 与协议选定；推送仍需另行确认。**
+**Phase 0、Phase 1 已完成。下一任务是 Phase 2 有上限的 Agent Loop；推送仍需另行确认。**

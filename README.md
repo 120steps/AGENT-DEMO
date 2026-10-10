@@ -1,6 +1,6 @@
 # AGENT-DEMO
 
-这是从原生工具调用逐步学习受控 Agent 工作流的独立 Python 工程。当前仅实施 Phase 0：包安装、配置与离线验证；尚未实现 LLM、Tool Calling、LangChain、LangGraph 或 API。
+这是从原生工具调用逐步学习受控 Agent 工作流的独立 Python 工程。Phase 0、Phase 1 已验收并完成授权本地提交；Phase 1 包括手动 Tool Calling、两个本地工具、离线与真实模型验证。当前进度见路线图。尚未实现持续 Agent Loop、LangChain、LangGraph 或 Web API。
 
 学习顺序和唯一进度入口见 [AGENT_LEARNING_ROADMAP.md](AGENT_LEARNING_ROADMAP.md)。旧 RAG 工程的静态接口调查见 [docs/rag_contract.md](docs/rag_contract.md)。
 
@@ -42,13 +42,13 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pip --isolated install --index-url https://pypi.org/simple --timeout 15 --retries 1 --disable-pip-version-check --no-cache-dir --no-build-isolation -e ".[dev]"
 ```
 
-更新后用 `python -m pip list --format=freeze --exclude-editable` 导出固定版本清单，并在新的验证环境安装测试，不仅改文件内的版本号。当前无提交仓库中，`pip freeze` 即便排除 editable 项仍会尝试 VCS 检测并警告，因此使用 `pip list` 导出外部依赖，避免记录本机源码路径。
+更新后用 `python -m pip list --format=freeze --exclude-editable` 导出固定版本清单，并在新的验证环境安装测试，不仅改文件内的版本号。Phase 0 在当时无提交的仓库中发现 `pip freeze` 会触发 VCS 警告，因此沿用 `pip list` 导出方式，避免记录本机源码路径。Phase 1 固定清单已在独立 `.venv-phase1-check` 环境安装验证。
 
 安装命令使用显式 PyPI 地址和有限重试；本次默认 pip 安装曾长时间无进展，改用上述命令后成功。需要内部镜像的环境应根据实际网络设置替换地址，不在文档中保存带凭据的地址。
 
 ## 配置与隔离
 
-Phase 0 只读取进程环境变量，不自动加载 `.env`。`.env.example` 是无密钥的配置说明；当前不需要 API Key。
+配置只读取进程环境变量，不自动加载 `.env`。`.env.example` 是无密钥的配置说明；Phase 0 与 Phase 1 离线模式不需要 API Key。真实模型调用需要 `GEMINI_API_KEY`（或后备 `GOOGLE_API_KEY`），密钥不写入源码或日志。
 
 ```powershell
 $env:AGENT_DEMO_ENV = "test"
@@ -59,6 +59,25 @@ $env:AGENT_DEMO_LOG_LEVEL = "DEBUG"
 允许的环境为 `development/test/production`；日志级别为 `DEBUG/INFO/WARNING/ERROR/CRITICAL`。未设置时使用 development 和 INFO；空值或无效值立即报错，避免悄悄使用错误配置。示例只输出非敏感环境和包信息，不打印其他环境变量。
 
 `.venv` 存放本项目的解释器入口和依赖，不影响旧 RAG 工程。`src/agent_demo` 存放可导入的包；项目根目录放文档、示例和测试。可编辑安装把环境中的导入指向源码，改动源码后通常不用重新安装；改动依赖或包元数据后需要重新安装。
+
+## Phase 1：原生 Tool Calling
+
+```powershell
+# 固定离线加法轨迹；不识别输入意图，不代表真实模型验收。
+.\.venv\Scripts\python.exe examples\phase01_tool_calling.py --mock
+
+# 先通过安全方式向当前进程设置 GEMINI_API_KEY，勿把密钥贴进文档。
+$env:GEMINI_MODEL = "gemini-3.5-flash-lite"
+.\.venv\Scripts\python.exe examples\phase01_tool_calling.py "What is 15 + 27?"
+.\.venv\Scripts\python.exe examples\phase01_tool_calling.py "Please look up the specifications of MOCK-SW-48."
+.\.venv\Scripts\python.exe examples\phase01_tool_calling.py "Hello!"
+```
+
+使用官方 `google-genai==2.29.0`，默认模型 `gemini-3.5-flash-lite`，已真实通过加法、模拟规格查询与问候验证。可通过 `GEMINI_MODEL` 覆盖，实际响应版本在 `MODEL_RESPONSE` 中记录。SDK 自动执行明确关闭，Dispatcher 仅允许 `add` 和 `lookup_product_spec`。规格都是 MOCK 数据，不能当成真实产品证据。
+
+每次最多两次模型请求、一次工具调用轮次；同轮至多四个工具顺序执行。后续仍请求工具时返回 `additional_tool_call_required`，退出码 1；工具错误、API 错误和响应错误同样返回失败。SDK 单请求超时 30 秒、attempts=1，示例不会自动重试或进入持续循环。
+
+原理、测试命令、真实验收记录见 [Phase 1 技术说明](docs/phase01_tool_calling.md)，框架快照见 [Phase 1 总结](docs/phase01_summary.md)。离线测试不会读取旧工程或调用网络；真实示例也不会自动读取旧工程凭据。
 
 ## Git
 
