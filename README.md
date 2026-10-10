@@ -79,6 +79,15 @@ $env:GEMINI_MODEL = "gemini-3.5-flash-lite"
 
 原理、测试命令、真实验收记录见 [Phase 1 技术说明](docs/phase01_tool_calling.md)，框架快照见 [Phase 1 总结](docs/phase01_summary.md)。离线测试不会读取旧工程或调用网络；真实示例也不会自动读取旧工程凭据。
 
+## Phase 3：LangChain 标准 Agent
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe examples\phase03_langchain_agent.py "Query MOCK-SW-48 and calculate total ports."
+```
+
+Phase 3 使用 `langchain==1.4.4`、`langchain-google-genai==4.4.0` 和官方 `create_agent`。真实运行需要进程环境中的 `GEMINI_API_KEY`；离线测试不调用网络。工具仍由 Phase 1 Dispatcher 校验，最终答案由 Pydantic `AgentAnswer` 验证。详见 [Phase 3 文档](docs/phase03_langchain_agent.md) 和 [阶段总结](docs/phase03_summary.md)。
+
 ## Git
 
 提交前检查 `git status --short`、`git ls-files` 和忽略规则。`.env`、虚拟环境、缓存、日志、runtime、outputs、数据库不提交。Phase 0 已经用户授权完成本地提交，尚未推送；后续提交和推送按用户授权执行。

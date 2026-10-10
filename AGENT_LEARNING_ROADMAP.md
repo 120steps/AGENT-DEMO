@@ -2,9 +2,9 @@
 
 > 版本：v2.0，实施版<br>
 > 更新日期：2026-10-10<br>
-> 当前状态：**Phase 2 DOING — 技术验收完成，待本地提交授权**<br>
-> 当前阶段：**Phase 0、Phase 1、Phase 2 DONE**<br>
-> 下一任务：**Phase 3：选定并验证 LangChain 标准 Agent。推送未授权。**<br>
+> 当前状态：**Phase 3 DOING — LangChain 技术验收完成，待本地提交授权**<br>
+> 当前阶段：**Phase 0、Phase 1 DONE；Phase 2 与 Phase 3 技术实现已验证，提交状态分别按记录维护**<br>
+> 下一任务：**完成 Phase 3 本地提交授权后，进入 Phase 4 显式 LangGraph 工作流。推送未授权。**<br>
 > 唯一进度入口：本文件。后续按本文任务与验收证据推进。<br>
 > 边界：AGENT-DEMO 独立开发；RAG-DEMO 只读检查，未经明确授权不修改。
 
@@ -48,7 +48,7 @@
 | 0 | 仓库、环境、RAG 契约摸底 | DONE | 可安装工程、离线测试、接口调查及本地提交已完成 | 2026-10-10 |
 | 1 | 原生 Tool Calling | DONE | 单轮闭环、42 项测试、真实验证及授权本地提交完成 | 2026-10-10 |
 | 2 | 原生 Agent Loop | DOING | 有预算和终止控制的多步执行、CI 与真实多步验证完成；待本地提交 | — |
-| 3 | LangChain 标准 Agent | TODO | 共享业务工具的框架实现 | — |
+| 3 | LangChain 标准 Agent | DOING | create_agent、共享工具、Pydantic 输出、真实验证完成；待本地提交 | — |
 | 4 | LangGraph 显式工作流 | TODO | 要求、证据、判断的分支流程 | — |
 | 5 | Checkpoint、恢复、人工审核 | TODO | 重启恢复和重复执行保护 | — |
 | 6 | 真实 Agentic RAG | TODO | 真实接口集成及引用评测 | — |
@@ -266,16 +266,18 @@ AGENT-DEMO/
 
 **必做任务**
 
-- [ ] 安装并锁定经验证的 LangChain 与模型集成包，核实 `create_agent`。
-- [ ] 将共用业务函数封装为框架工具，避免复制规格查询与判断逻辑。
-- [ ] 完成与 Phase 2 等价的任务，添加 Pydantic 结构化输出与工具错误处理。
-- [ ] 保留执行次数、超时和预算约束，核实框架内相关限制的含义。
-- [ ] 使用同一批业务用例比较答案、必要动作、禁止动作、调用次数和延迟。
-- [ ] 记录原生实现与框架实现的消息、工具执行、middleware 和终止机制对照。
+- [x] 安装并锁定经验证的 LangChain 与模型集成包，核实 `create_agent`。
+- [x] 将共用业务函数封装为框架工具，避免复制规格查询与判断逻辑。
+- [x] 完成与 Phase 2 等价的任务，添加 Pydantic 结构化输出与工具错误处理。
+- [x] 保留执行次数、超时和预算约束，核实框架内相关限制的含义。
+- [x] 使用同一批业务用例比较答案、必要动作、禁止动作、调用次数和延迟。
+- [x] 记录原生实现与框架实现的消息、工具执行、middleware 和终止机制对照。
 
 **交付：** `examples/phase03_langchain_agent.py`、对照笔记及验证记录。
 
 **验收：** 两种实现均完成核心任务；非法工具和错误参数不会绕过业务边界；不要求真实模型输出逐字相同或轨迹顺序完全一致。
+
+**2026-10-10 实际结果：** `langchain==1.4.4`、`langchain-google-genai==4.4.0` 已安装并锁定；主环境 49 passed，Ruff/format/pip check 通过。真实 Gemini LangChain Agent 完成 MOCK-SW-48 查询与总端口计算，Pydantic 输出为 52，退出码 0。阶段总结见 [docs/phase03_summary.md](docs/phase03_summary.md)，技术说明见 [docs/phase03_langchain_agent.md](docs/phase03_langchain_agent.md)。仅剩本地提交授权，暂不标记 DONE。
 
 ## 8. Phase 4 — LangGraph 显式工作流与业务模型
 
@@ -587,6 +589,18 @@ AGENT-DEMO/
 - 权限：按本阶段授权通过工具权限审查写入新工程 Git 索引和本地历史；没有 push，没有修改旧工程。
 - 下一任务：Phase 2 首项——实现有轮数、调用数与总期限上限的 Agent Loop；本次不提前实施。
 
+### 2026-10-10 — Phase 3 / LangChain 标准 Agent
+
+- 状态：DOING；技术验收完成，待本地提交授权。
+- 实现：LangChain 1.4.4 `create_agent`、Google Gemini 集成 4.4.0、两个复用 Dispatcher 的 Tool 包装、Pydantic `AgentAnswer`、真实与离线验证。
+- 修改文件：pyproject.toml、requirements-lock.txt、README、本路线图；新增 `src/agent_demo/agents/langchain_agent.py`、`examples/phase03_langchain_agent.py`、`tests/test_phase03_langchain_agent.py`、`docs/phase03_langchain_agent.md`、`docs/phase03_summary.md`。
+- 验证命令：主环境 `pytest -q`、`ruff check .`、`ruff format --check .`、`pip check`、Phase 2 Mock 示例、Phase 3 真实示例；结果 49 passed，静态检查和依赖检查通过。
+- 真实验证：Gemini `gemini-3.5-flash-lite` 通过 LangChain Agent 完成 MOCK-SW-48 查询与总端口计算，Pydantic 结构化结果 total_ports=52，退出码 0。密钥仅在授权的进程环境使用，不写入工程。
+- 对比结论：LangChain 管理模型消息、工具往返和循环节点；白名单、业务校验、错误、超时、预算和敏感日志仍由应用负责。`recursion_limit` 是图步骤上限，不等于工具次数。
+- 限制：CI 文件/真实 runner 尚未单独执行；未实现 Phase 4 显式图、Phase 5 checkpoint、Phase 6 RAG。旧 RAG 工程未修改。
+- Git：当前 phase-3，工作区包含 Phase 3 变更，未 add/commit/push。建议 commit：`feat: add LangChain standard agent implementation`。
+- 下一任务：获得本地提交授权后进入 Phase 4 Requirement、Evidence、Decision 模型与显式工作流。
+
 ## 17. 架构决策记录（ADR）
 
 | ID | 日期 | 决策 | 原因 | 复审点 |
@@ -604,6 +618,7 @@ AGENT-DEMO/
 | ADR-011 | 2026-10-10 | 当前选择 Python 3.11 系列；依赖用 pip list 排除 editable 导出 | 本机 3.11.0 可用且满足已查声明；pip freeze 在无提交仓库仍触发 VCS 警告 | Python 补丁升级或 Phase 3 引入框架 |
 | ADR-012 | 2026-10-10 | 每阶段验收生成 docs/phaseNN_summary.md，按模板讲解工作、重点与框架 | 用户要求固定保存阶段学习知识，便于复习与后续推进 | 每个 Phase 验收 |
 | ADR-013 | 2026-10-10 | Phase 1 使用 google-genai 2.29.0 / gemini-3.5-flash-lite，关闭自动执行；结果用 user 角色，保留 ID 和原始 Content | 最新别名两次 ServerError；稳定型号真实通过。SDK 示例 tool 角色被 API 400 拒绝，安装版 Content 只支持 user/model；以真实协议为准 | Phase 2 或模型/SDK 更新 |
+| ADR-014 | 2026-10-10 | Phase 3 使用 LangChain 1.4.4 `create_agent` 与 langchain-google-genai 4.4.0；业务函数仍通过 Phase 1 Dispatcher 执行 | 学习框架控制层，同时保持业务权限边界单一；`recursion_limit` 不冒充工具预算 | Phase 4 或依赖升级 |
 
 ## 18. 官方资料与版本核实
 
