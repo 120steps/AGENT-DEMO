@@ -1,10 +1,10 @@
 # AGENT-DEMO — Agent 学习与工程实施路线图
 
 > 版本：v2.0，实施版<br>
-> 更新日期：2026-10-10<br>
-> 当前状态：**Phase 3 DOING — LangChain 技术验收完成，待本地提交授权**<br>
-> 当前阶段：**Phase 0、Phase 1 DONE；Phase 2 与 Phase 3 技术实现已验证，提交状态分别按记录维护**<br>
-> 下一任务：**完成 Phase 3 本地提交授权后，进入 Phase 4 显式 LangGraph 工作流。推送未授权。**<br>
+> 更新日期：2026-10-11<br>
+> 当前状态：**Phase 4 DOING — 技术验收通过，待授权本地提交形成版本**<br>
+> 当前阶段：**Phase 4 显式业务图已实现；Phase 0–3 保留，前阶段验收声明差异见最新学习日志**<br>
+> 下一任务：**保存 Phase 4 授权版本；Phase 5 首先区分消息上下文、checkpoint、store 和业务数据库。推送未授权。**<br>
 > 唯一进度入口：本文件。后续按本文任务与验收证据推进。<br>
 > 边界：AGENT-DEMO 独立开发；RAG-DEMO 只读检查，未经明确授权不修改。
 
@@ -14,7 +14,11 @@
 
 ### 0.1 已确认的工程事实
 
-截至 2026-10-10 的本地只读检查：
+截至 2026-10-11 的本地检查（下方旧阶段事实按日期保留）：
+
+- 当前分支 `phase-4`，HEAD `757f3f3`；历史包含 Phase 2 的 `d93d59a` / 合并 `ec763bf`，Phase 3 的 `d785bc3` / 合并 `757f3f3`。此前“待提交”的描述已过时；本次未查询远端，不把本地合并记录当作实时远端状态。
+- Phase 4 完整回归 98 passed / 0 failed，Ruff、pip check、五类离线图 Demo 通过；代码和文档尚未提交。继续时检测到用户已暂存昨日代码，保留暂存状态，不自动 add/commit/push。
+- Phase 3 当前执行限制与旧验收声明存在差异，详见第 16 节 2026-10-11 纠正说明；不因本次 Phase 4 测试通过就宣称这些旧限制已补齐。
 
 - 工程目录：`D:\workspace\AI\AGENT-DEMO`。
 - 已存在 `.git`，当前分支为 `phase-1`；Phase 1 实现提交为 `7a67a36`，完成记录另提交。Phase 0 的 `08dc5b4`、`f87ec8d` 与后续 `c3e5f2e` 历史保留。
@@ -47,9 +51,9 @@
 |---|---|---|---|---|
 | 0 | 仓库、环境、RAG 契约摸底 | DONE | 可安装工程、离线测试、接口调查及本地提交已完成 | 2026-10-10 |
 | 1 | 原生 Tool Calling | DONE | 单轮闭环、42 项测试、真实验证及授权本地提交完成 | 2026-10-10 |
-| 2 | 原生 Agent Loop | DOING | 有预算和终止控制的多步执行、CI 与真实多步验证完成；待本地提交 | — |
-| 3 | LangChain 标准 Agent | DOING | create_agent、共享工具、Pydantic 输出、真实验证完成；待本地提交 | — |
-| 4 | LangGraph 显式工作流 | TODO | 要求、证据、判断的分支流程 | — |
+| 2 | 原生 Agent Loop | DOING | 已提交并合并；历史验收记录保留，本次不扩大其覆盖声明 | — |
+| 3 | LangChain 标准 Agent | DOING | 已提交并合并；执行限制与对比测试覆盖存在缺口，见最新日志 | — |
+| 4 | LangGraph 显式工作流 | DOING | 业务模型、确定性条件图、49 项新增测试与总结通过；待授权提交 | — |
 | 5 | Checkpoint、恢复、人工审核 | TODO | 重启恢复和重复执行保护 | — |
 | 6 | 真实 Agentic RAG | TODO | 真实接口集成及引用评测 | — |
 | 7 | MCP 独立实验 | TODO | 本地 MCP Server / Client | — |
@@ -269,8 +273,8 @@ AGENT-DEMO/
 - [x] 安装并锁定经验证的 LangChain 与模型集成包，核实 `create_agent`。
 - [x] 将共用业务函数封装为框架工具，避免复制规格查询与判断逻辑。
 - [x] 完成与 Phase 2 等价的任务，添加 Pydantic 结构化输出与工具错误处理。
-- [x] 保留执行次数、超时和预算约束，核实框架内相关限制的含义。
-- [x] 使用同一批业务用例比较答案、必要动作、禁止动作、调用次数和延迟。
+- [ ] 保留执行次数、超时和预算约束，核实框架内相关限制的含义。（2026-10-11 代码复核发现覆盖不足，旧日志保留。）
+- [ ] 使用同一批业务用例比较答案、必要动作、禁止动作、调用次数和延迟。（2026-10-11 当前三项测试不足以证明完整对比。）
 - [x] 记录原生实现与框架实现的消息、工具执行、middleware 和终止机制对照。
 
 **交付：** `examples/phase03_langchain_agent.py`、对照笔记及验证记录。
@@ -285,17 +289,19 @@ AGENT-DEMO/
 
 **必做任务**
 
-- [ ] 定义 Requirement、Evidence、Decision 三类 Pydantic 数据模型。
-- [ ] 将复合条款拆成可分别核验的子要求；保留父条款 ID、原文及位置。
-- [ ] 建立提取或读取要求 → 查询证据 → 校验 → 判断 → 输出的显式图。
-- [ ] 设置有证据、缺证据、冲突、工具失败路径；判断前执行确定性校验。
-- [ ] 将数值、单位、比较运算和字段完整性检查交给代码。
-- [ ] 理解 State 更新、消息合并及 reducer，避免重试造成重复追加。
-- [ ] 画出流程图，离线覆盖每条关键分支。
+- [x] 定义 Requirement、Evidence、Decision 三类 Pydantic 数据模型。
+- [x] 将复合条款拆成可分别核验的子要求；保留父条款 ID、原文及位置。（人工结构化输入，保留 mandatory。）
+- [x] 建立提取或读取要求 → 查询证据 → 校验 → 判断 → 输出的显式图。
+- [x] 设置有证据、缺证据、冲突、工具失败路径；判断前执行确定性校验。
+- [x] 将数值、单位、比较运算和字段完整性检查交给代码。
+- [x] 理解 State 更新、消息合并及 reducer，避免重试造成重复追加。（顺序图采用默认替换 reducer 和 ID 字典，不引入聊天消息。）
+- [x] 画出流程图，离线覆盖每条关键分支。
 
 **交付：** `examples/phase04_langgraph_workflow.py`、共用业务模型、条件分支测试。
 
 **验收：** 缺证据不生成肯定结论；工具失败不等同于设备不满足；冲突进入待确认；数值规则可独立验证。
+
+**2026-10-11 实际结果：** 技术验收通过，98 passed（Phase 0–3 原有 49 + Phase 4 新增 49），Ruff/pip check/editable 安装及 Demo 通过。五类 MOCK 场景分别 FC、NC、PENDING、PENDING、PENDING；工具失败 ERROR；未知优先保留 PENDING。原工具的介质字段缺失，完全满足场景使用单独标注来源的人工 MOCK 补充证据。技术文档及 Mermaid 见 [docs/phase04_langgraph_workflow.md](docs/phase04_langgraph_workflow.md)，总结见 [docs/phase04_summary.md](docs/phase04_summary.md)。没有真实 LLM/RAG 调用。按第 15 节，授权本地提交前保持 DOING。
 
 ## 9. Phase 5 — Checkpoint、重启恢复与人工审核
 
@@ -601,6 +607,21 @@ AGENT-DEMO/
 - Git：当前 phase-3，工作区包含 Phase 3 变更，未 add/commit/push。建议 commit：`feat: add LangChain standard agent implementation`。
 - 下一任务：获得本地提交授权后进入 Phase 4 Requirement、Evidence、Decision 模型与显式工作流。
 
+### 2026-10-11 — Phase 4 / 显式业务图实现及技术验收
+
+- 状态：DOING，技术验收通过；本阶段尚未提交，不自动 push。
+- 修改文件：`src/agent_demo/domain/{requirements,evidence,decisions,mock_cases}.py`、`src/agent_demo/graphs/compliance_graph.py`、`examples/phase04_langgraph_workflow.py`、`tests/test_phase04_langgraph_workflow.py`；pyproject.toml、requirements-lock.txt、`.github/workflows/ci.yml`、README、本路线图；`docs/phase04_langgraph_workflow.md`、`docs/phase04_summary.md`。
+- 实现：人工条款拆分；结构化 State；逐条校验、条件路由及 Python 数值/单位比较；父子汇总；MOCK 证据、配置条件、冲突和故障区分。未知不判 NC，故障单独 ERROR。没有 LLM、RAG、checkpoint 或人工审批实现。
+- 验证命令：`.venv\Scripts\python.exe -m pip --disable-pip-version-check install --no-index --no-build-isolation --no-deps -e .`；`-m pytest`；`-m ruff check .`；`-m ruff format --check .`；`-m pip check`；Phase 4 Demo；Phase 0 示例、Phase 1 `--mock`、Phase 2 `--mock`。技术说明保存具体命令与结果。
+- 结果：Windows 10 x64 / Python 3.11.0；langgraph 1.2.14、pydantic 2.14.0；98 passed / 0 failed，Ruff/check/format、依赖检查和示例通过。五类结果 FC、NC、PENDING、PENDING、PENDING；额外覆盖 PC、单位、错误型号、全部运算符、层级/输入错误、工具异常、每条条件分支、State 不原地修改及重复运行无污染。
+- 失败修复：初次 91 passed / 1 failed，顶层 PC 汇总错误变 NC，修复并保留回归；一处 Ruff 超长行修复。初始 pip 命令长时间未返回，不记录成功；改用 no-index、禁用版本检查的离线安装成功。Windows CIM 进程诊断被拒绝，未终止不明进程。
+- 先前记录纠正：本地历史证明 Phase 2/3 已提交合并，旧“待提交”不再适用。Phase 3 只有三项离线测试；timeout 参数未实际执行，recursion_limit 未实现独立工具次数/预算限制，完整原生对比覆盖不足。因此撤回对应两项复选框并保留历史日志，不继续声称全量验收通过。此缺口不阻塞完全确定性的 Phase 4，本次不无关重构。
+- Git：`phase-4` / `757f3f3`；昨天开始时干净，今天继续时代码已暂存，保留用户暂存范围；本次未 add/commit/push。新文档及后续修复需在授权后统一核查提交。敏感目录保持忽略。
+- 限制：全部资料为 MOCK；手工拆分；原工具没有介质或资料版本；CI 仅修复依赖安装，未运行 GitHub runner；没有真实资料、自动自然语言解析、持久化或 HITL。
+- 建议 commit：`feat: add explicit LangGraph MOCK compliance workflow`。
+- 收尾补充：WorkflowResult 返回要求、证据及校验记录，引用 ID 可回查。加入中文条款后曾暴露 Windows cp1252 输出异常，改用 JSON Unicode 转义，并新增无密钥/ASCII 控制台回归，最终完整测试 98 passed。
+- 下一任务：授权保存 Phase 4 可追踪版本；Phase 5 先区分消息上下文、checkpoint、跨 thread store 和业务数据库，再演示内存 checkpoint。前阶段验收缺口另行保留，不将其掩盖。
+
 ## 17. 架构决策记录（ADR）
 
 | ID | 日期 | 决策 | 原因 | 复审点 |
@@ -620,6 +641,14 @@ AGENT-DEMO/
 | ADR-013 | 2026-10-10 | Phase 1 使用 google-genai 2.29.0 / gemini-3.5-flash-lite，关闭自动执行；结果用 user 角色，保留 ID 和原始 Content | 最新别名两次 ServerError；稳定型号真实通过。SDK 示例 tool 角色被 API 400 拒绝，安装版 Content 只支持 user/model；以真实协议为准 | Phase 2 或模型/SDK 更新 |
 | ADR-014 | 2026-10-10 | Phase 3 使用 LangChain 1.4.4 `create_agent` 与 langchain-google-genai 4.4.0；业务函数仍通过 Phase 1 Dispatcher 执行 | 学习框架控制层，同时保持业务权限边界单一；`recursion_limit` 不冒充工具预算 | Phase 4 或依赖升级 |
 
+Phase 4 新增决策（2026-10-11）：
+
+- ADR-015：使用完全确定性的顺序 StateGraph，状态字段默认替换，以稳定 ID 字典保存结果；当前无并发聚合需求，不使用追加 reducer，不提前实现 checkpoint。
+- ADR-016：复合条款按 ERROR → PENDING → 必要项 NC → 已证实部分满足 PC → 全部 FC 汇总；只有可选项失败且无已知满足时保守 PENDING。政策仅适用 MOCK 教学，正式 RFP 前确认必要性和业务口径。
+- ADR-017：复用原 MOCK 工具的真实字段；电口介质由独立人工 MOCK 证据补充，来源版本未知保留 null。原工具没有返回的字段不由适配器补造。
+
+复审点：Phase 5 状态持久化与恢复、Phase 6 真实证据、毕业项目的正式业务规则。
+
 ## 18. 官方资料与版本核实
 
 - LangChain Agent：https://docs.langchain.com/oss/python/langchain/agents
@@ -632,4 +661,4 @@ AGENT-DEMO/
 
 本路线制定时核对了 LangChain Agent、LangGraph 持久化与中断文档。其他库在引入阶段再核实官方文档和兼容版本；链接内容更新不代表本地依赖自动升级。
 
-**Phase 0、Phase 1 已完成。下一任务是 Phase 2 有上限的 Agent Loop；推送仍需另行确认。**
+**Phase 4 技术验收通过，待授权本地提交；下一阶段为 Phase 5 checkpoint 与恢复。前阶段覆盖差异见最新日志，推送仍需另行确认。**

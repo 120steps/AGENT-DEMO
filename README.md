@@ -88,6 +88,18 @@ $env:GEMINI_MODEL = "gemini-3.5-flash-lite"
 
 Phase 3 使用 `langchain==1.4.4`、`langchain-google-genai==4.4.0` 和官方 `create_agent`。真实运行需要进程环境中的 `GEMINI_API_KEY`；离线测试不调用网络。工具仍由 Phase 1 Dispatcher 校验，最终答案由 Pydantic `AgentAnswer` 验证。详见 [Phase 3 文档](docs/phase03_langchain_agent.md) 和 [阶段总结](docs/phase03_summary.md)。
 
+## Phase 4：LangGraph 显式业务工作流
+
+```powershell
+.\.venv\Scripts\python.exe examples\phase04_langgraph_workflow.py
+.\.venv\Scripts\python.exe -m pytest
+.\.venv\Scripts\python.exe -m ruff check .
+```
+
+无需 API Key。StateGraph 顺序处理全部子要求，再汇总父条款；模型不参与最终判定。五类 MOCK 场景覆盖完全满足、数量不足、模块配置未知、证据缺失和冲突。原工具未提供电口类型，完整满足场景使用明确标注来源的额外 MOCK 假设；默认不补充时保留 PENDING。
+
+详见 [Phase 4 技术说明](docs/phase04_langgraph_workflow.md) 和 [阶段总结](docs/phase04_summary.md)。CI 使用项目 dev extra 安装完整依赖；Windows 锁文件的版本说明不代表 Linux 已验证。
+
 ## Git
 
 提交前检查 `git status --short`、`git ls-files` 和忽略规则。`.env`、虚拟环境、缓存、日志、runtime、outputs、数据库不提交。Phase 0 已经用户授权完成本地提交，尚未推送；后续提交和推送按用户授权执行。
