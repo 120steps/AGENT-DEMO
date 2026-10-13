@@ -100,6 +100,31 @@ Phase 3 使用 `langchain==1.4.4`、`langchain-google-genai==4.4.0` 和官方 `c
 
 详见 [Phase 4 技术说明](docs/phase04_langgraph_workflow.md) 和 [阶段总结](docs/phase04_summary.md)。CI 使用项目 dev extra 安装完整依赖；Windows 锁文件的版本说明不代表 Linux 已验证。
 
+## Phase 5：Checkpoint、恢复与人工审核
+
+```powershell
+$phase05Thread = 'learn-' + [guid]::NewGuid().ToString('N')
+.\.venv\Scripts\python.exe examples\phase05_checkpoint_hitl.py start --thread-id $phase05Thread
+$phase05State = .\.venv\Scripts\python.exe examples\phase05_checkpoint_hitl.py status --thread-id $phase05Thread | ConvertFrom-Json
+$phase05State.review_snapshot | ConvertTo-Json -Depth 30
+```
+
+`start` 保存 SQLite Checkpoint 并退出；重新启动后用相同 thread_id 查看和恢复。查看快照后，使用其当前审核 ID、版本和内容摘要批准：
+
+```powershell
+$phase05Review = $phase05State.review_snapshot
+.\.venv\Scripts\python.exe examples\phase05_checkpoint_hitl.py resume --thread-id $phase05Thread `
+  --action approve --review-id $phase05Review.review_id `
+  --review-version $phase05Review.review_version --snapshot-digest $phase05Review.snapshot_digest
+.\.venv\Scripts\python.exe examples\phase05_checkpoint_hitl.py store-demo
+```
+
+也支持 reject，以及通过 `--action modify --modification-json 文件路径` 替换要求、证据或配置；修改后重新判断、生成新审核版本并等待再次批准。不能直接修改最终 FC/PC/NC。无 API Key 或真实资料需求。
+
+Checkpoint 和操作账本分别位于 `runtime/phase05/`；仅批准后在 `outputs/phase05/` 生成一个可核查的 MOCK JSON 草稿。重复执行核查 operation_id、路径和内容 SHA-256，不覆盖未知文件；完成产物被删改时拒绝自动重建。CLI 是受信本地学习入口，thread_id 不提供身份认证。
+
+实际版本 `langgraph-checkpoint-sqlite==3.1.2`；完整命令、跨进程证据、限制见 [Phase 5 技术说明](docs/phase05_checkpoint_hitl.md) 和 [阶段总结](docs/phase05_summary.md)。
+
 ## Git
 
 提交前检查 `git status --short`、`git ls-files` 和忽略规则。`.env`、虚拟环境、缓存、日志、runtime、outputs、数据库不提交。Phase 0 已经用户授权完成本地提交，尚未推送；后续提交和推送按用户授权执行。

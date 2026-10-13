@@ -1,10 +1,10 @@
 # AGENT-DEMO — Agent 学习与工程实施路线图
 
 > 版本：v2.0，实施版<br>
-> 更新日期：2026-10-11<br>
-> 当前状态：**Phase 4 DOING — 技术验收通过，待授权本地提交形成版本**<br>
-> 当前阶段：**Phase 4 显式业务图已实现；Phase 0–3 保留，前阶段验收声明差异见最新学习日志**<br>
-> 下一任务：**保存 Phase 4 授权版本；Phase 5 首先区分消息上下文、checkpoint、store 和业务数据库。推送未授权。**<br>
+> 更新日期：2026-10-13<br>
+> 当前状态：**Phase 5 DOING — 技术验收通过，待授权本地提交形成版本**<br>
+> 当前阶段：**Phase 4 已提交并复核 DONE；Phase 5 跨进程恢复、审核和幂等验证通过；前阶段缺口保留**<br>
+> 下一任务：**保存 Phase 5 授权版本；进入 Phase 6 前核实真实服务、权限、设备资料和证据响应。推送未授权。**<br>
 > 唯一进度入口：本文件。后续按本文任务与验收证据推进。<br>
 > 边界：AGENT-DEMO 独立开发；RAG-DEMO 只读检查，未经明确授权不修改。
 
@@ -14,7 +14,13 @@
 
 ### 0.1 已确认的工程事实
 
-截至 2026-10-11 的本地检查（下方旧阶段事实按日期保留）：
+截至 2026-10-13 的本地检查（下方旧阶段事实按日期保留）：
+
+- 当前分支 `phase-4`，HEAD `9e4a8f3`（`phase 4`），任务开始时工作区干净。Phase 4 已形成版本，原 98 项测试复核通过，正式收尾 DONE。本次未查询远端，不声称实时推送状态。
+- Phase 5 完整回归 164 passed / 0 failed / 0 skipped（原 98 + 新增 66）；SQLite 真实独立进程退出/恢复、审核版本、拒绝无写入、真实文件发布后进程异常恢复、幂等性、Thread/Store 边界通过。实际 CLI 证据：`runtime/phase05/validation-20261013-d63b2cb0.json`，运行数据保持忽略；Phase 5 尚未提交。
+- 本次复用 Phase 4 完整业务图，不复制比较规则；没有访问或修改 RAG-DEMO，没有真实 LLM 调用，没有 MCP/API/Docker 实现。Phase 6 的真实服务和证据资料前提尚未验证。
+
+以下 2026-10-11 检查作为历史保留：
 
 - 当前分支 `phase-4`，HEAD `757f3f3`；历史包含 Phase 2 的 `d93d59a` / 合并 `ec763bf`，Phase 3 的 `d785bc3` / 合并 `757f3f3`。此前“待提交”的描述已过时；本次未查询远端，不把本地合并记录当作实时远端状态。
 - Phase 4 完整回归 98 passed / 0 failed，Ruff、pip check、五类离线图 Demo 通过；代码和文档尚未提交。继续时检测到用户已暂存昨日代码，保留暂存状态，不自动 add/commit/push。
@@ -53,8 +59,8 @@
 | 1 | 原生 Tool Calling | DONE | 单轮闭环、42 项测试、真实验证及授权本地提交完成 | 2026-10-10 |
 | 2 | 原生 Agent Loop | DOING | 已提交并合并；历史验收记录保留，本次不扩大其覆盖声明 | — |
 | 3 | LangChain 标准 Agent | DOING | 已提交并合并；执行限制与对比测试覆盖存在缺口，见最新日志 | — |
-| 4 | LangGraph 显式工作流 | DOING | 业务模型、确定性条件图、49 项新增测试与总结通过；待授权提交 | — |
-| 5 | Checkpoint、恢复、人工审核 | TODO | 重启恢复和重复执行保护 | — |
+| 4 | LangGraph 显式工作流 | DONE | 98 项验证记录保留；实现提交 9e4a8f3，本次复核通过 | 2026-10-13（复核） |
+| 5 | Checkpoint、恢复、人工审核 | DOING | 内存/SQLite、独立进程恢复、版本审核、操作账本、66 项新增测试通过；待授权提交 | — |
 | 6 | 真实 Agentic RAG | TODO | 真实接口集成及引用评测 | — |
 | 7 | MCP 独立实验 | TODO | 本地 MCP Server / Client | — |
 | 8 | 评测、安全、可观测性汇总 | TODO | 回归报告和错误诊断 | — |
@@ -301,7 +307,9 @@ AGENT-DEMO/
 
 **验收：** 缺证据不生成肯定结论；工具失败不等同于设备不满足；冲突进入待确认；数值规则可独立验证。
 
-**2026-10-11 实际结果：** 技术验收通过，98 passed（Phase 0–3 原有 49 + Phase 4 新增 49），Ruff/pip check/editable 安装及 Demo 通过。五类 MOCK 场景分别 FC、NC、PENDING、PENDING、PENDING；工具失败 ERROR；未知优先保留 PENDING。原工具的介质字段缺失，完全满足场景使用单独标注来源的人工 MOCK 补充证据。技术文档及 Mermaid 见 [docs/phase04_langgraph_workflow.md](docs/phase04_langgraph_workflow.md)，总结见 [docs/phase04_summary.md](docs/phase04_summary.md)。没有真实 LLM/RAG 调用。按第 15 节，授权本地提交前保持 DOING。
+**2026-10-11 实际结果：** 技术验收通过，98 passed（Phase 0–3 原有 49 + Phase 4 新增 49），Ruff/pip check/editable 安装及 Demo 通过。五类 MOCK 场景分别 FC、NC、PENDING、PENDING、PENDING；工具失败 ERROR；未知优先保留 PENDING。原工具的介质字段缺失，完全满足场景使用单独标注来源的人工 MOCK 补充证据。技术文档及 Mermaid 见 [docs/phase04_langgraph_workflow.md](docs/phase04_langgraph_workflow.md)，总结见 [docs/phase04_summary.md](docs/phase04_summary.md)。没有真实 LLM/RAG 调用。当时授权本地提交前保持 DOING。
+
+**2026-10-13 收尾复核：** 本地历史已存在实现提交 `9e4a8f3`，工作区起始干净，98 项既有测试及五场景 Demo 复核通过，Phase 4 标记 DONE；保留当时待提交的日志与总结快照。
 
 ## 9. Phase 5 — Checkpoint、重启恢复与人工审核
 
@@ -309,20 +317,22 @@ AGENT-DEMO/
 
 **必做任务**
 
-- [ ] 区分消息上下文、checkpoint、跨 thread store 和业务数据库。
-- [ ] 先演示内存 checkpoint，再接入本地持久化 checkpoint。
-- [ ] 验证同一 thread 连续性、新 thread 隔离，以及停止进程后的恢复。
-- [ ] 将待审核内容明确保存为具体要求、证据、判断及拟执行动作。
-- [ ] 拆分准备、审核和执行节点；理解 interrupt 恢复可能重跑节点。
-- [ ] 对写入动作使用操作 ID 和重复执行保护；设计输出文件重复生成策略。
-- [ ] 测试批准、拒绝、修改后重新校验；影响范围改变时重新审核。
-- [ ] 测试重复恢复、重复提交审批，以及执行后重试不会重复产生业务结果。
-- [ ] 用最小例子展示跨 thread store 的存取；记录其与业务状态的区别。
-- [ ] 明确 thread_id 不是授权凭据，服务化时必须检查任务归属。
+- [x] 区分消息上下文、checkpoint、跨 thread store 和业务数据库。
+- [x] 先演示内存 checkpoint，再接入本地持久化 checkpoint。
+- [x] 验证同一 thread 连续性、新 thread 隔离，以及停止进程后的恢复。（独立 Python 进程真实验证。）
+- [x] 将待审核内容明确保存为具体要求、证据、判断及拟执行动作。
+- [x] 拆分准备、审核和执行节点；理解 interrupt 恢复可能重跑节点。
+- [x] 对写入动作使用操作 ID 和重复执行保护；设计输出文件重复生成策略。
+- [x] 测试批准、拒绝、修改后重新校验；影响范围改变时重新审核。
+- [x] 测试重复恢复、重复提交审批，以及执行后重试不会重复产生业务结果。
+- [x] 用最小例子展示跨 thread store 的存取；记录其与业务状态的区别。
+- [x] 明确 thread_id 不是授权凭据，服务化时必须检查任务归属。
 
 **交付：** `examples/phase05_checkpoint_hitl.py`、持久化恢复与审核测试。
 
 **验收：** 关闭程序后恢复成功；拒绝后无受保护写入；重复审批/恢复不重复执行；新 thread 无上下文串线。
+
+**2026-10-13 实际结果：** 技术验收通过。主环境 164 passed / 0 failed / 0 skipped；InMemorySaver 两独立进程证明状态丢失，SqliteSaver 三独立进程 start/status/resume 恢复同一快照；文件已发布但账本/Checkpoint 未完成时 `os._exit()` 后安全恢复，文件字节和修改时间不变。Approve/Reject/Modify、旧版本拒绝、输出路径及 NTFS junction 防护、完成产物被删改后拒绝重复审批、并发操作去重通过。CLI 的配置修改由 PENDING → 新审核版本 2 / FC → 批准 completed；文件仍为 MOCK DRAFT。说明、Mermaid、实际证据及限制见 [技术文档](docs/phase05_checkpoint_hitl.md) 和 [总结](docs/phase05_summary.md)。代码未提交，按第 15 节保持 DOING；未消耗真实模型 Token。
 
 ## 10. Phase 6 — 真实 Agentic RAG 集成
 
@@ -495,7 +505,7 @@ AGENT-DEMO/
 - 总结不替代验证报告、接口契约、学习日志或提交授权；已有详情通过链接引用。
 - 生成文档后核查引用、图与代码一致性、验证结果和敏感信息，再按用户授权处理提交。
 
-当前阶段总结：[Phase 0](docs/phase00_summary.md)、[Phase 1](docs/phase01_summary.md)。后续完成阶段时在此追加链接。
+当前阶段总结：[Phase 0](docs/phase00_summary.md)、[Phase 1](docs/phase01_summary.md)、[Phase 3](docs/phase03_summary.md)、[Phase 4](docs/phase04_summary.md)、[Phase 5](docs/phase05_summary.md)。总结保留各自验收时快照，当前进度以上表为准。
 
 ## 16. 学习日志
 
@@ -622,6 +632,22 @@ AGENT-DEMO/
 - 收尾补充：WorkflowResult 返回要求、证据及校验记录，引用 ID 可回查。加入中文条款后曾暴露 Windows cp1252 输出异常，改用 JSON Unicode 转义，并新增无密钥/ASCII 控制台回归，最终完整测试 98 passed。
 - 下一任务：授权保存 Phase 4 可追踪版本；Phase 5 先区分消息上下文、checkpoint、跨 thread store 和业务数据库，再演示内存 checkpoint。前阶段验收缺口另行保留，不将其掩盖。
 
+### 2026-10-13 — Phase 5 / Checkpoint、持久化恢复和人工审核
+
+- 状态：DOING，所有本阶段技术验收通过；等待授权版本提交，无 push。Phase 4 发现已有 `9e4a8f3`，复核后标记 DONE；Phase 2/3 覆盖缺口保留，不无关重构。
+- 核心理解：Checkpoint 保存执行位置，操作账本保存副作用意图和完成状态；审核快照必须与待执行对象绑定。interrupt 节点会重跑，因此受保护写入在独立执行节点中；版本修改后重新校验并再次中断。
+- 修改文件：新增 `src/agent_demo/domain/reviews.py`、`src/agent_demo/graphs/review_graph.py`、`src/agent_demo/graphs/store_demo.py`、`src/agent_demo/persistence/operations.py`、`examples/phase05_checkpoint_hitl.py`、`tests/test_phase05_checkpoint_hitl.py`、`tests/test_phase05_operations.py`、`docs/phase05_checkpoint_hitl.md`、`docs/phase05_summary.md`；修改 pyproject.toml、requirements-lock.txt、README、本路线图。原 Phase 0–4 代码和入口保持可用。
+- 依赖实际安装：`pip --isolated --disable-pip-version-check install --index-url https://pypi.org/simple --timeout 15 --retries 1 --no-cache-dir langgraph-checkpoint-sqlite` 成功；SQLite Saver 3.1.2 解析到 checkpoint 4.3.0、aiosqlite 0.22.1、sqlite-vec 0.1.9；LangGraph 1.2.14/Pydantic 2.14.0 保持。经 editable 安装、pip check、pip list 核验并更新 Windows 锁定文件。
+- 验证命令：虚拟环境 `-m pytest`、`-m ruff check .`、`-m ruff format --check .`、`-m pip check`；Phase 4 五场景 Demo；Phase 5 CLI `start/status/resume --action modify/approve/reject`、重复批准及 `store-demo`；测试真实 SQLite、不同 Python PID、os._exit() 及文件内容/mtime。详细命令见技术文档。
+- 结果：164 passed / 0 failed / 0 skipped（原 98 + 新增 66）；业务数据均 MOCK；内存状态不跨进程保存、SQLite 状态跨进程恢复、Thread 隔离、Namespace 授权、批准/拒绝/修改、新版本审核、重复执行、操作绑定、路径越界、未知文件保护与真实崩溃恢复通过。Ruff/format/pip check 通过；Phase 4 五类业务场景保持原结果。
+- CLI 实际轨迹：`phase05-validation-20261013-d63b2cb0`，未确认模块 PENDING/awaiting_review → 新进程 status 恢复 → modify 配置 → review_version=2、FC/awaiting_review → approve completed → repeat completed；独立拒绝任务 rejected，无受保护文件。运行证据 `runtime/phase05/validation-20261013-d63b2cb0.json`；唯一批准产物 `outputs/phase05/ecd711964a642dc9106836df8f967785af81c0a2caa9c899d6e6c1464be38062.json`，仍为 DRAFT。
+- 失败及修复：最初 Modify 序列化把未修改字段变成显式 null，导致三项测试失败；统一省略 null 后重新校验正常。Ledger 允许 SQLite 工作线程访问并用 RLock/事务保护同连接；重复批准终态原本只信任 Checkpoint，补充产物完整性核查，文件被删改时拒绝重建。Windows 符号链接创建权限不足时用实际 NTFS junction 检测路径保护，最终无跳过；CLI 修改 JSON 支持 UTF-8 BOM；Ruff 长行/代码块格式修复。
+- Git：当前 `phase-4` / `9e4a8f3`；本次代码和文档未 add/commit/push。runtime、outputs、数据库、凭据和虚拟环境保持忽略；没有访问或修改 RAG-DEMO。
+- 收尾核查：60 个锁定依赖与实际安装版本全部一致；32 个 README/Phase 5 文档本地链接有效；Git diff/check 与敏感跟踪检查通过。额外 UTF-8 BOM CLI 修改进入审核第 2 版后拒绝，无产物。
+- 限制：可信本地 CLI，不是身份认证服务；状态/快照数据库必须由可信操作者保护。幂等保证仅限受控本地目录、支持原子硬链接的文件系统和进程异常恢复；不承诺断电或任意外部 API Exactly-once。Checkpoint 在 Phase 4 完整判断节点边界保存，内部只读计算可重跑；不实现生产并发审核调度。Store 仅内存实验，未构建长期用户记忆。真实 LLM/RAG/部署不适用，CI 远端未运行。
+- 建议 commit：`feat(agent): add persistent checkpoints and human review workflow`。
+- 下一任务：授权保存 Phase 5；Phase 6 先核实实际服务地址/权限、已发布设备资料、真实检索原文/页码/版本响应及调用副作用，当前进入真实集成的条件尚未满足。
+
 ## 17. 架构决策记录（ADR）
 
 | ID | 日期 | 决策 | 原因 | 复审点 |
@@ -649,6 +675,15 @@ Phase 4 新增决策（2026-10-11）：
 
 复审点：Phase 5 状态持久化与恢复、Phase 6 真实证据、毕业项目的正式业务规则。
 
+Phase 5 新增决策（2026-10-13）：
+
+- ADR-018：审核图调用原 Phase 4 完整确定性图，外层持久化保存 JSON 状态，避免复制业务规则及自定义模型反序列化；内层只读计算重跑安全，细粒度中间 Checkpoint 延期。
+- ADR-019：审核快照绑定 run/thread/version/内容摘要及拟执行路径；审核与执行拆分，Modify 必须重算并进入新版本，业务结论和人工审核结果分开记录。
+- ADR-020：SQLite 操作账本以 operation_id 和目标路径唯一约束绑定 SHA-256，prepared 先持久化、临时文件 fsync 后非覆盖原子硬链接发布、完成记录随后提交。重试核验产物与账本，不盲目重建或覆盖；不扩展为分布式 Exactly-once。
+- ADR-021：Thread 仅执行上下文，跨 Thread Store 用显式 namespace 和可信调用方授权；本阶段 CLI 不提供身份认证，后续服务必须验证任务归属并保护持久化数据。
+
+复审点：Phase 6 真实服务调用副作用与证据来源、Phase 9 身份权限和部署文件系统、毕业项目的正式 SOC 审核。
+
 ## 18. 官方资料与版本核实
 
 - LangChain Agent：https://docs.langchain.com/oss/python/langchain/agents
@@ -661,4 +696,4 @@ Phase 4 新增决策（2026-10-11）：
 
 本路线制定时核对了 LangChain Agent、LangGraph 持久化与中断文档。其他库在引入阶段再核实官方文档和兼容版本；链接内容更新不代表本地依赖自动升级。
 
-**Phase 4 技术验收通过，待授权本地提交；下一阶段为 Phase 5 checkpoint 与恢复。前阶段覆盖差异见最新日志，推送仍需另行确认。**
+**Phase 4 DONE；Phase 5 技术验收通过，待授权版本提交。Phase 6 真实服务与资料前提尚未核实，前阶段覆盖差异保留，推送仍需另行确认。**
