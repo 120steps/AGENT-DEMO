@@ -1,4 +1,4 @@
-# Resolved and installed through 2026-10-13: Windows 10 x64, CPython 3.11.0.
+# Resolved and installed through 2026-10-14: Windows 10 x64, CPython 3.11.0.
 # External runtime/dev/build tools only; generated from pip list --format=freeze --exclude-editable.
 # Install this file first, then: python -m pip install --no-build-isolation --no-deps -e .
 # No local paths, editable VCS references, hashes, or cross-platform guarantee.
@@ -44,6 +44,7 @@ pyasn1_modules==0.4.2
 pycparser==3.11
 pydantic==2.14.0
 pydantic_core==2.50.0
+pypdf==6.20.1
 Pygments==2.21.0
 pytest==9.1.1
 PyYAML==6.0.3

@@ -125,6 +125,42 @@ Checkpoint 和操作账本分别位于 `runtime/phase05/`；仅批准后在 `out
 
 实际版本 `langgraph-checkpoint-sqlite==3.1.2`；完整命令、跨进程证据、限制见 [Phase 5 技术说明](docs/phase05_checkpoint_hitl.md) 和 [阶段总结](docs/phase05_summary.md)。
 
+## Phase 6：Agentic RAG（真实验收 BLOCKED）
+
+不启动或修改 RAG-DEMO；不在新工程创建向量库。离线演示使用 HTTP MockTransport 与脚本模型，输出明确标注 `offline_mock`：
+
+```powershell
+.\.venv\Scripts\python.exe examples\phase06_agentic_rag.py --offline --scenario greeting --chat
+.\.venv\Scripts\python.exe examples\phase06_agentic_rag.py --offline --scenario supplement
+.\.venv\Scripts\python.exe examples\phase06_agentic_rag.py --offline --mode benchmark
+.\.venv\Scripts\python.exe -m pytest
+.\.venv\Scripts\python.exe -m ruff check .
+```
+
+真实调用前，须先准备可安全查询的独立 V3 服务，确认不会修改旧项目，然后在当前进程设置：
+
+- `AGENT_DEMO_RAG_BASE_URL`：固定 HTTPS origin，或已核实的本机 HTTP 服务 origin。
+- `AGENT_DEMO_RAG_TOKEN`：有效 Bearer，仅安全配置到环境；不贴到源码、聊天或日志。
+- `AGENT_DEMO_RAG_KB`：获授权知识库，默认 default。
+- `AGENT_DEMO_RAG_PAGE_SEMANTICS`：默认 unknown；V3 来源及物理页约定核实后可设置 pdf_physical_1_based。
+- `AGENT_DEMO_LIVE_RAG_CONFIRM_READONLY=1`：操作者对上述安全服务的确认，不能用于授权旧工程写入。
+- `GEMINI_API_KEY` 或 `GOOGLE_API_KEY`：Agent 模型凭据；纯 retrieve 不需要。模型名复用 `GEMINI_MODEL`。
+
+```powershell
+# 只调用已配置的 /retrieve，不登录、下载、索引或重建旧服务。
+.\.venv\Scripts\python.exe examples\phase06_agentic_rag.py --mode retrieve --query "实际资料问题"
+.\.venv\Scripts\python.exe examples\phase06_agentic_rag.py --query "实际设备问题" `
+  --document-id "已确认文档ID" --version-id "已确认版本ID" `
+  --requirements data\private\requirements.json --bindings data\private\bindings.json
+.\.venv\Scripts\python.exe examples\phase06_agentic_rag.py --mode benchmark --case-file data\private\live-cases.json
+```
+
+人工 bindings 明确型号、文档/版本、SHA-256、授权 PDF 路径和适用条件。实际核查 PDF 哈希、物理页及原文后，只提取有限的明确规格行；不支持的自然语言或表格保留 PENDING。不能从文件名或关键词确认型号，也不能把 LLM 候选解释当成业务结论。真实路径不会回退到 MOCK；Phase 5 审核仍可使用 real_rag 模式，输出始终为草稿。
+
+真实 opt-in 测试还需要 `AGENT_DEMO_RAG_BINDINGS_JSON`（新工程下 JSON 路径）和 `AGENT_DEMO_RAG_TEST_QUERY`；当前缺安全服务及资料，该验收明确跳过为 BLOCKED。401/403 返回 auth_failed，连接/超时错误有独立错误码，空或不充分证据保留 PENDING。不要用启动或重建旧库解决配置阻碍。
+
+详见 [当前契约](docs/rag_contract.md)、[Phase 6 技术说明](docs/phase06_agentic_rag.md)、[总结](docs/phase06_summary.md)和[对比报告](eval/reports/phase06_baseline.md)。私有 PDF/绑定/用例放入已忽略的 `data/private/`，运行证据和数据库继续保持忽略。
+
 ## Git
 
 提交前检查 `git status --short`、`git ls-files` 和忽略规则。`.env`、虚拟环境、缓存、日志、runtime、outputs、数据库不提交。Phase 0 已经用户授权完成本地提交，尚未推送；后续提交和推送按用户授权执行。
