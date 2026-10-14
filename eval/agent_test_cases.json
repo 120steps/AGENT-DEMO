@@ -1,0 +1,14 @@
+{
+  "verification_mode": "offline_mock",
+  "description": "Explicit synthetic control cases; not a real document evaluation dataset.",
+  "cases": [
+    {"id": "greeting", "expected_agent_searches": 0, "expected_status": "completed"},
+    {"id": "single", "expected_agent_searches": 1, "expected_status": "completed"},
+    {"id": "supplement", "expected_agent_searches": 2, "expected_status": "completed"},
+    {"id": "empty", "expected_agent_searches": 1, "expected_status": "PENDING"},
+    {"id": "conflict", "expected_agent_searches": 1, "expected_status": "completed", "business_note": "retrieval completed only; unverified or conflicting business evidence remains PENDING"},
+    {"id": "service_error", "expected_agent_searches": 1, "expected_status": "failed"}
+  ],
+  "live_cases": [],
+  "live_blocker": "Authorized safe RAG service, fixed device document/PDF binding and model credentials unavailable."
+}

@@ -1,5 +1,6 @@
 """Sequential explicit business graph. No LLM, RAG, persistence or device access."""
 
+import hashlib
 import operator
 from decimal import Decimal
 from typing import TypedDict
@@ -26,6 +27,8 @@ class ComplianceState(TypedDict, total=False):
     workflow_status: str
     cursor: int
     result: WorkflowResult
+    evidence_mode: str
+    retrieval_errors: dict[str, str]
 
 
 # Default StateGraph reducers replace each field. Sequential nodes explicitly return
@@ -130,10 +133,12 @@ def mock_spec_evidence(model, spec):
 
 
 def retrieve_evidence(state, dispatcher=dispatch):
-    errors = dict(state["errors"])
+    errors = {**state["errors"], **state.get("retrieval_errors", {})}
     evidences = {}
     try:
-        if state.get("evidence_input") is not None:
+        if state.get("evidence_mode") == "real_rag" and state.get("evidence_input") is None:
+            items = []
+        elif state.get("evidence_input") is not None:
             items = [Evidence.model_validate(e) for e in state["evidence_input"]]
         else:
             items = []
@@ -147,6 +152,8 @@ def retrieve_evidence(state, dispatcher=dispatch):
                 except Exception as exc:
                     errors[model] = f"tool_execution_failed:{type(exc).__name__}"
         for item in items:
+            if state.get("evidence_mode", "mock") != item.source_type:
+                raise ValueError("MOCK and real evidence must not be mixed")
             if item.id in evidences:
                 raise ValueError("duplicate evidence ID")
             evidences[item.id] = item
@@ -170,6 +177,39 @@ def validate_evidence(state):
             for evidence in state["evidences"].values():
                 if evidence.model != req.model or evidence.attribute != req.attribute:
                     continue
+                if evidence.source_type == "real_rag":
+                    proof_metadata = evidence.metadata or {}
+                    if (
+                        proof_metadata.get("verified_chunk_sha256")
+                        != hashlib.sha256((evidence.source_text or "").encode()).hexdigest()
+                    ):
+                        validation["missing"].append(
+                            f"{evidence.id}: verified chunk content changed"
+                        )
+                        continue
+                    if not all(
+                        (
+                            evidence.document_id,
+                            evidence.source_version,
+                            evidence.chunk_id is not None,
+                            evidence.page is not None,
+                            evidence.page_number_semantics == "pdf_physical_1_based",
+                            evidence.origin_verified,
+                            evidence.document_hash,
+                            evidence.extraction_method == "deterministic_spec_line",
+                        )
+                    ):
+                        validation["missing"].append(f"{evidence.id}: real provenance unverified")
+                        continue
+                    # Re-check the narrow extraction grammar rather than trusting a
+                    # caller/LLM-supplied numeric value or extraction flag.
+                    from agent_demo.integrations.rag_evidence import extract_spec_values
+
+                    if (evidence.actual_value, evidence.unit) not in extract_spec_values(
+                        evidence.source_text or "", evidence.attribute
+                    ):
+                        validation["missing"].append(f"{evidence.id}: unsupported numeric claim")
+                        continue
                 if any(config.get(k) != v for k, v in evidence.applicable_conditions.items()):
                     validation["missing"].append(
                         f"{evidence.id}: configuration unconfirmed/mismatch"
@@ -229,9 +269,17 @@ def build_decision(state):
     if status == "ready":
         proposed = "FC" if state["comparisons"][req.id] else "NC"
         reason = (
-            "Applicable MOCK evidence satisfies rule"
+            (
+                "Applicable MOCK evidence satisfies rule"
+                if state.get("evidence_mode", "mock") == "mock"
+                else "Applicable evidence satisfies rule"
+            )
             if proposed == "FC"
-            else ("Applicable MOCK evidence proves requirement is not met")
+            else (
+                "Applicable MOCK evidence proves requirement is not met"
+                if state.get("evidence_mode", "mock") == "mock"
+                else "Applicable evidence proves requirement is not met"
+            )
         )
         evidence = state["evidences"][validation["ids"][0]]
         reason += (
@@ -285,7 +333,11 @@ def finalize_result(state):
             decisions[req.id] = Decision(
                 requirement_id=req.id,
                 proposed_status=aggregate(children, by_id),
-                reason="MOCK conservative composite policy: "
+                reason=(
+                    "MOCK conservative composite policy: "
+                    if state.get("evidence_mode", "mock") == "mock"
+                    else "Conservative composite policy: "
+                )
                 + "; ".join(f"{d.requirement_id}={d.proposed_status}" for d in children),
                 evidence_ids=sorted({eid for d in children for eid in d.evidence_ids}),
                 validation_result="aggregated",
@@ -306,6 +358,7 @@ def finalize_result(state):
         requirements=state["requirements"],
         evidences=list(state["evidences"].values()),
         validation_results=state["validation_results"],
+        source_type=state.get("evidence_mode", "mock"),
     )
     return {"decisions": decisions, "workflow_status": workflow_status, "result": result}
 
@@ -347,13 +400,27 @@ def build_compliance_graph(dispatcher=dispatch):
     return graph.compile()
 
 
-def run_workflow(requirements, *, evidences=None, configuration=None, dispatcher=dispatch):
+def run_workflow(
+    requirements,
+    *,
+    evidences=None,
+    configuration=None,
+    dispatcher=dispatch,
+    evidence_mode="mock",
+    retrieval_errors=None,
+):
+    if evidence_mode not in {"mock", "real_rag"}:
+        raise ValueError("invalid evidence mode")
+    if evidence_mode == "real_rag" and evidences is None:
+        evidences = []  # Never fall back to the MOCK spec tool for a real task.
     # Finite graph steps proportional to validated input size, not model decisions.
     return build_compliance_graph(dispatcher).invoke(
         {
             "requirement_input": requirements,
             "evidence_input": evidences,
             "configuration": configuration or {},
+            "evidence_mode": evidence_mode,
+            "retrieval_errors": retrieval_errors or {},
         },
         {"recursion_limit": max(20, 5 * len(requirements) + 10)},
     )["result"]

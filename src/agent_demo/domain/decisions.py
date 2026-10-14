@@ -31,4 +31,4 @@ class WorkflowResult(BaseModel):
     requirements: list[Requirement]
     evidences: list[Evidence]
     validation_results: dict[str, dict]
-    source_type: Literal["mock"] = "mock"
+    source_type: Literal["mock", "real_rag"] = "mock"

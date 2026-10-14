@@ -10,6 +10,7 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command, interrupt
 from pydantic import ValidationError
 
+from agent_demo.domain.decisions import WorkflowResult
 from agent_demo.domain.reviews import ReviewResponse, ReviewSnapshot
 from agent_demo.graphs.compliance_graph import run_workflow
 
@@ -47,6 +48,7 @@ class ReviewState(TypedDict, total=False):
     status: str
     error_type: str | None
     operation_result: dict
+    evidence_mode: str
 
 
 def evaluate_requirements(state):
@@ -55,6 +57,7 @@ def evaluate_requirements(state):
         state["requirement_input"],
         evidences=state.get("evidence_input"),
         configuration=state.get("configuration"),
+        evidence_mode=state.get("evidence_mode", "mock"),
     )
     return {
         "business_result": result.model_dump(mode="json"),
@@ -85,11 +88,13 @@ def build_review_graph(checkpointer, ledger, *, after_publish=None):
             business_result=deepcopy(state["business_result"]),
             configuration=deepcopy(state.get("configuration", {})),
             proposed_action=dict(
-                kind="write_mock_soc_draft",
+                kind="write_soc_draft"
+                if state.get("evidence_mode") == "real_rag"
+                else "write_mock_soc_draft",
                 operation_id=operation_id,
                 target_path=str(ledger.output_root / f"{operation_id}.json"),
                 document_status="DRAFT",
-                source_type="mock",
+                source_type=state.get("evidence_mode", "mock"),
             ),
         )
         snapshot["snapshot_digest"] = snapshot_digest(snapshot)
@@ -163,14 +168,24 @@ def build_review_graph(checkpointer, ledger, *, after_publish=None):
                 state["requirement_input"],
                 evidences=state.get("evidence_input"),
                 configuration=state.get("configuration"),
+                evidence_mode=state.get("evidence_mode", "mock"),
             ).model_dump(mode="json")
-            if fresh != snapshot["business_result"] or fresh != state["business_result"]:
+            # Saved Phase 5 snapshots lack the newly optional Evidence provenance
+            # fields. Compare validated default-filled business objects, keeping
+            # the ORIGINAL snapshot digest and published bytes untouched.
+            approved_object = WorkflowResult.model_validate(snapshot["business_result"]).model_dump(
+                mode="json"
+            )
+            current_object = WorkflowResult.model_validate(state["business_result"]).model_dump(
+                mode="json"
+            )
+            if fresh != approved_object or fresh != current_object:
                 raise ValueError("approved business object changed")
             if snapshot["configuration"] != state.get("configuration", {}):
                 raise ValueError("approved configuration changed")
             payload = {
                 "document_status": "DRAFT",
-                "source_type": "mock",
+                "source_type": state.get("evidence_mode", "mock"),
                 "human_review_status": "approved",
                 "review_snapshot": deepcopy(snapshot),
                 "review_response": response.model_dump(mode="json", exclude_none=True),
@@ -238,8 +253,17 @@ def thread_config(thread_id):
 
 
 def start_review(
-    graph, thread_id, requirements, *, evidences=None, configuration=None, run_id=None
+    graph,
+    thread_id,
+    requirements,
+    *,
+    evidences=None,
+    configuration=None,
+    run_id=None,
+    evidence_mode="mock",
 ):
+    if evidence_mode not in {"mock", "real_rag"}:
+        raise ValueError("invalid evidence mode")
     config = thread_config(thread_id)
     if graph.get_state(config).values:
         raise ValueError("thread already exists; use status/resume")
@@ -252,6 +276,7 @@ def start_review(
             "thread_id": thread_id,
             "review_version": 0,
             "review_history": {},
+            "evidence_mode": evidence_mode,
         },
         config,
     )

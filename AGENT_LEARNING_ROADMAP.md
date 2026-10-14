@@ -1,10 +1,10 @@
 # AGENT-DEMO — Agent 学习与工程实施路线图
 
 > 版本：v2.0，实施版<br>
-> 更新日期：2026-10-13<br>
-> 当前状态：**Phase 5 DOING — 技术验收通过，待授权本地提交形成版本**<br>
-> 当前阶段：**Phase 4 已提交并复核 DONE；Phase 5 跨进程恢复、审核和幂等验证通过；前阶段缺口保留**<br>
-> 下一任务：**保存 Phase 5 授权版本；进入 Phase 6 前核实真实服务、权限、设备资料和证据响应。推送未授权。**<br>
+> 更新日期：2026-10-14<br>
+> 当前状态：**Phase 6 BLOCKED — 客户端、Agent Tool、证据业务路径及离线验证完成；缺安全真实服务与资料验收**<br>
+> 当前阶段：**Phase 4–5 已提交并复核 DONE；Phase 6 真实 HTTP、真实 PDF 回查和真实评测未通过；前阶段缺口保留**<br>
+> 下一任务：**提供已授权且不会改变旧项目的 RAG 服务、Bearer、固定设备 PDF 与型号/版本绑定，再执行真实验收。推送未授权。**<br>
 > 唯一进度入口：本文件。后续按本文任务与验收证据推进。<br>
 > 边界：AGENT-DEMO 独立开发；RAG-DEMO 只读检查，未经明确授权不修改。
 
@@ -14,7 +14,14 @@
 
 ### 0.1 已确认的工程事实
 
-截至 2026-10-13 的本地检查（下方旧阶段事实按日期保留）：
+截至 2026-10-14 的本地检查（下方旧阶段事实按日期保留）：
+
+- 当前分支 `phase-4`，HEAD `9260a54`（`phase 5`），本次开始时工作区干净。Phase 5 已提交；既有 164 项测试在新回归中全部通过，另验证原 2026-10-13 已保存任务仍能核验为 completed。
+- Phase 6 完整 pytest 为 311 passed / 0 failed / 1 skipped；唯一跳过的是安全真实服务/设备 PDF 未配置的 opt-in 验收。HTTP Mock、脚本 Chat Model、TEST PDF、真实本机关闭端口错误检查分别标注，不冒充真实 RAG 请求。
+- RAG-DEMO 当前 HEAD `d72c329`，只读 Git 前后干净，当前未发现 8000/8011 监听；V3 `/retrieve` 及下载/启动可能写旧运行数据。未导入、启动或调用旧服务，没有读取旧凭据或修改旧项目。
+- 当前进程没有 RAG URL/Token 或 Gemini API Key；无授权真实设备资料与固定 PDF 绑定。Phase 6 客户端/流程可离线运行，真实端到端与评测保持 BLOCKED。
+
+以下 2026-10-13 检查作为历史保留：
 
 - 当前分支 `phase-4`，HEAD `9e4a8f3`（`phase 4`），任务开始时工作区干净。Phase 4 已形成版本，原 98 项测试复核通过，正式收尾 DONE。本次未查询远端，不声称实时推送状态。
 - Phase 5 完整回归 164 passed / 0 failed / 0 skipped（原 98 + 新增 66）；SQLite 真实独立进程退出/恢复、审核版本、拒绝无写入、真实文件发布后进程异常恢复、幂等性、Thread/Store 边界通过。实际 CLI 证据：`runtime/phase05/validation-20261013-d63b2cb0.json`，运行数据保持忽略；Phase 5 尚未提交。
@@ -60,8 +67,8 @@
 | 2 | 原生 Agent Loop | DOING | 已提交并合并；历史验收记录保留，本次不扩大其覆盖声明 | — |
 | 3 | LangChain 标准 Agent | DOING | 已提交并合并；执行限制与对比测试覆盖存在缺口，见最新日志 | — |
 | 4 | LangGraph 显式工作流 | DONE | 98 项验证记录保留；实现提交 9e4a8f3，本次复核通过 | 2026-10-13（复核） |
-| 5 | Checkpoint、恢复、人工审核 | DOING | 内存/SQLite、独立进程恢复、版本审核、操作账本、66 项新增测试通过；待授权提交 | — |
-| 6 | 真实 Agentic RAG | TODO | 真实接口集成及引用评测 | — |
+| 5 | Checkpoint、恢复、人工审核 | DONE | 实现提交 9260a54；164 项回归及既有审核快照兼容复核通过 | 2026-10-14（复核） |
+| 6 | 真实 Agentic RAG | BLOCKED | HTTP/Tool/真实证据路径与离线评测机制完成；311 passed，真实服务/PDF/实测缺失 | — |
 | 7 | MCP 独立实验 | TODO | 本地 MCP Server / Client | — |
 | 8 | 评测、安全、可观测性汇总 | TODO | 回归报告和错误诊断 | — |
 | 9 | 最小 API 与部署完善 | TODO | Agent API、容器化、部署验证 | — |
@@ -334,6 +341,8 @@ AGENT-DEMO/
 
 **2026-10-13 实际结果：** 技术验收通过。主环境 164 passed / 0 failed / 0 skipped；InMemorySaver 两独立进程证明状态丢失，SqliteSaver 三独立进程 start/status/resume 恢复同一快照；文件已发布但账本/Checkpoint 未完成时 `os._exit()` 后安全恢复，文件字节和修改时间不变。Approve/Reject/Modify、旧版本拒绝、输出路径及 NTFS junction 防护、完成产物被删改后拒绝重复审批、并发操作去重通过。CLI 的配置修改由 PENDING → 新审核版本 2 / FC → 批准 completed；文件仍为 MOCK DRAFT。说明、Mermaid、实际证据及限制见 [技术文档](docs/phase05_checkpoint_hitl.md) 和 [总结](docs/phase05_summary.md)。代码未提交，按第 15 节保持 DOING；未消耗真实模型 Token。
 
+**2026-10-14 收尾复核：** 已存在本地提交 `9260a54`，既有 164 项测试通过，Phase 5 标记 DONE。Phase 6 扩展业务模型时新增实际 SQLite 旧快照恢复测试：仅规范化新可选默认字段作比较，不修改原快照摘要或已生成文件，保留既有数值理由。历史未提交记录按原日期保留。
+
 ## 10. Phase 6 — 真实 Agentic RAG 集成
 
 **学习问题：** 如何让模型决定检索，同时让证据和权限保持可核验？
@@ -342,20 +351,22 @@ AGENT-DEMO/
 
 **必做任务**
 
-- [ ] 更新 `docs/rag_contract.md`，保存脱敏响应样本和实际错误场景。
-- [ ] 编写 RAGClient 与 `search_knowledge_base` 工具，限定服务地址、参数范围、超时及重试。
-- [ ] 将真实响应映射到 Evidence；缺失字段显式标注，不自行补造页码或原文。
-- [ ] 保留文档 ID、版本/哈希（可获得时）、原文片段、chunk_id、页码语义和适用型号/条件。
-- [ ] 对一般问候允许直接回答；设备合规判断必须经过证据流程。
-- [ ] 支持有限次数的查询改写和补充检索；证据不足后停止并返回待确认。
-- [ ] 测试空结果、接口故障、字段缺失、来源冲突和引用不匹配。
-- [ ] 加入检索内容中的提示注入样本，验证其不能改变工具权限。
-- [ ] 比较一次固定检索基线与 Agentic RAG 的任务效果、调用数和延迟。
-- [ ] 分别记录 Mock API 测试与真实服务端到端结果。
+- [ ] 更新 `docs/rag_contract.md`，保存脱敏响应样本和实际错误场景。（源码契约/副作用已更新；真实响应样本待安全服务。）
+- [x] 编写 RAGClient 与 `search_knowledge_base` 工具，限定服务地址、参数范围、超时及重试。（离线 API/框架实际运行通过。）
+- [ ] 将真实响应映射到 Evidence；缺失字段显式标注，不自行补造页码或原文。（代码和模拟契约验证完成；真实响应待验收。）
+- [x] 保留文档 ID、版本/哈希（可获得时）、原文片段、chunk_id、页码语义和适用型号/条件。（离线字段映射验证；缺失保留 None。）
+- [x] 对一般问候允许直接回答；设备合规判断必须经过证据流程。（脚本模型验证调用机制；真实 LLM 待验证。）
+- [x] 支持有限次数的查询改写和补充检索；证据不足后停止并返回待确认。（实际 create_agent 图、脚本响应验证上限。）
+- [x] 测试空结果、接口故障、字段缺失、来源冲突和引用不匹配。
+- [x] 加入检索内容中的提示注入样本，验证其不能改变工具权限。（执行白名单/消息角色/业务门禁验证，不宣称模型对所有注入免疫。）
+- [ ] 比较一次固定检索基线与 Agentic RAG 的任务效果、调用数和延迟。（六类离线控制实验完成，真实同题评测未完成。）
+- [x] 分别记录 Mock API 测试与真实服务端到端结果。（真实端到端明确 BLOCKED，没有冒充通过。）
 
 **交付：** RAGClient、真实引用样例、Agentic RAG 评测用例与报告。
 
 **验收：** 真实 PDF 引用可回查且页码解释明确；服务不可用时返回可诊断状态；无证据不生成 FC；旧项目未被修改。
+
+**2026-10-14 实际结果：** BLOCKED。实现和离线验证完成：311 passed / 0 failed / 1 skipped；原 Phase 0–5 的 164 项包含其中。服务契约及副作用更新、HTTP 客户端、受限 Tool、LangChain Agent、真实 Evidence 模型路径、原业务图及审核集成完成。pypdf 实际 TEST PDF 验证不等于真实服务 PDF 回查；真实 HTTP/PDF/同题评测都未通过。详见 [技术说明](docs/phase06_agentic_rag.md)、[总结](docs/phase06_summary.md)、[对比记录](eval/reports/phase06_baseline.md)。旧仓库保持只读，本次不启动、不索引、不修改旧数据。
 
 ## 11. Phase 7 — MCP 独立实验
 
@@ -648,6 +659,23 @@ AGENT-DEMO/
 - 建议 commit：`feat(agent): add persistent checkpoints and human review workflow`。
 - 下一任务：授权保存 Phase 5；Phase 6 先核实实际服务地址/权限、已发布设备资料、真实检索原文/页码/版本响应及调用副作用，当前进入真实集成的条件尚未满足。
 
+### 2026-10-14 — Phase 6 / HTTP Agentic RAG 开发与真实验收阻碍
+
+- 状态：BLOCKED，安全服务、模型凭据与授权设备 PDF/固定版本缺失；代码和离线验收已完成，不将 Mock 或 TEST PDF 当作真实 RAG 验收。Phase 5 实现提交 `9260a54` 已核实，收尾 DONE。
+- 核心理解：Agent 只选择检索查询；HTTP 服务返回原文；PDF/来源核验和限定数值抽取产生结构化 Evidence；既有 LangGraph 判断及审核负责最终结论。LLM 候选解释和有效 citation ID 不能代替业务规则或事实适用性。
+- 旧仓库调查：HEAD `d72c329`，只读 status 前后空；V3 Bearer `/retrieve` 返回原文、1-based 物理页、页内 chunk、document/version、独立评分和 metadata；没有 model 专用筛选或统一 score。源码确认启动会初始化 Catalog，检索/下载可写缓存、日志、WAL；未启动或调用。本机 8000/8011 未发现监听。已存在文档为员工/费用/安全/差旅资料，不能当设备 Datasheet。
+- 新增文件：`integrations/rag_client.py`、`integrations/citation_verifier.py`、`integrations/rag_evidence.py`、`tools/rag_search.py`、`agents/agentic_rag.py`、`evaluation/rag_benchmark.py`、`examples/phase06_agentic_rag.py`；Phase 6 客户端/Agent/PDF/Evidence/benchmark/旧快照测试及 opt-in 集成测试；`eval/agent_test_cases.json`、`eval/reports/phase06_baseline.md`、两份 Phase 6 文档。
+- 修改文件：Requirement/Evidence/WorkflowResult/Review 模型、compliance_graph/review_graph、pyproject/lock、README、.env.example、.gitignore（私有资料目录）及本路线图、rag_contract。所有既有功能保留，不复制旧检索引擎或创建新向量库。
+- 验证命令：虚拟环境 `pip --isolated ... install pypdf`、`pip --disable-pip-version-check install --no-index --no-build-isolation --no-deps -e .`；`-m pip check`；`-m pytest`；`-m ruff check .` / `format --check .`；Phase 6 `--offline --scenario supplement`、`--scenario greeting --chat`、`--mode benchmark`；真实配置入口 `--mode retrieve` 返回 BLOCKED/exit1；原 Phase 5 status 核验及旧 SQLite 快照批准/修改/重启回归。实际 CLI 和命令见技术文档。
+- 结果：完整 311 passed / 0 failed / 1 skipped（32.76s），跳过仅真实安全服务/PDF 验收；Ruff/format/pip check 通过；61 项锁定版本与实际安装一致。客户端58、Agent34、TEST PDF32、Evidence19、离线benchmark1、旧Checkpoint兼容2、真实关闭端口网络故障1均通过；既有164通过。LangChain1.4.4、LangGraph1.2.14、httpx0.28.1、pypdf6.20.1。模型使用和费用不可获得时明确标记 unavailable。
+- 最终复核：完整 pytest 再次为 311 passed / 0 failed / 1 skipped（30.09s）；Ruff check、64 文件格式检查和 pip check 通过。36 个本地文档链接可解析，敏感文件未进入跟踪范围，工作区仅为本阶段待提交变更。
+- 实际离线轨迹：supplement 为模型轮次3、工具检索2；greeting 检索0。六案例固定检索均1，Agent分别0/1/2/1/1/1，平均均1；离线 Agent 控制耗时均值15.67ms，不能推导真实性能优势。证据文件 `outputs/phase06/offline-benchmark-20261014-45261010.json` 保持忽略。冲突样例 completed 仅表示检索循环结束；真实业务缺绑定仍 PENDING，已验证两份不同 TEST PDF 来源冲突被规则识别。
+- 失败/修复：初次 Ruff 长行修复；真实配置入口安全服务确认缺失返回明确原因，不发送 HTTP。新增 Evidence 可选字段曾造成旧快照严格字典比较风险，改为校验后填默认字段比较，保留原摘要/原文件/原 MOCK 数值理由，实际旧任务仍 completed。真实路径在节点内禁止回退 MOCK；原文核验摘要防意外改动；模型预算失败传入业务故障，不能伪装 FC。
+- Git：`phase-4` / `9260a54`，本阶段未 add/commit/push；旧项目未修改；凭据、私有 PDF、outputs/runtime、运行库均忽略。
+- 限制：实际 HTTP、真实设备文档页码回查、真实模型自主检索与真实评测未执行。数值提取仅支持明确规格行；人工 DocumentBinding 必须确认型号、版本、配置及授权，不能自证资料厂商真实性。超时停止等待不等于取消；token 事后预算不撤销已计费调用。历史 Phase 3 缺口继续保留。
+- 建议 commit：`feat(agent): integrate bounded RAG retrieval with verified evidence workflows`。
+- 下一任务：提供安全独立服务与凭据、已授权固定设备 PDF/绑定/标准答案，完成 opt-in HTTP/PDF 验收及真实对比；Phase 10A 尚不能进入，Phase 7 为独立可选学习实验，不是业务主链依赖。
+
 ## 17. 架构决策记录（ADR）
 
 | ID | 日期 | 决策 | 原因 | 复审点 |
@@ -684,6 +712,16 @@ Phase 5 新增决策（2026-10-13）：
 
 复审点：Phase 6 真实服务调用副作用与证据来源、Phase 9 身份权限和部署文件系统、毕业项目的正式 SOC 审核。
 
+Phase 6 新增决策（2026-10-14）：
+
+- ADR-022：仅使用现有 V3 HTTP `/retrieve`，配置固定 origin、Bearer、KB 和 caller 文档范围；不登录、不启动旧工程、不复建检索引擎。真实副作用安全条件不满足时保持 BLOCKED。
+- ADR-023：复用原业务模型和图，real_rag 模式禁止 MOCK 混入或回退。人工型号/文档/版本/哈希/条件绑定 + 实际 PDF 引用核验 + 限定字面规格抽取，缺失或不支持格式保持 PENDING，不把 LLM 摘要作为数值证明。
+- ADR-024：create_agent 加应用 Middleware，分别限制模型调用、搜索工具尝试、HTTP 重试、token 和期限；事件不记录凭据/全文，超时不宣称取消或成本撤销。工具白名单只有 search，结构化输出通道不增加业务执行权限。
+- ADR-025：新 Evidence 默认字段向后兼容；旧 Checkpoint 比较时规范化可选默认值，原快照摘要与既有产物保持不变。真实证据审核沿用独立版本和操作账本，仍输出 DRAFT。
+- ADR-026：offline_mock/TEST PDF、实际网络故障、真实 HTTP、真实 PDF、真实效果评测分别记录；缺真实条件不填充成功率或声称 Agent 优于固定流程。
+
+复审点：解除 Phase 6 真实验收阻碍、Phase 10A 正式业务口径、Phase 9 服务身份授权与部署。
+
 ## 18. 官方资料与版本核实
 
 - LangChain Agent：https://docs.langchain.com/oss/python/langchain/agents
@@ -696,4 +734,4 @@ Phase 5 新增决策（2026-10-13）：
 
 本路线制定时核对了 LangChain Agent、LangGraph 持久化与中断文档。其他库在引入阶段再核实官方文档和兼容版本；链接内容更新不代表本地依赖自动升级。
 
-**Phase 4 DONE；Phase 5 技术验收通过，待授权版本提交。Phase 6 真实服务与资料前提尚未核实，前阶段覆盖差异保留，推送仍需另行确认。**
+**Phase 4–5 DONE；Phase 6 BLOCKED（开发与离线验证完成，真实服务/PDF/评测未验证）。先解除真实验收阻碍，再推进 Phase 10A；Phase 7 独立可选，提交和推送需按授权执行。**

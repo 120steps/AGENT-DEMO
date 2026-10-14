@@ -8,6 +8,7 @@ venv/
 *.pem
 *.key
 credentials*.json
+data/private/
 
 # Python and tooling output
 __pycache__/

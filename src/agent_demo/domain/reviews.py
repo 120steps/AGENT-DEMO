@@ -42,11 +42,11 @@ class ReviewResponse(BaseModel):
 
 class ProposedAction(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    kind: Literal["write_mock_soc_draft"] = "write_mock_soc_draft"
+    kind: Literal["write_mock_soc_draft", "write_soc_draft"] = "write_mock_soc_draft"
     operation_id: str
     target_path: str
     document_status: Literal["DRAFT"] = "DRAFT"
-    source_type: Literal["mock"] = "mock"
+    source_type: Literal["mock", "real_rag"] = "mock"
 
 
 class ReviewSnapshot(BaseModel):

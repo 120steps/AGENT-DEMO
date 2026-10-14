@@ -131,3 +131,86 @@ Phase 6 前仍需确认：
 **Phase 6 真实集成尚未验证。** 型号映射、业务资料版本、数据是否已经就绪，以及启动/调用副作用仍是进入真实集成前必须处理的事项。
 
 旧仓库 Git 只读状态检查使用 `--no-optional-locks` 和命令级 `-c safe.directory=D:/workspace/AI/rag-demo`，未修改全局配置或旧仓库引用。调查前输出为空；交付前再次核对并在新工程的 Phase 0 验证记录中记录结果。
+
+## 8. Phase 6 重新核实（2026-10-14）
+
+本节补充当前事实，保留前面的 Phase 0 调查历史。旧仓库仍是 `D:\workspace\AI\rag-demo`，本次仅读取源码、README、文件名和 Git 状态；没有导入旧项目、读取 `.env`/凭据、启动服务、访问数据库、运行旧测试或发送 HTTP 请求。
+
+### 8.1 当前服务状态与实际检查
+
+执行的只读检查：
+
+```powershell
+git --no-optional-locks -c safe.directory=D:/workspace/AI/rag-demo -C D:/workspace/AI/rag-demo status --short
+git --no-optional-locks -c safe.directory=D:/workspace/AI/rag-demo -C D:/workspace/AI/rag-demo log -1 --format='%h %s'
+netstat -ano -p TCP
+```
+
+- Git 工作区状态输出为空；当前提交为 `d72c329 update readme.md`。
+- `netstat` 未发现本机 `8000` 或 `8011` 的 `LISTENING` 记录；`Get-NetTCPConnection` 查询也未返回这两个端口的监听项。
+- 使用新工程 `.venv\Scripts\python.exe` 和标准库 socket，对 `127.0.0.1:8011`、`127.0.0.1:8000` 分别执行 TCP-only 检查（0.5 秒超时），`connect_ex` 均返回 `10035`，在检查期限内未建立连接。该值不是 HTTP 状态码，也不能作为真实服务响应或鉴权失败证据。
+- V3 README 第 39 行仍给出 `127.0.0.1:8011`；`docker-compose.yml` 第 7 行仅绑定本机 `8011`。没有发现当前可请求的部署实例；其他机器、容器网络或未公开端口的状态未知。
+
+这次没有真实 `/retrieve` 响应、真实 source/page 回查或登录成功证据。**真实旧 RAG 集成验收仍为 BLOCKED，离线契约测试不能替代这项验收。**
+
+### 8.2 当前 V3 契约与源码定位
+
+以下行号均相对于旧仓库 `rag_langchain_native/`，对应本次读取的 `d72c329`。
+
+| 契约 | 已核实源码 | 客户端边界 |
+|---|---|---|
+| `POST /auth/login` | `api.py:54`、`api.py:307`、`security.py:176` | tenant_id/username/password，返回 access_token/token_type；未读取或取得当前可用凭据 |
+| `POST /retrieve` | `api.py:60`、`api.py:341` | Bearer 认证；question、knowledge_base_id、top_k，以及可选 document_id/version_id/classification/conversation_id；没有按设备型号查询的专用参数 |
+| 正常检索响应 | `chain.py:629`、`enterprise.py:161` | documents 原文片段和查询处理字段；正常延迟为 latency_ms，另追加 tenant_id/knowledge_base_id/authorization_epoch/contextual_query |
+| 空授权结果 | `enterprise.py:108`、`enterprise.py:188` | documents=[]、refused=true、refusal_reason=no_authorized_documents；删除 answer，延迟字段为 retrieval_latency_ms；不能解释为设备 NC |
+| 文档片段 | `retrieval.py:537` | document/source/page/chunk_id/document_id/version_id/chunk_uid/metadata；字段存在于序列化代码不代表实际索引中值必定非空 |
+| 分数字段 | `retrieval.py:564` | vector_distance/fusion_score/rerank_score 独立保留；没有统一 score，不把 distance 当概率 |
+| PDF 页码 | `ingestion.py:72` | loader 的 0-based page 加一，代表 PDF 物理页；印刷页码映射未提供 |
+| 文档版本列表 | `api.py:472`、`lifecycle.py:330`、`catalog.py:142` | 可返回版本记录中的 content_hash/version_number；当前未请求真实列表；version_id 不等于产品手册修订号 |
+| 内容哈希 | `lifecycle.py:181`、`lifecycle.py:255` | 上传 bytes 的 SHA-256 存入 Catalog；企业 chunk metadata 构造没有加入 content_hash，检索序列化没有专门返回文档哈希 |
+| 下载 | `api.py:529`、`lifecycle.py:333` | 按 document_id 和可选 version_id 返回 PDF；下载路径在服务端限制于 upload_dir；客户端不得把 source 当可执行的本地路径 |
+| `/chat` 与检索区别 | `api.py:361`、`enterprise.py:209` | 生成回答，并可能写会话；路由不转发 top_k；Phase 6 原文证据工具不应拿 answer 代替 document |
+
+`QueryRequest` 的具体限制仍为：question 1–4000 字符，knowledge_base_id 默认 `default`，top_k 默认 10、范围 1–50，其他筛选字段可空。实际部署还能用 `max_query_chars` 收紧问题长度。租户/角色来自验证 Token 后的服务端用户记录，客户端不能提交身份字段替代认证（`api.py:222`、`security.py:202`）。
+
+检索结果没有保证提供设备 model、属性 actual_value、单位 unit 或适用配置。必须在新工程校验并保留“未知”，不能从 source 文件名或检索相似度补造这些业务字段。使用 document_id/version_id 过滤前，也需要明确的型号—允许文档/版本映射和服务端授权；旧服务还验证输出 version_id 属于当前授权版本集合（`enterprise.py:129`）。
+
+### 8.3 启动和请求的写入副作用
+
+| 操作 | 已核实行为 | 本次处理 |
+|---|---|---|
+| 导入或启动 V3 API | `api.py:560` 调用 create_app；第 113 行构建 Catalog；`catalog.py:51` 创建目录，第 60 行 WAL，第 189 行执行 schema | 没有导入或启动 |
+| `GET /health` | `api.py:181` 豁免自定义观测中间件；第 258 行仅返回设置中的状态、版本、collection 和 auth_configured；无业务 DB/索引调用 | 已知运行实例的 handler 可作轻量探测，但当前没有建立连接，未发送请求；外部访问日志行为未知 |
+| `GET /ready` | `api.py:300` 打开 Catalog 连接，第 302 行 mkdir runtime；请求仍经过观测 | 不作为旧仓库只读探测 |
+| `POST /retrieve` | `enterprise.py:49` 懒初始化 VectorStore；`vectorstore.py:54` 准备运行目录；`embedding.py:93` 可创建模型缓存；QueryProcessor 第 191 行准备目录，启用 rewrite/expansion 时可写 JSON cache | 没有请求；不能视为无文件写入的“读取” |
+| 登录、检索、版本列表、下载 | `api.py:178` 请求观测；默认 `observability/config.py:25` enabled=true、第 26 行 exporter=local；`observability/core.py:383` 写请求 JSONL，metric/trace 也可能写文件 | 默认配置下不能保证旧仓库零写入；没有请求 |
+| 首次版本列表/下载 | `api.py:201` 懒构造 Lifecycle；`lifecycle.py:93` ensure_runtime_dirs、第 94 行 create_vectorstore，即使最终业务方法只读 Catalog/PDF | 没有请求；不能因 HTTP GET 就推定无副作用 |
+
+源码默认关闭 query rewrite 和 expansion（`config.py:157`），默认启用 reranker（第 150 行）。这些是源码默认值，不是已运行实例的实际配置；本次未读取 `.env` 或进程凭据。没有 conversation_id 可减少上下文改写成本，仍不消除模型加载、缓存、Catalog WAL 和观测写入。
+
+**在“RAG-DEMO 绝不修改”的约束下，不自动启动旧服务，也不假定可以安全调用默认 `/retrieve`、登录或下载。** 后续真实验收需要已经准备好的、具备明确访问授权的独立 RAG 服务，以及对该服务请求副作用的确认；也可以由用户另行提供或授权完全隔离的服务实例。不能为本次调查安装旧依赖、改旧配置或迁移数据库。
+
+### 8.4 资料与未完成项
+
+仅列出 `data/pdf` 文件名，当前有 `employee_handbook.pdf`、`expense_policy.pdf`、`security_policy.pdf`、`travel_policy.pdf`。未打开 PDF、未查询 Catalog/索引，不能推定它们已发布或对当前用户可见，也不能把公司制度资料作为设备规格证据。
+
+真实验收仍缺：可访问服务 URL、可用且授权的 Bearer 凭据、知识库/文档/版本范围、目标设备资料与型号映射、返回 metadata 完整性、原始 PDF 的 source/page 回查结果。错误路径仅静态核实：401、403、404、409、413、422、429（Retry-After）、503，以及可能的未处理 500；真实错误体、代理及部署行为未验证。
+
+新工程可以先实现有限超时、明确错误类别、严格证据字段校验和 Mock HTTP 集成测试；这些验证应分别注明“离线契约/模拟服务”，不标记真实 RAG 访问成功。
+
+### 8.5 新工程的 PDF 引用核查验证
+
+新增 `src/agent_demo/integrations/citation_verifier.py:verify_citation`：调用方提供 PDF bytes 或明确允许目录内的 Path、期望的整份 PDF SHA-256、source、quote、page，并明确声明 `page_semantics="pdf_physical_1_based"`。代码只读给定文件，使用 pypdf 的 `PdfReader` 和 `reader.pages[page - 1].extract_text()`，按实际 PDF 物理页核查；不下载文件、不猜印刷页偏移、不补造引用 ID、不调用 LLM/OCR。
+
+引用验证同时要求哈希匹配、物理页存在、原文片段出现在该页。匹配只合并空白，不修改大小写、标点或数值。缺哈希、未知页码语义、引用页越界、引文不匹配、无可提取文字、加密或解析失败都会保留明确的未验证结果。source 标签和文档/版本授权由上游契约及映射校验，PDF 检验本身不把任意 source 字符串认定为可信身份，也不证明型号适用或业务 FC。
+
+实际执行：
+
+```powershell
+.venv\Scripts\python.exe -m pytest tests/test_phase06_citations.py -q
+.venv\Scripts\python.exe -m ruff check src/agent_demo/integrations/citation_verifier.py tests/test_phase06_citations.py
+```
+
+结果：**32 passed**，Ruff 全部通过；实际安装并执行的解析器为 **pypdf 6.20.1**。测试使用手工构造的有效两页 TEST PDF，真实解析页面并验证内容、哈希、页码、空白归一化、数值不匹配、加密文件及允许路径范围。需要落盘的测试仅写 pytest 临时目录，没有读取旧工程 PDF 或改动旧仓库。
+
+**这证明新工程能够验证调用方给出的 TEST PDF 引用，不证明真实 RAG 的 source/page 已通过回查。** 真实服务原文与授权 PDF 的对应关系仍等待前述 BLOCKED 项解除。实现接口参考 [pypdf 官方文本提取文档](https://pypdf.readthedocs.io/en/stable/user/extract-text.html) 与 [PdfReader API](https://pypdf.readthedocs.io/en/stable/modules/PdfReader.html)。
