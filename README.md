@@ -1,6 +1,8 @@
 # AGENT-DEMO
 
-这是从原生工具调用逐步学习受控 Agent 工作流的独立 Python 工程。Phase 0、Phase 1 已验收并完成授权本地提交；Phase 1 包括手动 Tool Calling、两个本地工具、离线与真实模型验证。当前进度见路线图。尚未实现持续 Agent Loop、LangChain、LangGraph 或 Web API。
+这是从原生工具调用逐步学习受控 Agent 工作流的独立 Python 工程。现有原生 Agent Loop、LangChain Agent、LangGraph 业务判断、持久化恢复与人工审核，以及 HTTP Agentic RAG 适配。Phase 6 开发与离线验证完成，真实 RAG/PDF/模型评测保持 BLOCKED；Phase 2/3 的既有验收缺口保留，当前准确进度见路线图。Web API、MCP 和正式 SOC Excel 尚未实现。
+
+第一次接触本项目，建议先读 [工程入门：整体框架、重要模块与逐步实现过程](docs/project_guide.md)，其中包含业务例子、源码阅读顺序、常用模板和无需密钥的运行命令。
 
 学习顺序和唯一进度入口见 [AGENT_LEARNING_ROADMAP.md](AGENT_LEARNING_ROADMAP.md)。旧 RAG 工程的静态接口调查见 [docs/rag_contract.md](docs/rag_contract.md)。
 
@@ -10,7 +12,7 @@
 
 当前选择 CPython 3.11（本机为 3.11.0）、Windows 10 x64。本机只有这一套真实解释器；`py -0p` 未发现注册版本，因此使用 `python`，不依赖 `py` 启动器。
 
-已查询 PyPI 发布元数据：FastAPI 0.143.0、LangChain 1.4.4、LangGraph 1.2.14、Pydantic 2.14.0、pytest 9.1.1 的 Python 要求均包含 3.11。这里只证明解释器版本满足声明；这些框架尚未安装，后续阶段仍需验证依赖组合。元数据查询日期为 2026-10-10。
+Phase 0 于 2026-10-10 查询过 FastAPI、LangChain、LangGraph、Pydantic 和 pytest 的发布元数据，其 Python 要求包含 3.11。后续阶段已经实际安装并验证 LangChain、LangGraph、Pydantic、模型 SDK、SQLite Checkpointer 和 RAG 客户端依赖；当前声明见 `pyproject.toml`，实际固定版本见 `requirements-lock.txt`。FastAPI 服务仍属于后续阶段。
 
 3.11.0 是较早补丁版本；当前不改动全局 Python。以后升级到新的 3.11 补丁版本时应重建独立环境并重跑检查。`pyproject.toml` 暂限定 3.11 系列，其他系列未验证。
 
