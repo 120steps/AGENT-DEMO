@@ -1,6 +1,6 @@
 # Phase 8 总结：统一Evaluation、安全门槛与可观测性
 
-日期：2026-10-17。状态：本地技术验收通过，阶段收尾待授权代码版本；真实LLM/RAG质量基线BLOCKED。当前进度以[路线图](../AGENT_LEARNING_ROADMAP.md)为准，细节见[技术说明](phase08_evaluation.md)。
+日期：2026-10-17。状态：Phase8本地交付范围DONE，用户授权后实现版本`0fb559e`已建立；真实LLM/RAG质量基线仍BLOCKED。当前进度以[路线图](../AGENT_LEARNING_ROADMAP.md)为准，细节见[技术说明](phase08_evaluation.md)。
 
 ## 1. 这一阶段做了什么
 
@@ -44,4 +44,4 @@ Trace默认不存Prompt、参数、文档正文或认证信息；调用ID匿名�
 
 ## 6. 下一阶段怎么接着做
 
-先形成授权本地版本。业务主线需要补齐Phase2/3控制边界，准备安全RAG、固定PDF及真实重复评测；真实证据闭环通过后再推进Phase10A，之后才是Phase9A服务化。不会因为本地Evaluation通过就跳过这些前提。
+授权本地实现版本已形成，完成记录另提交，未推送。业务主线需要补齐Phase2/3控制边界，准备安全RAG、固定PDF及真实重复评测；真实证据闭环通过后再推进Phase10A，之后才是Phase9A服务化。不会因为本地Evaluation通过就跳过这些前提。
