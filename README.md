@@ -1,6 +1,6 @@
 # AGENT-DEMO
 
-这是从原生工具调用逐步学习受控 Agent 工作流的独立 Python 工程。现有原生 Agent Loop、LangChain Agent、LangGraph 业务判断、持久化恢复与人工审核，以及 HTTP Agentic RAG 适配。Phase 6 开发与离线验证完成，真实 RAG/PDF/模型评测保持 BLOCKED；Phase 2/3 的既有验收缺口保留，当前准确进度见路线图。Web API、MCP 和正式 SOC Excel 尚未实现。
+这是从原生工具调用逐步学习受控 Agent 工作流的独立 Python 工程。现有原生 Agent Loop、LangChain Agent、LangGraph 业务判断、持久化恢复与人工审核、HTTP Agentic RAG 适配，以及独立 MCP stdio 工具实验。Phase 6 真实 RAG/PDF/模型评测保持 BLOCKED；Phase 2/3 既有验收缺口保留，当前准确进度见路线图。Web API 和正式 SOC Excel 尚未实现。
 
 第一次接触本项目，建议先读 [工程入门：整体框架、重要模块与逐步实现过程](docs/project_guide.md)，其中包含业务例子、源码阅读顺序、常用模板和无需密钥的运行命令。
 
@@ -162,6 +162,24 @@ Checkpoint 和操作账本分别位于 `runtime/phase05/`；仅批准后在 `out
 真实 opt-in 测试还需要 `AGENT_DEMO_RAG_BINDINGS_JSON`（新工程下 JSON 路径）和 `AGENT_DEMO_RAG_TEST_QUERY`；当前缺安全服务及资料，该验收明确跳过为 BLOCKED。401/403 返回 auth_failed，连接/超时错误有独立错误码，空或不充分证据保留 PENDING。不要用启动或重建旧库解决配置阻碍。
 
 详见 [当前契约](docs/rag_contract.md)、[Phase 6 技术说明](docs/phase06_agentic_rag.md)、[总结](docs/phase06_summary.md)和[对比报告](eval/reports/phase06_baseline.md)。私有 PDF/绑定/用例放入已忽略的 `data/private/`，运行证据和数据库继续保持忽略。
+
+## Phase 7：MCP 独立 stdio 实验
+
+官方 SDK `mcp==2.3.0`（v2），本机实际协议 `2026-07-28`。工具仍复用原 Dispatcher，仅暴露 add 与 MOCK 规格。以下命令自动启动并回收本地 Server，不需要另开窗口：
+
+```powershell
+# 无 LLM：真实 MCP 子进程发现和调用。
+.\.venv\Scripts\python.exe examples\phase07_mcp_client.py
+# 固定脚本模型：真实 create_agent + MCP stdio，非真实模型验收。
+.\.venv\Scripts\python.exe examples\phase07_mcp_agent.py
+.\.venv\Scripts\python.exe -m pytest tests\test_phase07_mcp.py -q
+# 仅在当前进程已有模型 Key 时进行真实 Gemini 验证。
+.\.venv\Scripts\python.exe examples\phase07_mcp_agent.py --live
+```
+
+MCP stdout 专用于协议，Server 日志写 stderr。默认 Server 由当前虚拟环境 Python 启动，只继承 SDK 允许的环境及显式非敏感配置，不自动读取旧工程密钥。远程 HTTP、认证和多服务器管理未实现；本地实验不改变 RAG HTTP 集成。
+
+详见 [技术说明](docs/phase07_mcp.md) 和 [阶段总结](docs/phase07_summary.md)。Windows 固定依赖包含 pywin32，不能直接作为 Linux lock 使用。
 
 ## Git
 
