@@ -181,6 +181,21 @@ MCP stdout 专用于协议，Server 日志写 stderr。默认 Server 由当前�
 
 详见 [技术说明](docs/phase07_mcp.md) 和 [阶段总结](docs/phase07_summary.md)。Windows 固定依赖包含 pywin32，不能直接作为 Linux lock 使用。
 
+## Phase 8：Evaluation、安全与本地Trace
+
+复用现有Agent/业务图/审核/RAG/MCP，统一48条用例；当前44条可执行，3条真实LLM和1条真实RAG用例因环境未齐BLOCKED，不计通过率。
+
+```powershell
+.\.venv\Scripts\python.exe examples\phase08_evaluation.py
+.\.venv\Scripts\python.exe examples\phase08_evaluation.py --case rag-forged --no-benchmarks
+.\.venv\Scripts\python.exe examples\phase08_evaluation.py --trace outputs\phase08\某次运行\trace.jsonl --run-id 实际run_id
+.\.venv\Scripts\python.exe -m pytest tests\test_phase08_evaluation.py tests\test_phase08_security.py -q
+```
+
+每次运行创建独立outputs目录，报告包含真实分母、环境/源码Hash与BLOCKED原因。JSONL默认不记录Prompt、文档正文、参数或认证信息。`--include-live`仅在当前进程已安全配置条件时调用真实集成，绝不启动旧RAG；无条件时记录BLOCKED。`--save-baseline`只允许首次创建固定快照，已存在时拒绝覆盖。
+
+详见[技术说明](docs/phase08_evaluation.md)、[阶段总结](docs/phase08_summary.md)、[基线报告](eval/reports/phase08_baseline.md)。CI运行离线Evaluation和安全回归，不自动调用付费模型；远端CI本次未验证。
+
 ## Git
 
 提交前检查 `git status --short`、`git ls-files` 和忽略规则。`.env`、虚拟环境、缓存、日志、runtime、outputs、数据库不提交。Phase 0 已经用户授权完成本地提交，尚未推送；后续提交和推送按用户授权执行。

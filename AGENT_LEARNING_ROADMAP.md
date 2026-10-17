@@ -2,9 +2,9 @@
 
 > 版本：v2.0，实施版<br>
 > 更新日期：2026-10-17<br>
-> 当前状态：**Phase 7 DONE — MCP stdio、Agent 集成、回归与授权本地版本完成；Phase 6 真实验收仍 BLOCKED**<br>
-> 当前阶段：**独立 MCP 实验已收尾；保留 Phase 2/3 缺口及 Phase 6 服务/PDF/真实评测阻碍**<br>
-> 下一任务：**Phase 8 先汇总已有评测用例、验证分类和错误；另按路线图补齐 Phase 2/3，并在安全服务及资料就绪后解除 Phase 6 阻碍。不推送。**<br>
+> 当前状态：**Phase 8 DOING — 本地统一评测、安全门槛、Trace及基线通过；待授权版本收尾，真实质量样例BLOCKED**<br>
+> 当前阶段：**48条统一用例，44实际通过/4真实阻碍；395项回归通过，Phase 6真实验收仍BLOCKED**<br>
+> 下一任务：**核查并授权Phase 8本地版本；随后补齐Phase 2/3控制缺口，准备安全RAG及固定PDF，执行真实基线。不进入Phase 9/10，不推送。**<br>
 > 唯一进度入口：本文件。后续按本文任务与验收证据推进。<br>
 > 边界：AGENT-DEMO 独立开发；RAG-DEMO 只读检查，未经明确授权不修改。
 
@@ -15,6 +15,12 @@
 ### 0.1 已确认的工程事实
 
 截至 2026-10-17 的本地检查：
+
+- Phase8开始时分支`phase-4`、HEAD `e82f69a`，工作区干净，Phase7实现与完成记录已存在。本次未自动提交/推送。
+- Phase8统一48条用例，44条实际执行PASS、3条真实LLM与1条真实RAG/PDF因缺配置BLOCKED；不计入通过率。工具16/18执行成功，状态18/18正确，三项安全违规均0，仅代表明确测试范围。
+- 完整395 passed / 0 failed / 1 skipped（78.25s），新增34与原361全部通过；Ruff/format/pip check通过，既有76项依赖不变。Trace、运行历史及pytest XML位于outputs，脱敏基线位于eval/reports，旧RAG保持只读。
+
+以下为Phase7收尾时的同日记录：
 
 - 当前分支 `phase-4`；本次开始时 HEAD `378f948`、工作区干净，已包含 Phase 6 提交 `aaf6c8f`。Phase 7 经用户明确授权形成实现提交 `2f6fd60`，完成记录另提交；不改变既有历史，不推送。
 - 官方 MCP Python SDK 2.3.0 实际安装兼容当前 Python 3.11.0、Pydantic 2.14.0、LangChain 1.4.4。原61个依赖版本未变，新增15项，固定清单76项；本地 stdio 实际协商到 2026-07-28。
@@ -77,7 +83,7 @@
 | 5 | Checkpoint、恢复、人工审核 | DONE | 实现提交 9260a54；164 项回归及既有审核快照兼容复核通过 | 2026-10-14（复核） |
 | 6 | 真实 Agentic RAG | BLOCKED | HTTP/Tool/真实证据路径与离线评测机制完成；311 passed，真实服务/PDF/实测缺失 | — |
 | 7 | MCP 独立实验 | DONE | v2真实stdio、Agent与50项专项通过；授权实现提交2f6fd60 | 2026-10-17 |
-| 8 | 评测、安全、可观测性汇总 | TODO | 回归报告和错误诊断 | — |
+| 8 | 评测、安全、可观测性汇总 | DOING | 48用例、44PASS/4BLOCKED，安全/Trace/基线及395回归；待本地版本 | — |
 | 9 | 最小 API 与部署完善 | TODO | Agent API、容器化、部署验证 | — |
 | 10 | RFP → SOC 毕业项目 | TODO | 可审核、可追溯的 Excel 输出 | — |
 
@@ -405,14 +411,19 @@ AGENT-DEMO/
 
 **必做任务**
 
-- [ ] 汇总 `eval/agent_test_cases.json`；每条记录 ID、输入、预期事实/状态、必要与禁止动作、证据和数据来源。
-- [ ] 分开报告离线确定性测试、真实模型评测、真实 RAG 集成。
-- [ ] 记录模型标识、可用版本信息、SDK/依赖、提示版本、资料版本、参数、日期和代码版本。
-- [ ] 汇总任务成功率、工具成功率、误判、引用准确性、平均调用数、延迟和 token；成本按可核实价格估算。
-- [ ] 对关键真实模型样例重复运行，记录波动和样本规模；不声称完全确定性。
-- [ ] 扩展未知工具、错误参数、路径越界、注入、服务故障、重试耗尽和重复审批用例。
-- [ ] 保留敏感字段脱敏后的轨迹，能定位到模型请求、工具调用和节点。
-- [ ] 输出基线报告、失败案例和下一步改进项。
+- [x] 汇总 `eval/agent_test_cases.json`，保留旧六案例并增加48条结构化统一用例及各字段。
+- [x] 分开报告offline_mock、mcp_stdio、mcp_memory、real_llm、real_rag；未运行真实用例BLOCKED，不计通过率。
+- [x] 记录UTC时间、Git/dirty状态、Python/依赖、模型标记、控制器/Prompt Hash、数据集Hash与资料范围；未知实际模型/真实文档不推断。
+- [x] 实际计算任务/工具/状态/引用、调用数及可观测延迟；usage缺失与价格未核实保持unavailable，不捏造费用。
+- [ ] 关键真实模型三次代表性重复测量：当前无Key，三条BLOCKED，波动未测；延至真实条件具备后，不标PASS。
+- [x] 扩展未知工具、参数、预算、有限重试、路径与覆盖保护、注入、服务故障、版本/重复审核与幂等验证，实际执行权限及文件副作用。
+- [x] 统一payload-free JSONL及run/thread/调用ID关联，使用原event_sink与SDK Callback定位Node/Model/Tool，导入事件明确时间含义。
+- [x] 输出非覆盖基线JSON/Markdown，保留初次43/44失败产物，提供回放、分母和下一步限制。
+- [x] CI增加离线Evaluation硬门槛；安全回归包含于完整pytest，已本地验证退出码；未运行远端CI。
+- [x] 生成技术文档与固定阶段总结。
+- [ ] 经本阶段授权形成本地实现版本和完成记录；不推送。
+
+**2026-10-17 本地验收：** 48条中44PASS、4BLOCKED；执行工具16/18成功、状态18/18正确、接受引用成员/来源6/6，TEST PDF候选1/2（错页被拒绝），真实PDF指标无样本。未授权写入/无证据FC/接受伪造引用均0。完整395 passed / 0 failed / 1 skipped；专项34passed。真实质量重复测量延期的原因和影响见ADR-035，不把本地控制结果当作真实模型质量。
 
 **硬性验收：** 离线控制逻辑测试全部通过；选定测试集中未授权写入、无证据 FC、伪造引用为 0；所有这些结果必须标注测试范围，不能推广成对任意输入的绝对保证。
 
@@ -530,7 +541,7 @@ AGENT-DEMO/
 - 总结不替代验证报告、接口契约、学习日志或提交授权；已有详情通过链接引用。
 - 生成文档后核查引用、图与代码一致性、验证结果和敏感信息，再按用户授权处理提交。
 
-当前阶段总结：[Phase 0](docs/phase00_summary.md)、[Phase 1](docs/phase01_summary.md)、[Phase 2](docs/phase02_summary.md)、[Phase 3](docs/phase03_summary.md)、[Phase 4](docs/phase04_summary.md)、[Phase 5](docs/phase05_summary.md)、[Phase 6](docs/phase06_summary.md)、[Phase 7](docs/phase07_summary.md)。总结保留各自快照，存在总结不等于当前阶段DONE，实时进度以上表为准。
+当前阶段总结：[Phase 0](docs/phase00_summary.md)、[Phase 1](docs/phase01_summary.md)、[Phase 2](docs/phase02_summary.md)、[Phase 3](docs/phase03_summary.md)、[Phase 4](docs/phase04_summary.md)、[Phase 5](docs/phase05_summary.md)、[Phase 6](docs/phase06_summary.md)、[Phase 7](docs/phase07_summary.md)、[Phase 8](docs/phase08_summary.md)。总结保留各自快照，存在总结不等于当前阶段DONE，实时进度以上表为准。
 
 ## 16. 学习日志
 
@@ -716,6 +727,26 @@ AGENT-DEMO/
 - 验证沿用已完成的361 passed / 0 failed / 1 skipped、Ruff/format/pip check及真实stdio/清理证据。本次仅Git提交和文档状态变化，不声称重新运行完整测试。
 - 下一任务：Phase8先汇总已有评测用例与离线/真实验证分类；Phase2/3缺口及Phase6真实验收继续单独跟踪。未推送，不扩大授权。
 
+### 2026-10-17 — Phase 8 / Evaluation、Security与Observability
+
+- 状态：DOING，本地技术验收通过，等待本阶段授权版本；真实LLM三次代表用例与真实RAG/PDF样例BLOCKED，原因是当前进程没有模型Key、安全服务与资料绑定。Phase6及旧控制缺口不变。
+- 核心理解：任务Oracle优先用结构化结果、实际动作及副作用；拒绝攻击可算用例PASS，但不算工具执行成功。BLOCKED/SKIPPED不进入通过率分母，安全三项单独门控。
+- 实现：Pydantic统一用例、Runner、Oracle/安全门槛、显式分母指标、非覆盖JSON/Markdown、真实用例条件检查与既有集成入口、本地JSONL/SDK Callback、三组脚本/协议Benchmark、失败回放及CI离线检查；未改稳定业务或重写Agent。
+- 文件：新增evaluation/{models,fixtures,scenarios,live,runner,metrics,security,report,benchmarks}.py、observability.py、examples/phase08_evaluation.py、两份Phase8测试、技术文档及总结、eval/reports/phase08_{baseline.md,results.json}；修改统一数据集、CI、README和路线图。
+- 用例：tool11（含3真实）、compliance11、review11、rag10（含1真实）、mcp5，共48；39 offline_mock、4真实stdio、1内存SDK通过，4真实条件阻碍。真实结果不假设、不进入离线通过数。
+- 实际命令：`.venv\Scripts\python.exe examples/phase08_evaluation.py`、`--no-benchmarks`、`--include-live --save-baseline`；`-m pytest tests/test_phase08_evaluation.py tests/test_phase08_security.py -q`；完整`-m pytest -q --tb=short --junitxml outputs/phase08/pytest-20261017.xml`；Ruff check/format、pip check。未新增依赖，原76项清单保留。
+- 结果：专项34 passed（21.70s）；完整395 passed / 0 failed / 1 skipped（78.25s），原361全部通过。唯一pytest跳过仍Phase6真实环境，不与Evaluation4个BLOCKED混算。Ruff/87文件格式/pip check通过。
+- 正式基线：44/44符合预期；24工具请求、18实际执行、16成功/2预设失败、3未授权拒绝/2参数拒绝，另有预算拒绝；状态18/18、FC/NC错判0、复合错误0、冲突2/2。接受引用成员/来源6/6，候选TEST PDF1/2（负向错页被拒绝），真实PDF无样本；Token/费用unavailable。工具计数范围为Agent及MCP边界，业务图内部确定性辅助调用按Node观察，不算模型工具请求。
+- 安全：在本用例集内，未授权写入、无足够关联证据FC、被接受伪造/来源不一致引用均0；反向测试证明即便结果贴PASS，任一关键违规仍使硬门槛失败。恶意文档不能执行额外工具、不能跳审核或制造FC；无真实LLM抗注入普遍保证。
+- Benchmark：脚本计划查规格→加法52，原生/框架各3样本，均值约2.13/16.44ms；直接Tool/MCP warm各3，约0.65/3.21ms，启动1194.30ms另列；固定与Agentic检索复用六场景，平均次数均1。同机同时回归、负载非受控，均不能推断真实性能/模型优劣。
+- 证据：[基线Markdown](eval/reports/phase08_baseline.md)、[JSON](eval/reports/phase08_results.json)；正式运行`outputs/phase08/20261017T093232Z-d137f986/`及完整pytest XML。元数据Git=e82f69a及dirty状态，数据集SHA256=76b832a1f5c0bcb28c435ef779b910f51a95b317eb0dbca856f40b6a8cf19dee，源码/Prompt Hash另存JSON。
+- 失败历史：首次43/44，mcp-untrusted夹具无描述先触发invalid_discovery；补齐描述后进入原预期的invalid_response，没有降低门槛。初次运行`outputs/phase08/20261017T092126Z-3618d3be/`保留。用例动作预期补强后同步修正评测器负向测试夹具，重新完整回归通过；未覆盖历史失败报告。
+- 可观测性：原生实时事件、实际SDK节点Callback、MCP调用及RAG既有事件导入；导入时间明确标记，不伪造发生时间。默认不存Prompt/参数/文档全文/认证头，ID稳定匿名化。评测独立临时目录及SQLite，不污染既有Checkpoint。
+- CI：新增离线Evaluation、安全硬门槛与格式检查；Windows已运行相同核心命令，GitHub/Linux远端未执行。实际退出码负向测试证明错误预期返回1。
+- 收尾回放：实际执行`examples/phase08_evaluation.py --case rag-forged --case mcp-untrusted --no-benchmarks`，2/2符合预期、退出0；证据`outputs/phase08/20261017T094030Z-a773d5ba/`。实际Trace CLI按run_id查询得到同一Run的10条事件、退出0；46个本地文档链接、76项锁定版本及基线Hash核查通过。曾因终端cp1252无法输出中文导致只读检查失败，改为Python `-X utf8`后成功，未影响文件内容或测试结果。
+- Git：phase-4/e82f69a，本阶段未add/commit/push；旧RAG只读Git保持干净，未启动、修改或访问旧数据库。建议commit：`feat(agent): add evaluation security and observability framework`。
+- 下一任务：授权本地版本；之后优先Phase2/3控制修复及真实服务/PDF条件，再执行真实质量重复基线。Phase9/10前提仍未满足。
+
 ## 17. 架构决策记录（ADR）
 
 | ID | 日期 | 决策 | 原因 | 复审点 |
@@ -771,6 +802,16 @@ Phase 7 新增决策（2026-10-17）：
 
 复审点：本地授权版本收尾、Phase8安全/错误汇总、需要跨机器工具时的Streamable HTTP与认证。
 
+Phase 8 新增决策（2026-10-17）：
+
+- ADR-031：保留Phase6旧数据结构，新增严格evaluation_cases；通过既有入口执行，Oracle使用结构化结果/实际动作/文件副作用，不比较自然语言关键词。
+- ADR-032：报告执行模式与显式分母，区分请求/实际执行/业务结果；三项安全违规独立门控。真实质量阈值先留空，缺真实前提不计PASS，有限样本不推广绝对保证。
+- ADR-033：统一payload-free JSONL，通过既有事件与SDK Callback观察；调用ID匿名化、导入事件标记时间依据、未知值为null。局部评测SQLite只允许明确业务类反序列化，不放开pickle或改旧库。
+- ADR-034：每次运行唯一目录，固定基线仅首次创建；首次失败保留。Benchmark仅本机脚本/协议成本观测，记录样本量和负载限制，不强制外部平台。
+- ADR-035：本阶段按用户“真实条件可用时执行”的边界交付本地评测与门槛；三次真实模型及真实RAG质量测量因无Key/安全服务/PDF延期为BLOCKED，不冒充完成。影响：无法给出真实SOC/引用/抗注入质量结论，Phase6阻碍和真实业务进入条件继续保留。
+
+复审点：Phase8授权版本、Phase2/3修复后的同题回归、真实模型/RAG样本与安全质量阈值、未来部署监控。
+
 ## 18. 官方资料与版本核实
 
 - LangChain Agent：https://docs.langchain.com/oss/python/langchain/agents
@@ -783,4 +824,4 @@ Phase 7 新增决策（2026-10-17）：
 
 本路线制定时核对了 LangChain Agent、LangGraph 持久化与中断文档。其他库在引入阶段再核实官方文档和兼容版本；链接内容更新不代表本地依赖自动升级。
 
-**Phase 7 DONE：本地MCP、Agent、回归及授权实现提交2f6fd60完成。Phase 6仍BLOCKED，Phase2/3缺口保留；下一任务Phase8汇总，真实业务进入Phase10A前须解除证据验收阻碍。本次不推送。**
+**Phase8 DOING：本地统一评测、安全门槛、Trace与基线通过，等待授权版本收尾；真实质量样例BLOCKED。Phase7 DONE，Phase6仍BLOCKED，Phase2/3缺口保留；不提前推进Phase9/10，不推送。**

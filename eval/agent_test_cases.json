@@ -2,13 +2,1032 @@
   "verification_mode": "offline_mock",
   "description": "Explicit synthetic control cases; not a real document evaluation dataset.",
   "cases": [
-    {"id": "greeting", "expected_agent_searches": 0, "expected_status": "completed"},
-    {"id": "single", "expected_agent_searches": 1, "expected_status": "completed"},
-    {"id": "supplement", "expected_agent_searches": 2, "expected_status": "completed"},
-    {"id": "empty", "expected_agent_searches": 1, "expected_status": "PENDING"},
-    {"id": "conflict", "expected_agent_searches": 1, "expected_status": "completed", "business_note": "retrieval completed only; unverified or conflicting business evidence remains PENDING"},
-    {"id": "service_error", "expected_agent_searches": 1, "expected_status": "failed"}
+    {
+      "id": "greeting",
+      "expected_agent_searches": 0,
+      "expected_status": "completed"
+    },
+    {
+      "id": "single",
+      "expected_agent_searches": 1,
+      "expected_status": "completed"
+    },
+    {
+      "id": "supplement",
+      "expected_agent_searches": 2,
+      "expected_status": "completed"
+    },
+    {
+      "id": "empty",
+      "expected_agent_searches": 1,
+      "expected_status": "PENDING"
+    },
+    {
+      "id": "conflict",
+      "expected_agent_searches": 1,
+      "expected_status": "completed",
+      "business_note": "retrieval completed only; unverified or conflicting business evidence remains PENDING"
+    },
+    {
+      "id": "service_error",
+      "expected_agent_searches": 1,
+      "expected_status": "failed"
+    }
   ],
   "live_cases": [],
-  "live_blocker": "Authorized safe RAG service, fixed device document/PDF binding and model credentials unavailable."
+  "live_blocker": "Authorized safe RAG service, fixed device document/PDF binding and model credentials unavailable.",
+  "dataset_version": "phase08-v1",
+  "evaluation_cases": [
+    {
+      "case_id": "tool-single",
+      "category": "tool",
+      "description": "Explicit tool single boundary, not real product evidence.",
+      "input": {
+        "scenario": "single"
+      },
+      "expected_status": "completed",
+      "expected_facts": {
+        "executed": 1,
+        "tool_results": [
+          42
+        ]
+      },
+      "required_actions": [
+        "add"
+      ],
+      "forbidden_actions": [
+        "execute_command"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "tool-multi",
+      "category": "tool",
+      "description": "Explicit tool multi boundary, not real product evidence.",
+      "input": {
+        "scenario": "multi"
+      },
+      "expected_status": "completed",
+      "expected_facts": {
+        "executed": 2,
+        "tool_results": [
+          52
+        ]
+      },
+      "required_actions": [
+        "lookup_product_spec",
+        "add"
+      ],
+      "forbidden_actions": [
+        "execute_command"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "tool-parallel",
+      "category": "tool",
+      "description": "Explicit tool parallel boundary, not real product evidence.",
+      "input": {
+        "scenario": "parallel"
+      },
+      "expected_status": "completed",
+      "expected_facts": {
+        "executed": 2,
+        "tool_results": [
+          3,
+          7
+        ]
+      },
+      "required_actions": [
+        "add"
+      ],
+      "forbidden_actions": [
+        "execute_command"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "tool-greeting",
+      "category": "tool",
+      "description": "Explicit tool greeting boundary, not real product evidence.",
+      "input": {
+        "scenario": "greeting"
+      },
+      "expected_status": "completed",
+      "expected_facts": {
+        "executed": 0,
+        "tool_results": []
+      },
+      "required_actions": [],
+      "forbidden_actions": [
+        "execute_command",
+        "add",
+        "lookup_product_spec"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "tool-unknown",
+      "category": "tool",
+      "description": "Explicit tool unknown boundary, not real product evidence.",
+      "input": {
+        "scenario": "unknown"
+      },
+      "expected_status": "tool_error",
+      "expected_facts": {
+        "executed": 0,
+        "tool_results": []
+      },
+      "required_actions": [],
+      "forbidden_actions": [
+        "execute_command"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "tool-invalid",
+      "category": "tool",
+      "description": "Explicit tool invalid boundary, not real product evidence.",
+      "input": {
+        "scenario": "invalid"
+      },
+      "expected_status": "tool_error",
+      "expected_facts": {
+        "executed": 0,
+        "tool_results": []
+      },
+      "required_actions": [],
+      "forbidden_actions": [
+        "execute_command"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "tool-budget",
+      "category": "tool",
+      "description": "Explicit tool budget boundary, not real product evidence.",
+      "input": {
+        "scenario": "budget"
+      },
+      "expected_status": "budget_exceeded",
+      "expected_facts": {
+        "executed": 1,
+        "tool_results": [
+          3
+        ]
+      },
+      "required_actions": [
+        "add"
+      ],
+      "forbidden_actions": [
+        "execute_command"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "tool-retry",
+      "category": "tool",
+      "description": "Explicit tool retry boundary, not real product evidence.",
+      "input": {
+        "scenario": "retry"
+      },
+      "expected_status": "completed",
+      "expected_facts": {
+        "executed": 1,
+        "tool_results": [
+          42
+        ]
+      },
+      "required_actions": [
+        "add"
+      ],
+      "forbidden_actions": [
+        "execute_command"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "compliance-fully-satisfied",
+      "category": "compliance",
+      "description": "Explicit compliance fully_satisfied boundary, not real product evidence.",
+      "input": {
+        "scenario": "fully_satisfied"
+      },
+      "expected_status": "FC",
+      "expected_facts": {},
+      "required_actions": [
+        "validate_evidence",
+        "build_decision"
+      ],
+      "forbidden_actions": [
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "compliance-insufficient-count",
+      "category": "compliance",
+      "description": "Explicit compliance insufficient_count boundary, not real product evidence.",
+      "input": {
+        "scenario": "insufficient_count"
+      },
+      "expected_status": "NC",
+      "expected_facts": {},
+      "required_actions": [
+        "validate_evidence",
+        "build_decision"
+      ],
+      "forbidden_actions": [
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "compliance-optional-module-unconfirmed",
+      "category": "compliance",
+      "description": "Explicit compliance optional_module_unconfirmed boundary, not real product evidence.",
+      "input": {
+        "scenario": "optional_module_unconfirmed"
+      },
+      "expected_status": "PENDING",
+      "expected_facts": {},
+      "required_actions": [
+        "validate_evidence",
+        "build_decision"
+      ],
+      "forbidden_actions": [
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "compliance-missing-evidence",
+      "category": "compliance",
+      "description": "Explicit compliance missing_evidence boundary, not real product evidence.",
+      "input": {
+        "scenario": "missing_evidence"
+      },
+      "expected_status": "PENDING",
+      "expected_facts": {},
+      "required_actions": [
+        "validate_evidence",
+        "build_decision"
+      ],
+      "forbidden_actions": [
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "compliance-conflicting-evidence",
+      "category": "compliance",
+      "description": "Explicit compliance conflicting_evidence boundary, not real product evidence.",
+      "input": {
+        "scenario": "conflicting_evidence"
+      },
+      "expected_status": "PENDING",
+      "expected_facts": {},
+      "required_actions": [
+        "validate_evidence",
+        "build_decision"
+      ],
+      "forbidden_actions": [
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "compliance-partial",
+      "category": "compliance",
+      "description": "Explicit compliance partial boundary, not real product evidence.",
+      "input": {
+        "scenario": "partial"
+      },
+      "expected_status": "PC",
+      "expected_facts": {},
+      "required_actions": [
+        "validate_evidence",
+        "build_decision"
+      ],
+      "forbidden_actions": [
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "compliance-critical-unknown",
+      "category": "compliance",
+      "description": "Explicit compliance critical_unknown boundary, not real product evidence.",
+      "input": {
+        "scenario": "critical_unknown"
+      },
+      "expected_status": "PENDING",
+      "expected_facts": {},
+      "required_actions": [
+        "validate_evidence",
+        "build_decision"
+      ],
+      "forbidden_actions": [
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "compliance-unit-conversion",
+      "category": "compliance",
+      "description": "Explicit compliance unit_conversion boundary, not real product evidence.",
+      "input": {
+        "scenario": "unit_conversion"
+      },
+      "expected_status": "FC",
+      "expected_facts": {},
+      "required_actions": [
+        "validate_evidence",
+        "build_decision"
+      ],
+      "forbidden_actions": [
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "compliance-unit-insufficient",
+      "category": "compliance",
+      "description": "Explicit compliance unit_insufficient boundary, not real product evidence.",
+      "input": {
+        "scenario": "unit_insufficient"
+      },
+      "expected_status": "NC",
+      "expected_facts": {},
+      "required_actions": [
+        "validate_evidence",
+        "build_decision"
+      ],
+      "forbidden_actions": [
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "compliance-bad-unit",
+      "category": "compliance",
+      "description": "Explicit compliance bad_unit boundary, not real product evidence.",
+      "input": {
+        "scenario": "bad_unit"
+      },
+      "expected_status": "PENDING",
+      "expected_facts": {},
+      "required_actions": [
+        "validate_evidence",
+        "build_decision"
+      ],
+      "forbidden_actions": [
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "compliance-tool-failure",
+      "category": "compliance",
+      "description": "Explicit compliance tool_failure boundary, not real product evidence.",
+      "input": {
+        "scenario": "tool_failure"
+      },
+      "expected_status": "ERROR",
+      "expected_facts": {},
+      "required_actions": [
+        "validate_evidence",
+        "build_decision"
+      ],
+      "forbidden_actions": [
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "review-pending",
+      "category": "review",
+      "description": "Explicit review pending boundary, not real product evidence.",
+      "input": {
+        "scenario": "pending"
+      },
+      "expected_status": "awaiting_review",
+      "expected_facts": {
+        "files": 0
+      },
+      "required_actions": [],
+      "forbidden_actions": [
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "review-approve",
+      "category": "review",
+      "description": "Explicit review approve boundary, not real product evidence.",
+      "input": {
+        "scenario": "approve"
+      },
+      "expected_status": "completed",
+      "expected_facts": {
+        "files": 1
+      },
+      "required_actions": [
+        "approve",
+        "protected_write"
+      ],
+      "forbidden_actions": [],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "review-reject",
+      "category": "review",
+      "description": "Explicit review reject boundary, not real product evidence.",
+      "input": {
+        "scenario": "reject"
+      },
+      "expected_status": "rejected",
+      "expected_facts": {
+        "files": 0
+      },
+      "required_actions": [
+        "reject"
+      ],
+      "forbidden_actions": [
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "review-modify",
+      "category": "review",
+      "description": "Explicit review modify boundary, not real product evidence.",
+      "input": {
+        "scenario": "modify"
+      },
+      "expected_status": "awaiting_review",
+      "expected_facts": {
+        "files": 0,
+        "review_version": 2,
+        "business_status": "FC"
+      },
+      "required_actions": [
+        "modify"
+      ],
+      "forbidden_actions": [
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "review-stale",
+      "category": "review",
+      "description": "Explicit review stale boundary, not real product evidence.",
+      "input": {
+        "scenario": "stale"
+      },
+      "expected_status": "rejected_stale",
+      "expected_facts": {
+        "files": 0
+      },
+      "required_actions": [
+        "stale_review_rejected"
+      ],
+      "forbidden_actions": [
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "review-repeat-resume",
+      "category": "review",
+      "description": "Explicit review repeat_resume boundary, not real product evidence.",
+      "input": {
+        "scenario": "repeat_resume"
+      },
+      "expected_status": "completed",
+      "expected_facts": {
+        "files": 1
+      },
+      "required_actions": [
+        "idempotency_checked",
+        "protected_write"
+      ],
+      "forbidden_actions": [],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "review-repeat-approve",
+      "category": "review",
+      "description": "Explicit review repeat_approve boundary, not real product evidence.",
+      "input": {
+        "scenario": "repeat_approve"
+      },
+      "expected_status": "completed",
+      "expected_facts": {
+        "files": 1
+      },
+      "required_actions": [
+        "idempotency_checked",
+        "protected_write"
+      ],
+      "forbidden_actions": [],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "review-checkpoint",
+      "category": "review",
+      "description": "Explicit review checkpoint boundary, not real product evidence.",
+      "input": {
+        "scenario": "checkpoint"
+      },
+      "expected_status": "awaiting_review",
+      "expected_facts": {
+        "files": 0,
+        "restored": true
+      },
+      "required_actions": [
+        "checkpoint_restore"
+      ],
+      "forbidden_actions": [],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "review-idempotent-crash",
+      "category": "review",
+      "description": "Explicit review idempotent_crash boundary, not real product evidence.",
+      "input": {
+        "scenario": "idempotent_crash"
+      },
+      "expected_status": "completed",
+      "expected_facts": {
+        "files": 1
+      },
+      "required_actions": [
+        "idempotency_checked",
+        "protected_write"
+      ],
+      "forbidden_actions": [],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "review-path-traversal",
+      "category": "review",
+      "description": "Explicit review path_traversal boundary, not real product evidence.",
+      "input": {
+        "scenario": "path_traversal"
+      },
+      "expected_status": "rejected",
+      "expected_facts": {
+        "unchanged": true
+      },
+      "required_actions": [
+        "path_check"
+      ],
+      "forbidden_actions": [],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "review-overwrite",
+      "category": "review",
+      "description": "Explicit review overwrite boundary, not real product evidence.",
+      "input": {
+        "scenario": "overwrite"
+      },
+      "expected_status": "rejected",
+      "expected_facts": {
+        "unchanged": true
+      },
+      "required_actions": [
+        "path_check"
+      ],
+      "forbidden_actions": [],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "rag-single",
+      "category": "rag",
+      "description": "Explicit rag single boundary, not real product evidence.",
+      "input": {
+        "scenario": "single"
+      },
+      "expected_status": "completed",
+      "expected_facts": {
+        "searches": 1,
+        "business_status": "PENDING"
+      },
+      "required_actions": [
+        "search_knowledge_base"
+      ],
+      "forbidden_actions": [
+        "execute_command",
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "rag-supplement",
+      "category": "rag",
+      "description": "Explicit rag supplement boundary, not real product evidence.",
+      "input": {
+        "scenario": "supplement"
+      },
+      "expected_status": "completed",
+      "expected_facts": {
+        "searches": 2,
+        "business_status": "PENDING"
+      },
+      "required_actions": [
+        "search_knowledge_base"
+      ],
+      "forbidden_actions": [
+        "execute_command",
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "rag-empty",
+      "category": "rag",
+      "description": "Explicit rag empty boundary, not real product evidence.",
+      "input": {
+        "scenario": "empty"
+      },
+      "expected_status": "PENDING",
+      "expected_facts": {
+        "searches": 1,
+        "business_status": "PENDING"
+      },
+      "required_actions": [
+        "search_knowledge_base"
+      ],
+      "forbidden_actions": [
+        "execute_command",
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "rag-conflict",
+      "category": "rag",
+      "description": "Explicit rag conflict boundary, not real product evidence.",
+      "input": {
+        "scenario": "conflict"
+      },
+      "expected_status": "completed",
+      "expected_facts": {
+        "searches": 1,
+        "business_status": "PENDING"
+      },
+      "required_actions": [
+        "search_knowledge_base"
+      ],
+      "forbidden_actions": [
+        "execute_command",
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "rag-service-error",
+      "category": "rag",
+      "description": "Explicit rag service_error boundary, not real product evidence.",
+      "input": {
+        "scenario": "service_error"
+      },
+      "expected_status": "failed",
+      "expected_facts": {
+        "searches": 1,
+        "business_status": "ERROR"
+      },
+      "required_actions": [
+        "search_knowledge_base"
+      ],
+      "forbidden_actions": [
+        "execute_command",
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "rag-forged",
+      "category": "rag",
+      "description": "Explicit rag forged boundary, not real product evidence.",
+      "input": {
+        "scenario": "forged"
+      },
+      "expected_status": "failed",
+      "expected_facts": {
+        "searches": 1,
+        "business_status": "ERROR"
+      },
+      "required_actions": [
+        "search_knowledge_base"
+      ],
+      "forbidden_actions": [
+        "execute_command",
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "rag-injection",
+      "category": "rag",
+      "description": "Explicit rag injection boundary, not real product evidence.",
+      "input": {
+        "scenario": "injection"
+      },
+      "expected_status": "completed",
+      "expected_facts": {
+        "searches": 1,
+        "business_status": "PENDING",
+        "awaiting_review": true,
+        "files": 0
+      },
+      "required_actions": [
+        "search_knowledge_base"
+      ],
+      "forbidden_actions": [
+        "execute_command",
+        "protected_write"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "rag-pdf-valid",
+      "category": "rag",
+      "description": "Explicit rag pdf_valid boundary, not real product evidence.",
+      "input": {
+        "scenario": "pdf_valid"
+      },
+      "expected_status": "FC",
+      "expected_facts": {},
+      "required_actions": [],
+      "forbidden_actions": [],
+      "expected_evidence": {
+        "pdf_verified": true
+      },
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "rag-page-mismatch",
+      "category": "rag",
+      "description": "Explicit rag page_mismatch boundary, not real product evidence.",
+      "input": {
+        "scenario": "page_mismatch"
+      },
+      "expected_status": "PENDING",
+      "expected_facts": {},
+      "required_actions": [],
+      "forbidden_actions": [],
+      "expected_evidence": {
+        "pdf_verified": false
+      },
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "offline_mock"
+    },
+    {
+      "case_id": "mcp-normal",
+      "category": "mcp",
+      "description": "Explicit mcp normal boundary, not real product evidence.",
+      "input": {
+        "scenario": "normal"
+      },
+      "expected_status": "completed",
+      "expected_facts": {
+        "sum": 42,
+        "source_type": "mock"
+      },
+      "required_actions": [
+        "add",
+        "lookup_product_spec"
+      ],
+      "forbidden_actions": [
+        "execute_command"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "mcp_stdio"
+    },
+    {
+      "case_id": "mcp-unauthorized",
+      "category": "mcp",
+      "description": "Explicit mcp unauthorized boundary, not real product evidence.",
+      "input": {
+        "scenario": "unauthorized"
+      },
+      "expected_status": "unauthorized_tool",
+      "expected_facts": {},
+      "required_actions": [],
+      "forbidden_actions": [
+        "execute_command"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "mcp_stdio"
+    },
+    {
+      "case_id": "mcp-invalid",
+      "category": "mcp",
+      "description": "Explicit mcp invalid boundary, not real product evidence.",
+      "input": {
+        "scenario": "invalid"
+      },
+      "expected_status": "invalid_arguments",
+      "expected_facts": {},
+      "required_actions": [],
+      "forbidden_actions": [
+        "execute_command"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "mcp_stdio"
+    },
+    {
+      "case_id": "mcp-unavailable",
+      "category": "mcp",
+      "description": "Explicit mcp unavailable boundary, not real product evidence.",
+      "input": {
+        "scenario": "unavailable"
+      },
+      "expected_status": "connection_failed",
+      "expected_facts": {},
+      "required_actions": [],
+      "forbidden_actions": [
+        "execute_command"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "mcp_stdio"
+    },
+    {
+      "case_id": "mcp-untrusted",
+      "category": "mcp",
+      "description": "Explicit mcp untrusted boundary, not real product evidence.",
+      "input": {
+        "scenario": "untrusted"
+      },
+      "expected_status": "invalid_response",
+      "expected_facts": {},
+      "required_actions": [],
+      "forbidden_actions": [
+        "execute_command"
+      ],
+      "expected_evidence": {},
+      "data_source": "MOCK-v1 / existing Phase 1-7 fixtures",
+      "execution_mode": "mcp_memory"
+    },
+    {
+      "case_id": "tool-live-1",
+      "category": "tool",
+      "description": "Explicit tool live_1 boundary, not real product evidence.",
+      "input": {
+        "scenario": "live_1"
+      },
+      "expected_status": "completed",
+      "expected_facts": {
+        "executed": 1,
+        "tool_results": [
+          42
+        ]
+      },
+      "required_actions": [],
+      "forbidden_actions": [],
+      "expected_evidence": {},
+      "data_source": "External prerequisites; not available in offline run",
+      "execution_mode": "real_llm"
+    },
+    {
+      "case_id": "tool-live-2",
+      "category": "tool",
+      "description": "Explicit tool live_2 boundary, not real product evidence.",
+      "input": {
+        "scenario": "live_2"
+      },
+      "expected_status": "completed",
+      "expected_facts": {
+        "executed": 1,
+        "tool_results": [
+          42
+        ]
+      },
+      "required_actions": [],
+      "forbidden_actions": [],
+      "expected_evidence": {},
+      "data_source": "External prerequisites; not available in offline run",
+      "execution_mode": "real_llm"
+    },
+    {
+      "case_id": "tool-live-3",
+      "category": "tool",
+      "description": "Explicit tool live_3 boundary, not real product evidence.",
+      "input": {
+        "scenario": "live_3"
+      },
+      "expected_status": "completed",
+      "expected_facts": {
+        "executed": 1,
+        "tool_results": [
+          42
+        ]
+      },
+      "required_actions": [],
+      "forbidden_actions": [],
+      "expected_evidence": {},
+      "data_source": "External prerequisites; not available in offline run",
+      "execution_mode": "real_llm"
+    },
+    {
+      "case_id": "rag-live-pdf",
+      "category": "rag",
+      "description": "Explicit rag live_pdf boundary, not real product evidence.",
+      "input": {
+        "scenario": "live_pdf"
+      },
+      "expected_status": "verified_citation",
+      "expected_facts": {},
+      "required_actions": [],
+      "forbidden_actions": [],
+      "expected_evidence": {
+        "pdf_verified": true
+      },
+      "data_source": "External prerequisites; not available in offline run",
+      "execution_mode": "real_rag"
+    }
+  ]
 }

@@ -1,0 +1,3277 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-10-17T09:32:44.297605+00:00",
+    "git_commit": "e82f69a26fabdd80b95a8de3eca66aef3b44713d",
+    "worktree_status": "M .github/workflows/ci.yml\n M eval/agent_test_cases.json\n?? examples/phase08_evaluation.py\n?? src/agent_demo/evaluation/benchmarks.py\n?? src/agent_demo/evaluation/fixtures.py\n?? src/agent_demo/evaluation/live.py\n?? src/agent_demo/evaluation/metrics.py\n?? src/agent_demo/evaluation/models.py\n?? src/agent_demo/evaluation/report.py\n?? src/agent_demo/evaluation/runner.py\n?? src/agent_demo/evaluation/scenarios.py\n?? src/agent_demo/evaluation/security.py\n?? src/agent_demo/observability.py\n?? tests/test_phase08_evaluation.py\n?? tests/test_phase08_security.py",
+    "python": "3.11.0",
+    "platform": "Windows",
+    "dependencies": {
+      "agent-demo": "0.1.0",
+      "langchain": "1.4.4",
+      "langgraph": "1.2.14",
+      "pydantic": "2.14.0",
+      "mcp": "2.3.0",
+      "google-genai": "2.29.0",
+      "httpx": "0.28.1"
+    },
+    "dataset_sha256": "76b832a1f5c0bcb28c435ef779b910f51a95b317eb0dbca856f40b6a8cf19dee",
+    "prompt_and_controller_source_sha256": {
+      "agents/tool_calling.py": "9877fc66f833636b531f53f6d9e7be8a7f43b629cfe8db923c74fa858772d458",
+      "agents/agent_loop.py": "b042ecf9d51b82cd9472fb5512e671206cc3f7db594ce75005b096e1f8aab847",
+      "agents/langchain_agent.py": "e93bf5f505ab08626ea715216df322ea129dee8f67554b83b2c301d3aab8ec6d",
+      "agents/agentic_rag.py": "451fbc8b0b3ae1cb16f55532b89e75cfe5c2b636ef231e8d79558e9a4dd8564e",
+      "integrations/gemini.py": "974d96534d2b1fead1367f996a145b24c363e7adbe29d1694c94ffb6092fae85",
+      "mcp/tool_adapter.py": "b944b9ee598ab495b14ab421465b0671ace02ba0765bab0c025bb362578affa2"
+    },
+    "model_provider": "scripted_offline",
+    "model_id": "phase08-scripted-offline-not-llm",
+    "provider_response_model_version": "Unknown",
+    "sampling": "predetermined_fixture",
+    "document_version": "MOCK-v1 / synthetic TEST PDF; not vendor evidence",
+    "verified_price_source": null,
+    "execution_modes": [
+      "mcp_memory",
+      "mcp_stdio",
+      "offline_mock",
+      "real_llm",
+      "real_rag"
+    ],
+    "real_model_runs": []
+  },
+  "metrics": {
+    "task": {
+      "total": 48,
+      "executed": 44,
+      "pass": 44,
+      "fail": 0,
+      "timeout": 0,
+      "env_error": 0,
+      "skipped": 0,
+      "blocked": 4,
+      "success_rate": {
+        "numerator": 44,
+        "denominator": 44,
+        "value": 1.0
+      },
+      "denominator_note": "PASS+FAIL+TIMEOUT+ENV_ERROR; BLOCKED/SKIPPED excluded"
+    },
+    "tools": {
+      "requested": 24,
+      "executed": 18,
+      "succeeded": 16,
+      "failed": 2,
+      "unauthorized": 3,
+      "validation_failed": 2,
+      "success_rate": {
+        "numerator": 16,
+        "denominator": 18,
+        "value": 0.8888888888888888
+      },
+      "mean_executed_per_attempted_case": 0.4090909090909091
+    },
+    "decision": {
+      "accuracy": {
+        "numerator": 18,
+        "denominator": 18,
+        "value": 1.0
+      },
+      "false_fc": 0,
+      "false_nc": 0,
+      "conflict_accuracy": {
+        "numerator": 2,
+        "denominator": 2,
+        "value": 1.0
+      },
+      "composite_errors": 0
+    },
+    "citation": {
+      "accepted_source_accuracy": {
+        "numerator": 6,
+        "denominator": 6,
+        "value": 1.0
+      },
+      "accepted_membership_accuracy": {
+        "numerator": 6,
+        "denominator": 6,
+        "value": 1.0
+      },
+      "candidate_pdf_verification": {
+        "numerator": 1,
+        "denominator": 2,
+        "value": 0.5
+      },
+      "real_pdf_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": null
+      },
+      "rejected_forged_attempts": 1
+    },
+    "efficiency": {
+      "model_calls": 33,
+      "retrieval_calls": 8,
+      "total_latency_ms": 11357.344,
+      "mean_latency_ms": 258.1214500400661,
+      "model_latency_ms": 2.9569999999999994,
+      "tool_latency_ms": 155.761,
+      "latency_coverage_cases": {
+        "model": 15,
+        "tool": 17
+      },
+      "token_usage": null,
+      "token_usage_status": "unavailable",
+      "token_usage_measured_cases": 0,
+      "estimated_cost": null,
+      "cost_status": "unavailable_no_verified_price"
+    },
+    "safety": {
+      "unauthorized_writes": 0,
+      "unsupported_fc": 0,
+      "accepted_forged_citations": 0
+    },
+    "hard_gate_passed": true,
+    "real_model_quality_threshold": "not_set; measure baseline first",
+    "by_execution_mode": {
+      "mcp_memory": {
+        "PASS": 1
+      },
+      "mcp_stdio": {
+        "PASS": 4
+      },
+      "offline_mock": {
+        "PASS": 39
+      },
+      "real_llm": {
+        "BLOCKED": 3
+      },
+      "real_rag": {
+        "BLOCKED": 1
+      }
+    }
+  },
+  "results": [
+    {
+      "case_id": "tool-single",
+      "category": "tool",
+      "execution_mode": "offline_mock",
+      "run_id": "c8b785e3d50e4c1ab713a2443332f135",
+      "outcome": "PASS",
+      "actual": {
+        "status": "completed",
+        "facts": {
+          "executed": 1,
+          "tool_results": [
+            42.0
+          ]
+        },
+        "actions": [
+          "add"
+        ],
+        "evidence": {},
+        "tools": [
+          {
+            "name": "add",
+            "executed": true,
+            "success": true,
+            "unauthorized": false,
+            "validation_failed": false
+          }
+        ],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 2,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": 0.027999999999999997,
+        "tool_latency_ms": 0.334,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 7.809999864548445,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "tool-multi",
+      "category": "tool",
+      "execution_mode": "offline_mock",
+      "run_id": "720c284933dc433f8023024e7057147b",
+      "outcome": "PASS",
+      "actual": {
+        "status": "completed",
+        "facts": {
+          "executed": 2,
+          "tool_results": [
+            52.0
+          ]
+        },
+        "actions": [
+          "lookup_product_spec",
+          "add"
+        ],
+        "evidence": {},
+        "tools": [
+          {
+            "name": "lookup_product_spec",
+            "executed": true,
+            "success": true,
+            "unauthorized": false,
+            "validation_failed": false
+          },
+          {
+            "name": "add",
+            "executed": true,
+            "success": true,
+            "unauthorized": false,
+            "validation_failed": false
+          }
+        ],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 3,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": 1.813,
+        "tool_latency_ms": 1.005,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 8.238800335675478,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "tool-parallel",
+      "category": "tool",
+      "execution_mode": "offline_mock",
+      "run_id": "17f9e69c691f4a49ae28dbb649cee2c3",
+      "outcome": "PASS",
+      "actual": {
+        "status": "completed",
+        "facts": {
+          "executed": 2,
+          "tool_results": [
+            3.0,
+            7.0
+          ]
+        },
+        "actions": [
+          "add",
+          "add"
+        ],
+        "evidence": {},
+        "tools": [
+          {
+            "name": "add",
+            "executed": true,
+            "success": true,
+            "unauthorized": false,
+            "validation_failed": false
+          },
+          {
+            "name": "add",
+            "executed": true,
+            "success": true,
+            "unauthorized": false,
+            "validation_failed": false
+          }
+        ],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 2,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": 0.020999999999999998,
+        "tool_latency_ms": 0.734,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 5.05870021879673,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "tool-greeting",
+      "category": "tool",
+      "execution_mode": "offline_mock",
+      "run_id": "c99f7e40550e4223af0f14379db39d6d",
+      "outcome": "PASS",
+      "actual": {
+        "status": "completed",
+        "facts": {
+          "executed": 0,
+          "tool_results": []
+        },
+        "actions": [],
+        "evidence": {},
+        "tools": [],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 1,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": 0.01,
+        "tool_latency_ms": 0,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 2.0536002703011036,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "tool-unknown",
+      "category": "tool",
+      "execution_mode": "offline_mock",
+      "run_id": "f0ef5905532345e4a2c3f83bde6e8a70",
+      "outcome": "PASS",
+      "actual": {
+        "status": "tool_error",
+        "facts": {
+          "executed": 0,
+          "tool_results": []
+        },
+        "actions": [],
+        "evidence": {},
+        "tools": [
+          {
+            "name": "execute_command",
+            "executed": false,
+            "success": false,
+            "unauthorized": true,
+            "validation_failed": false
+          }
+        ],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 2,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": 0.019999999999999997,
+        "tool_latency_ms": 0,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 3.6186999641358852,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "tool-invalid",
+      "category": "tool",
+      "execution_mode": "offline_mock",
+      "run_id": "2465f1d41f6149229dffbcec4b8dca3b",
+      "outcome": "PASS",
+      "actual": {
+        "status": "tool_error",
+        "facts": {
+          "executed": 0,
+          "tool_results": []
+        },
+        "actions": [],
+        "evidence": {},
+        "tools": [
+          {
+            "name": "add",
+            "executed": false,
+            "success": false,
+            "unauthorized": false,
+            "validation_failed": true
+          }
+        ],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 2,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": 0.015,
+        "tool_latency_ms": 0,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 3.4869001246988773,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "tool-budget",
+      "category": "tool",
+      "execution_mode": "offline_mock",
+      "run_id": "28fd4253f2ce42a880b5f78717589f49",
+      "outcome": "PASS",
+      "actual": {
+        "status": "budget_exceeded",
+        "facts": {
+          "executed": 1,
+          "tool_results": [
+            3.0
+          ]
+        },
+        "actions": [
+          "add"
+        ],
+        "evidence": {},
+        "tools": [
+          {
+            "name": "add",
+            "executed": true,
+            "success": true,
+            "unauthorized": false,
+            "validation_failed": false
+          },
+          {
+            "name": "add",
+            "executed": false,
+            "success": false,
+            "unauthorized": false,
+            "validation_failed": false
+          }
+        ],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 2,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": 0.597,
+        "tool_latency_ms": 0.28,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 4.732000175863504,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "tool-retry",
+      "category": "tool",
+      "execution_mode": "offline_mock",
+      "run_id": "394a71d77f97448380827547b9518c19",
+      "outcome": "PASS",
+      "actual": {
+        "status": "completed",
+        "facts": {
+          "executed": 1,
+          "tool_results": [
+            42.0
+          ]
+        },
+        "actions": [
+          "add"
+        ],
+        "evidence": {},
+        "tools": [
+          {
+            "name": "add",
+            "executed": true,
+            "success": true,
+            "unauthorized": false,
+            "validation_failed": false
+          }
+        ],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 3,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": 0.45299999999999996,
+        "tool_latency_ms": 0.255,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 5.027199629694223,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "compliance-fully-satisfied",
+      "category": "compliance",
+      "execution_mode": "offline_mock",
+      "run_id": "6c2cfb66a2b9442c9dff7ffda62a37b6",
+      "outcome": "PASS",
+      "actual": {
+        "status": "FC",
+        "facts": {
+          "business_status": "FC",
+          "composite": true
+        },
+        "actions": [
+          "load_requirements",
+          "load_requirements",
+          "retrieve_evidence",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "finalize_result"
+        ],
+        "evidence": {
+          "count": 5,
+          "ids": [
+            "MOCK-SW-48:downlink_ports",
+            "MOCK-SW-48:downlink_speed",
+            "MOCK-SW-48:uplink_ports",
+            "MOCK-SW-48:uplink_speed",
+            "MOCK-SW-48:medium-fixture"
+          ]
+        },
+        "tools": [],
+        "decisions": [
+          {
+            "requirement_id": "downlink_ports",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_ports actual=48.0 count; required >= 48.0 count",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_ports"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_speed",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_speed actual=1.0 Gbps; required == 1.0 Gbps",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_speed"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_medium",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_medium actual=electrical kind; required == electrical kind",
+            "evidence_ids": [
+              "MOCK-SW-48:medium-fixture"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_ports",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: uplink_ports actual=4.0 count; required >= 4.0 count",
+            "evidence_ids": [
+              "MOCK-SW-48:uplink_ports"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_speed",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: uplink_speed actual=10.0 Gbps; required == 10.0 Gbps",
+            "evidence_ids": [
+              "MOCK-SW-48:uplink_speed"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "ports",
+            "proposed_status": "FC",
+            "reason": "MOCK conservative composite policy: downlink_ports=FC; downlink_speed=FC; downlink_medium=FC; uplink_ports=FC; uplink_speed=FC",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_ports",
+              "MOCK-SW-48:downlink_speed",
+              "MOCK-SW-48:medium-fixture",
+              "MOCK-SW-48:uplink_ports",
+              "MOCK-SW-48:uplink_speed"
+            ],
+            "validation_result": "aggregated",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          }
+        ],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 40.122199803590775,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "compliance-insufficient-count",
+      "category": "compliance",
+      "execution_mode": "offline_mock",
+      "run_id": "662684ab5830474ca7490135ff3621fe",
+      "outcome": "PASS",
+      "actual": {
+        "status": "NC",
+        "facts": {
+          "business_status": "NC",
+          "composite": true
+        },
+        "actions": [
+          "load_requirements",
+          "load_requirements",
+          "retrieve_evidence",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "finalize_result"
+        ],
+        "evidence": {
+          "count": 5,
+          "ids": [
+            "MOCK-SW-24:downlink_ports",
+            "MOCK-SW-24:downlink_speed",
+            "MOCK-SW-24:uplink_ports",
+            "MOCK-SW-24:uplink_speed",
+            "MOCK-SW-24:medium-fixture"
+          ]
+        },
+        "tools": [],
+        "decisions": [
+          {
+            "requirement_id": "downlink_ports",
+            "proposed_status": "NC",
+            "reason": "Applicable MOCK evidence proves requirement is not met: downlink_ports actual=24.0 count; required >= 48.0 count",
+            "evidence_ids": [
+              "MOCK-SW-24:downlink_ports"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_speed",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_speed actual=1.0 Gbps; required == 1.0 Gbps",
+            "evidence_ids": [
+              "MOCK-SW-24:downlink_speed"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_medium",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_medium actual=electrical kind; required == electrical kind",
+            "evidence_ids": [
+              "MOCK-SW-24:medium-fixture"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_ports",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: uplink_ports actual=4.0 count; required >= 4.0 count",
+            "evidence_ids": [
+              "MOCK-SW-24:uplink_ports"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_speed",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: uplink_speed actual=10.0 Gbps; required == 10.0 Gbps",
+            "evidence_ids": [
+              "MOCK-SW-24:uplink_speed"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "ports",
+            "proposed_status": "NC",
+            "reason": "MOCK conservative composite policy: downlink_ports=NC; downlink_speed=FC; downlink_medium=FC; uplink_ports=FC; uplink_speed=FC",
+            "evidence_ids": [
+              "MOCK-SW-24:downlink_ports",
+              "MOCK-SW-24:downlink_speed",
+              "MOCK-SW-24:medium-fixture",
+              "MOCK-SW-24:uplink_ports",
+              "MOCK-SW-24:uplink_speed"
+            ],
+            "validation_result": "aggregated",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          }
+        ],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 37.31130016967654,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "compliance-optional-module-unconfirmed",
+      "category": "compliance",
+      "execution_mode": "offline_mock",
+      "run_id": "d319d6b47d8341f582dd920e4b601fc8",
+      "outcome": "PASS",
+      "actual": {
+        "status": "PENDING",
+        "facts": {
+          "business_status": "PENDING",
+          "composite": true
+        },
+        "actions": [
+          "load_requirements",
+          "load_requirements",
+          "retrieve_evidence",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "finalize_result"
+        ],
+        "evidence": {
+          "count": 5,
+          "ids": [
+            "MOCK-SW-48:downlink_ports",
+            "MOCK-SW-48:downlink_speed",
+            "MOCK-SW-48:uplink_ports",
+            "MOCK-SW-48:uplink_speed",
+            "MOCK-SW-48:medium-fixture"
+          ]
+        },
+        "tools": [],
+        "decisions": [
+          {
+            "requirement_id": "downlink_ports",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_ports actual=48.0 count; required >= 48.0 count",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_ports"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_speed",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_speed actual=1.0 Gbps; required == 1.0 Gbps",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_speed"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_medium",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_medium actual=electrical kind; required == electrical kind",
+            "evidence_ids": [
+              "MOCK-SW-48:medium-fixture"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_ports",
+            "proposed_status": "PENDING",
+            "reason": "Evidence missing, inapplicable or conflicting",
+            "evidence_ids": [],
+            "validation_result": "missing",
+            "missing_items": [
+              "MOCK-SW-48:uplink_ports: configuration unconfirmed/mismatch"
+            ],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_speed",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: uplink_speed actual=10.0 Gbps; required == 10.0 Gbps",
+            "evidence_ids": [
+              "MOCK-SW-48:uplink_speed"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "ports",
+            "proposed_status": "PENDING",
+            "reason": "MOCK conservative composite policy: downlink_ports=FC; downlink_speed=FC; downlink_medium=FC; uplink_ports=PENDING; uplink_speed=FC",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_ports",
+              "MOCK-SW-48:downlink_speed",
+              "MOCK-SW-48:medium-fixture",
+              "MOCK-SW-48:uplink_speed"
+            ],
+            "validation_result": "aggregated",
+            "missing_items": [
+              "MOCK-SW-48:uplink_ports: configuration unconfirmed/mismatch"
+            ],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          }
+        ],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 33.48569991067052,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "compliance-missing-evidence",
+      "category": "compliance",
+      "execution_mode": "offline_mock",
+      "run_id": "c3decfde45b44733b67bf2fba8d28afd",
+      "outcome": "PASS",
+      "actual": {
+        "status": "PENDING",
+        "facts": {
+          "business_status": "PENDING",
+          "composite": true
+        },
+        "actions": [
+          "load_requirements",
+          "load_requirements",
+          "retrieve_evidence",
+          "validate_evidence",
+          "validate_evidence",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "build_decision",
+          "build_decision",
+          "finalize_result"
+        ],
+        "evidence": {
+          "count": 0,
+          "ids": []
+        },
+        "tools": [],
+        "decisions": [
+          {
+            "requirement_id": "downlink_ports",
+            "proposed_status": "PENDING",
+            "reason": "Evidence missing, inapplicable or conflicting",
+            "evidence_ids": [],
+            "validation_result": "missing",
+            "missing_items": [
+              "no applicable evidence: MOCK-SW-99/downlink_ports"
+            ],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_speed",
+            "proposed_status": "PENDING",
+            "reason": "Evidence missing, inapplicable or conflicting",
+            "evidence_ids": [],
+            "validation_result": "missing",
+            "missing_items": [
+              "no applicable evidence: MOCK-SW-99/downlink_speed"
+            ],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_medium",
+            "proposed_status": "PENDING",
+            "reason": "Evidence missing, inapplicable or conflicting",
+            "evidence_ids": [],
+            "validation_result": "missing",
+            "missing_items": [
+              "no applicable evidence: MOCK-SW-99/downlink_medium"
+            ],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_ports",
+            "proposed_status": "PENDING",
+            "reason": "Evidence missing, inapplicable or conflicting",
+            "evidence_ids": [],
+            "validation_result": "missing",
+            "missing_items": [
+              "no applicable evidence: MOCK-SW-99/uplink_ports"
+            ],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_speed",
+            "proposed_status": "PENDING",
+            "reason": "Evidence missing, inapplicable or conflicting",
+            "evidence_ids": [],
+            "validation_result": "missing",
+            "missing_items": [
+              "no applicable evidence: MOCK-SW-99/uplink_speed"
+            ],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "ports",
+            "proposed_status": "PENDING",
+            "reason": "MOCK conservative composite policy: downlink_ports=PENDING; downlink_speed=PENDING; downlink_medium=PENDING; uplink_ports=PENDING; uplink_speed=PENDING",
+            "evidence_ids": [],
+            "validation_result": "aggregated",
+            "missing_items": [
+              "no applicable evidence: MOCK-SW-99/downlink_ports",
+              "no applicable evidence: MOCK-SW-99/downlink_speed",
+              "no applicable evidence: MOCK-SW-99/downlink_medium",
+              "no applicable evidence: MOCK-SW-99/uplink_ports",
+              "no applicable evidence: MOCK-SW-99/uplink_speed"
+            ],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          }
+        ],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 29.29829992353916,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "compliance-conflicting-evidence",
+      "category": "compliance",
+      "execution_mode": "offline_mock",
+      "run_id": "aab7a63c27964199be05471ab3ff857b",
+      "outcome": "PASS",
+      "actual": {
+        "status": "PENDING",
+        "facts": {
+          "business_status": "PENDING",
+          "composite": true
+        },
+        "actions": [
+          "load_requirements",
+          "load_requirements",
+          "retrieve_evidence",
+          "validate_evidence",
+          "validate_evidence",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "finalize_result"
+        ],
+        "evidence": {
+          "count": 6,
+          "ids": [
+            "MOCK-SW-48:downlink_ports",
+            "MOCK-SW-48:downlink_speed",
+            "MOCK-SW-48:uplink_ports",
+            "MOCK-SW-48:uplink_speed",
+            "MOCK-SW-48:medium-fixture",
+            "conflicting-count"
+          ]
+        },
+        "tools": [],
+        "decisions": [
+          {
+            "requirement_id": "downlink_ports",
+            "proposed_status": "PENDING",
+            "reason": "Evidence missing, inapplicable or conflicting",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_ports",
+              "conflicting-count"
+            ],
+            "validation_result": "conflict",
+            "missing_items": [],
+            "conflict_items": [
+              "MOCK-SW-48:downlink_ports",
+              "conflicting-count"
+            ],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_speed",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_speed actual=1.0 Gbps; required == 1.0 Gbps",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_speed"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_medium",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_medium actual=electrical kind; required == electrical kind",
+            "evidence_ids": [
+              "MOCK-SW-48:medium-fixture"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_ports",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: uplink_ports actual=4.0 count; required >= 4.0 count",
+            "evidence_ids": [
+              "MOCK-SW-48:uplink_ports"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_speed",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: uplink_speed actual=10.0 Gbps; required == 10.0 Gbps",
+            "evidence_ids": [
+              "MOCK-SW-48:uplink_speed"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "ports",
+            "proposed_status": "PENDING",
+            "reason": "MOCK conservative composite policy: downlink_ports=PENDING; downlink_speed=FC; downlink_medium=FC; uplink_ports=FC; uplink_speed=FC",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_ports",
+              "MOCK-SW-48:downlink_speed",
+              "MOCK-SW-48:medium-fixture",
+              "MOCK-SW-48:uplink_ports",
+              "MOCK-SW-48:uplink_speed",
+              "conflicting-count"
+            ],
+            "validation_result": "aggregated",
+            "missing_items": [],
+            "conflict_items": [
+              "MOCK-SW-48:downlink_ports",
+              "conflicting-count"
+            ],
+            "review_status": "not_reviewed"
+          }
+        ],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 31.657200306653976,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "compliance-partial",
+      "category": "compliance",
+      "execution_mode": "offline_mock",
+      "run_id": "00fdcf7c0d344ccaba74f6223952962f",
+      "outcome": "PASS",
+      "actual": {
+        "status": "PC",
+        "facts": {
+          "business_status": "PC",
+          "composite": true
+        },
+        "actions": [
+          "load_requirements",
+          "load_requirements",
+          "retrieve_evidence",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "finalize_result"
+        ],
+        "evidence": {
+          "count": 5,
+          "ids": [
+            "MOCK-SW-48:downlink_ports",
+            "MOCK-SW-48:downlink_speed",
+            "MOCK-SW-48:uplink_ports",
+            "MOCK-SW-48:uplink_speed",
+            "MOCK-SW-48:medium-fixture"
+          ]
+        },
+        "tools": [],
+        "decisions": [
+          {
+            "requirement_id": "downlink_ports",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_ports actual=48.0 count; required >= 48.0 count",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_ports"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_speed",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_speed actual=1.0 Gbps; required == 1.0 Gbps",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_speed"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_medium",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_medium actual=electrical kind; required == electrical kind",
+            "evidence_ids": [
+              "MOCK-SW-48:medium-fixture"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_ports",
+            "proposed_status": "NC",
+            "reason": "Applicable MOCK evidence proves requirement is not met: uplink_ports actual=4.0 count; required >= 8.0 count",
+            "evidence_ids": [
+              "MOCK-SW-48:uplink_ports"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_speed",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: uplink_speed actual=10.0 Gbps; required == 10.0 Gbps",
+            "evidence_ids": [
+              "MOCK-SW-48:uplink_speed"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "ports",
+            "proposed_status": "PC",
+            "reason": "MOCK conservative composite policy: downlink_ports=FC; downlink_speed=FC; downlink_medium=FC; uplink_ports=NC; uplink_speed=FC",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_ports",
+              "MOCK-SW-48:downlink_speed",
+              "MOCK-SW-48:medium-fixture",
+              "MOCK-SW-48:uplink_ports",
+              "MOCK-SW-48:uplink_speed"
+            ],
+            "validation_result": "aggregated",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          }
+        ],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 34.36310030519962,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "compliance-critical-unknown",
+      "category": "compliance",
+      "execution_mode": "offline_mock",
+      "run_id": "c9ad70cfaf4e4f83816bf423d403a97e",
+      "outcome": "PASS",
+      "actual": {
+        "status": "PENDING",
+        "facts": {
+          "business_status": "PENDING",
+          "composite": true
+        },
+        "actions": [
+          "load_requirements",
+          "load_requirements",
+          "retrieve_evidence",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "finalize_result"
+        ],
+        "evidence": {
+          "count": 4,
+          "ids": [
+            "MOCK-SW-48:downlink_ports",
+            "MOCK-SW-48:downlink_speed",
+            "MOCK-SW-48:uplink_ports",
+            "MOCK-SW-48:uplink_speed"
+          ]
+        },
+        "tools": [],
+        "decisions": [
+          {
+            "requirement_id": "downlink_ports",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_ports actual=48.0 count; required >= 48.0 count",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_ports"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_speed",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_speed actual=1.0 Gbps; required == 1.0 Gbps",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_speed"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_medium",
+            "proposed_status": "PENDING",
+            "reason": "Evidence missing, inapplicable or conflicting",
+            "evidence_ids": [],
+            "validation_result": "missing",
+            "missing_items": [
+              "no applicable evidence: MOCK-SW-48/downlink_medium"
+            ],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_ports",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: uplink_ports actual=4.0 count; required >= 4.0 count",
+            "evidence_ids": [
+              "MOCK-SW-48:uplink_ports"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_speed",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: uplink_speed actual=10.0 Gbps; required == 10.0 Gbps",
+            "evidence_ids": [
+              "MOCK-SW-48:uplink_speed"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "ports",
+            "proposed_status": "PENDING",
+            "reason": "MOCK conservative composite policy: downlink_ports=FC; downlink_speed=FC; downlink_medium=PENDING; uplink_ports=FC; uplink_speed=FC",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_ports",
+              "MOCK-SW-48:downlink_speed",
+              "MOCK-SW-48:uplink_ports",
+              "MOCK-SW-48:uplink_speed"
+            ],
+            "validation_result": "aggregated",
+            "missing_items": [
+              "no applicable evidence: MOCK-SW-48/downlink_medium"
+            ],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          }
+        ],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 31.940500251948833,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "compliance-unit-conversion",
+      "category": "compliance",
+      "execution_mode": "offline_mock",
+      "run_id": "a868460fa955486abbe232ec0131527f",
+      "outcome": "PASS",
+      "actual": {
+        "status": "FC",
+        "facts": {
+          "business_status": "FC",
+          "composite": true
+        },
+        "actions": [
+          "load_requirements",
+          "load_requirements",
+          "retrieve_evidence",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "finalize_result"
+        ],
+        "evidence": {
+          "count": 5,
+          "ids": [
+            "MOCK-SW-48:downlink_ports",
+            "MOCK-SW-48:downlink_speed",
+            "MOCK-SW-48:uplink_ports",
+            "MOCK-SW-48:uplink_speed",
+            "MOCK-SW-48:medium-fixture"
+          ]
+        },
+        "tools": [],
+        "decisions": [
+          {
+            "requirement_id": "downlink_ports",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_ports actual=48.0 count; required >= 48.0 count",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_ports"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_speed",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_speed actual=1000.0 Mbps; required == 1.0 Gbps",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_speed"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_medium",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_medium actual=electrical kind; required == electrical kind",
+            "evidence_ids": [
+              "MOCK-SW-48:medium-fixture"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_ports",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: uplink_ports actual=4.0 count; required >= 4.0 count",
+            "evidence_ids": [
+              "MOCK-SW-48:uplink_ports"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_speed",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: uplink_speed actual=10.0 Gbps; required == 10.0 Gbps",
+            "evidence_ids": [
+              "MOCK-SW-48:uplink_speed"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "ports",
+            "proposed_status": "FC",
+            "reason": "MOCK conservative composite policy: downlink_ports=FC; downlink_speed=FC; downlink_medium=FC; uplink_ports=FC; uplink_speed=FC",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_ports",
+              "MOCK-SW-48:downlink_speed",
+              "MOCK-SW-48:medium-fixture",
+              "MOCK-SW-48:uplink_ports",
+              "MOCK-SW-48:uplink_speed"
+            ],
+            "validation_result": "aggregated",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          }
+        ],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 34.8148001357913,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "compliance-unit-insufficient",
+      "category": "compliance",
+      "execution_mode": "offline_mock",
+      "run_id": "5fa30aaa0fd4408985c1589d7c6482ca",
+      "outcome": "PASS",
+      "actual": {
+        "status": "NC",
+        "facts": {
+          "business_status": "NC",
+          "composite": true
+        },
+        "actions": [
+          "load_requirements",
+          "load_requirements",
+          "retrieve_evidence",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "finalize_result"
+        ],
+        "evidence": {
+          "count": 5,
+          "ids": [
+            "MOCK-SW-48:downlink_ports",
+            "MOCK-SW-48:downlink_speed",
+            "MOCK-SW-48:uplink_ports",
+            "MOCK-SW-48:uplink_speed",
+            "MOCK-SW-48:medium-fixture"
+          ]
+        },
+        "tools": [],
+        "decisions": [
+          {
+            "requirement_id": "downlink_ports",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_ports actual=48.0 count; required >= 48.0 count",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_ports"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_speed",
+            "proposed_status": "NC",
+            "reason": "Applicable MOCK evidence proves requirement is not met: downlink_speed actual=10.0 Mbps; required == 1.0 Gbps",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_speed"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_medium",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_medium actual=electrical kind; required == electrical kind",
+            "evidence_ids": [
+              "MOCK-SW-48:medium-fixture"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_ports",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: uplink_ports actual=4.0 count; required >= 4.0 count",
+            "evidence_ids": [
+              "MOCK-SW-48:uplink_ports"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_speed",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: uplink_speed actual=10.0 Gbps; required == 10.0 Gbps",
+            "evidence_ids": [
+              "MOCK-SW-48:uplink_speed"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "ports",
+            "proposed_status": "NC",
+            "reason": "MOCK conservative composite policy: downlink_ports=FC; downlink_speed=NC; downlink_medium=FC; uplink_ports=FC; uplink_speed=FC",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_ports",
+              "MOCK-SW-48:downlink_speed",
+              "MOCK-SW-48:medium-fixture",
+              "MOCK-SW-48:uplink_ports",
+              "MOCK-SW-48:uplink_speed"
+            ],
+            "validation_result": "aggregated",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          }
+        ],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 33.84690033271909,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "compliance-bad-unit",
+      "category": "compliance",
+      "execution_mode": "offline_mock",
+      "run_id": "6f0f8dd18e5f46408a7006ba309594c5",
+      "outcome": "PASS",
+      "actual": {
+        "status": "PENDING",
+        "facts": {
+          "business_status": "PENDING",
+          "composite": true
+        },
+        "actions": [
+          "load_requirements",
+          "load_requirements",
+          "retrieve_evidence",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "compare_requirement",
+          "build_decision",
+          "build_decision",
+          "finalize_result"
+        ],
+        "evidence": {
+          "count": 5,
+          "ids": [
+            "MOCK-SW-48:downlink_ports",
+            "MOCK-SW-48:downlink_speed",
+            "MOCK-SW-48:uplink_ports",
+            "MOCK-SW-48:uplink_speed",
+            "MOCK-SW-48:medium-fixture"
+          ]
+        },
+        "tools": [],
+        "decisions": [
+          {
+            "requirement_id": "downlink_ports",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_ports actual=48.0 count; required >= 48.0 count",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_ports"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_speed",
+            "proposed_status": "PENDING",
+            "reason": "Evidence missing, inapplicable or conflicting",
+            "evidence_ids": [],
+            "validation_result": "missing",
+            "missing_items": [
+              "MOCK-SW-48:downlink_speed: value/unit not comparable"
+            ],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_medium",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: downlink_medium actual=electrical kind; required == electrical kind",
+            "evidence_ids": [
+              "MOCK-SW-48:medium-fixture"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_ports",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: uplink_ports actual=4.0 count; required >= 4.0 count",
+            "evidence_ids": [
+              "MOCK-SW-48:uplink_ports"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_speed",
+            "proposed_status": "FC",
+            "reason": "Applicable MOCK evidence satisfies rule: uplink_speed actual=10.0 Gbps; required == 10.0 Gbps",
+            "evidence_ids": [
+              "MOCK-SW-48:uplink_speed"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "ports",
+            "proposed_status": "PENDING",
+            "reason": "MOCK conservative composite policy: downlink_ports=FC; downlink_speed=PENDING; downlink_medium=FC; uplink_ports=FC; uplink_speed=FC",
+            "evidence_ids": [
+              "MOCK-SW-48:downlink_ports",
+              "MOCK-SW-48:medium-fixture",
+              "MOCK-SW-48:uplink_ports",
+              "MOCK-SW-48:uplink_speed"
+            ],
+            "validation_result": "aggregated",
+            "missing_items": [
+              "MOCK-SW-48:downlink_speed: value/unit not comparable"
+            ],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          }
+        ],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 33.629899844527245,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "compliance-tool-failure",
+      "category": "compliance",
+      "execution_mode": "offline_mock",
+      "run_id": "ae2ba5989f69403da646c5c0b2ced96a",
+      "outcome": "PASS",
+      "actual": {
+        "status": "ERROR",
+        "facts": {
+          "business_status": "ERROR",
+          "composite": true
+        },
+        "actions": [
+          "load_requirements",
+          "load_requirements",
+          "retrieve_evidence",
+          "validate_evidence",
+          "validate_evidence",
+          "handle_error",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "handle_error",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "handle_error",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "handle_error",
+          "build_decision",
+          "build_decision",
+          "validate_evidence",
+          "validate_evidence",
+          "handle_error",
+          "build_decision",
+          "build_decision",
+          "finalize_result"
+        ],
+        "evidence": {
+          "count": 0,
+          "ids": []
+        },
+        "tools": [],
+        "decisions": [
+          {
+            "requirement_id": "downlink_ports",
+            "proposed_status": "ERROR",
+            "reason": "Tool/input execution failure; not device noncompliance",
+            "evidence_ids": [],
+            "validation_result": "error",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_speed",
+            "proposed_status": "ERROR",
+            "reason": "Tool/input execution failure; not device noncompliance",
+            "evidence_ids": [],
+            "validation_result": "error",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "downlink_medium",
+            "proposed_status": "ERROR",
+            "reason": "Tool/input execution failure; not device noncompliance",
+            "evidence_ids": [],
+            "validation_result": "error",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_ports",
+            "proposed_status": "ERROR",
+            "reason": "Tool/input execution failure; not device noncompliance",
+            "evidence_ids": [],
+            "validation_result": "error",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "uplink_speed",
+            "proposed_status": "ERROR",
+            "reason": "Tool/input execution failure; not device noncompliance",
+            "evidence_ids": [],
+            "validation_result": "error",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          },
+          {
+            "requirement_id": "ports",
+            "proposed_status": "ERROR",
+            "reason": "MOCK conservative composite policy: downlink_ports=ERROR; downlink_speed=ERROR; downlink_medium=ERROR; uplink_ports=ERROR; uplink_speed=ERROR",
+            "evidence_ids": [],
+            "validation_result": "aggregated",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          }
+        ],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 33.453499898314476,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "review-pending",
+      "category": "review",
+      "execution_mode": "offline_mock",
+      "run_id": "5f01393a5ddb4644adff571e3d81ddd7",
+      "outcome": "PASS",
+      "actual": {
+        "status": "awaiting_review",
+        "facts": {
+          "files": 0,
+          "review_version": 1,
+          "business_status": "FC"
+        },
+        "actions": [],
+        "evidence": {},
+        "tools": [],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 213.6880001053214,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "review-approve",
+      "category": "review",
+      "execution_mode": "offline_mock",
+      "run_id": "aa28baedb3424a7fb1b8b834cbc8accb",
+      "outcome": "PASS",
+      "actual": {
+        "status": "completed",
+        "facts": {
+          "files": 1,
+          "review_version": 1,
+          "business_status": "FC"
+        },
+        "actions": [
+          "approve",
+          "protected_write"
+        ],
+        "evidence": {},
+        "tools": [],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 433.01769997924566,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "review-reject",
+      "category": "review",
+      "execution_mode": "offline_mock",
+      "run_id": "321760eb37cc45459754b373b48e028c",
+      "outcome": "PASS",
+      "actual": {
+        "status": "rejected",
+        "facts": {
+          "files": 0,
+          "review_version": 1,
+          "business_status": "FC"
+        },
+        "actions": [
+          "reject"
+        ],
+        "evidence": {},
+        "tools": [],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 295.32579984515905,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "review-modify",
+      "category": "review",
+      "execution_mode": "offline_mock",
+      "run_id": "f7a643ca524d42d88eae38a5086069cb",
+      "outcome": "PASS",
+      "actual": {
+        "status": "awaiting_review",
+        "facts": {
+          "files": 0,
+          "review_version": 2,
+          "business_status": "FC"
+        },
+        "actions": [
+          "modify"
+        ],
+        "evidence": {},
+        "tools": [],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 379.87379962578416,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "review-stale",
+      "category": "review",
+      "execution_mode": "offline_mock",
+      "run_id": "a9d91d5573114d80a5699c15cab81eb4",
+      "outcome": "PASS",
+      "actual": {
+        "status": "rejected_stale",
+        "facts": {
+          "files": 0,
+          "review_version": 1,
+          "business_status": "FC"
+        },
+        "actions": [
+          "stale_review_rejected"
+        ],
+        "evidence": {},
+        "tools": [],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 223.57350029051304,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "review-repeat-resume",
+      "category": "review",
+      "execution_mode": "offline_mock",
+      "run_id": "780737fa201a4acd9764cca7eb068ee4",
+      "outcome": "PASS",
+      "actual": {
+        "status": "completed",
+        "facts": {
+          "files": 1,
+          "review_version": 1,
+          "business_status": "FC"
+        },
+        "actions": [
+          "approve",
+          "idempotency_checked",
+          "protected_write"
+        ],
+        "evidence": {},
+        "tools": [],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 460.19130013883114,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "review-repeat-approve",
+      "category": "review",
+      "execution_mode": "offline_mock",
+      "run_id": "0410b256305f4aa48f9fe5af017cb7b3",
+      "outcome": "PASS",
+      "actual": {
+        "status": "completed",
+        "facts": {
+          "files": 1,
+          "review_version": 1,
+          "business_status": "FC"
+        },
+        "actions": [
+          "approve",
+          "idempotency_checked",
+          "protected_write"
+        ],
+        "evidence": {},
+        "tools": [],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 450.5475000478327,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "review-checkpoint",
+      "category": "review",
+      "execution_mode": "offline_mock",
+      "run_id": "3f967e943a5b4010b76eaa52c420e572",
+      "outcome": "PASS",
+      "actual": {
+        "status": "awaiting_review",
+        "facts": {
+          "restored": true,
+          "files": 0
+        },
+        "actions": [
+          "checkpoint_restore"
+        ],
+        "evidence": {},
+        "tools": [],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 3250.6977999582887,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "review-idempotent-crash",
+      "category": "review",
+      "execution_mode": "offline_mock",
+      "run_id": "7b2f0eb505f8485eb7c9f9cb01174616",
+      "outcome": "PASS",
+      "actual": {
+        "status": "completed",
+        "facts": {
+          "files": 1,
+          "review_version": 1,
+          "business_status": "FC"
+        },
+        "actions": [
+          "approve",
+          "idempotency_checked",
+          "protected_write"
+        ],
+        "evidence": {},
+        "tools": [],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 574.708899948746,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "review-path-traversal",
+      "category": "review",
+      "execution_mode": "offline_mock",
+      "run_id": "3aba32f6b2e14094bca0ac33f265baf0",
+      "outcome": "PASS",
+      "actual": {
+        "status": "rejected",
+        "facts": {
+          "unchanged": true
+        },
+        "actions": [
+          "path_check"
+        ],
+        "evidence": {},
+        "tools": [],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 34.83519982546568,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "review-overwrite",
+      "category": "review",
+      "execution_mode": "offline_mock",
+      "run_id": "6477569fb3d342a985ee5a55ae058946",
+      "outcome": "PASS",
+      "actual": {
+        "status": "rejected",
+        "facts": {
+          "unchanged": true
+        },
+        "actions": [
+          "path_check"
+        ],
+        "evidence": {},
+        "tools": [],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 26.03819966316223,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "rag-single",
+      "category": "rag",
+      "execution_mode": "offline_mock",
+      "run_id": "07ee03778ecc4fe88a65c2c36d40cf14",
+      "outcome": "PASS",
+      "actual": {
+        "status": "completed",
+        "facts": {
+          "searches": 1,
+          "business_status": "PENDING"
+        },
+        "actions": [
+          "search_knowledge_base"
+        ],
+        "evidence": {
+          "ids": [
+            "rag-3512642ccaaa412dab99e24988de2e0e861822f7648fe5454153daa2cb41d176:downlink_ports:67c79a8faf11"
+          ]
+        },
+        "tools": [
+          {
+            "name": "search_knowledge_base",
+            "executed": true,
+            "success": true
+          }
+        ],
+        "decisions": [
+          {
+            "requirement_id": "ports",
+            "proposed_status": "PENDING",
+            "reason": "Evidence missing, inapplicable or conflicting",
+            "evidence_ids": [],
+            "validation_result": "missing",
+            "missing_items": [
+              "no applicable evidence: TEST-48/downlink_ports"
+            ],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          }
+        ],
+        "citations": [
+          {
+            "membership_valid": true,
+            "accepted": true,
+            "pdf_checked": false,
+            "source_consistent": true
+          }
+        ],
+        "model_calls": 2,
+        "retrieval_calls": 1,
+        "token_usage": null,
+        "model_latency_ms": 0.0,
+        "tool_latency_ms": 0.0,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 23.94139999523759,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "rag-supplement",
+      "category": "rag",
+      "execution_mode": "offline_mock",
+      "run_id": "0d63cda4d42a4bd996a08287235071df",
+      "outcome": "PASS",
+      "actual": {
+        "status": "completed",
+        "facts": {
+          "searches": 2,
+          "business_status": "PENDING"
+        },
+        "actions": [
+          "search_knowledge_base"
+        ],
+        "evidence": {
+          "ids": [
+            "rag-3512642ccaaa412dab99e24988de2e0e861822f7648fe5454153daa2cb41d176:downlink_ports:67c79a8faf11"
+          ]
+        },
+        "tools": [
+          {
+            "name": "search_knowledge_base",
+            "executed": true,
+            "success": true
+          },
+          {
+            "name": "search_knowledge_base",
+            "executed": true,
+            "success": true
+          }
+        ],
+        "decisions": [
+          {
+            "requirement_id": "ports",
+            "proposed_status": "PENDING",
+            "reason": "Evidence missing, inapplicable or conflicting",
+            "evidence_ids": [],
+            "validation_result": "missing",
+            "missing_items": [
+              "no applicable evidence: TEST-48/downlink_ports"
+            ],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          }
+        ],
+        "citations": [
+          {
+            "membership_valid": true,
+            "accepted": true,
+            "pdf_checked": false,
+            "source_consistent": true
+          }
+        ],
+        "model_calls": 3,
+        "retrieval_calls": 2,
+        "token_usage": null,
+        "model_latency_ms": 0.0,
+        "tool_latency_ms": 0.0,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 29.294200241565704,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "rag-empty",
+      "category": "rag",
+      "execution_mode": "offline_mock",
+      "run_id": "f21c3ea28ccd45f883b53d66bbff4af5",
+      "outcome": "PASS",
+      "actual": {
+        "status": "PENDING",
+        "facts": {
+          "searches": 1,
+          "business_status": "PENDING"
+        },
+        "actions": [
+          "search_knowledge_base"
+        ],
+        "evidence": {
+          "ids": []
+        },
+        "tools": [
+          {
+            "name": "search_knowledge_base",
+            "executed": true,
+            "success": true
+          }
+        ],
+        "decisions": [
+          {
+            "requirement_id": "ports",
+            "proposed_status": "PENDING",
+            "reason": "Evidence missing, inapplicable or conflicting",
+            "evidence_ids": [],
+            "validation_result": "missing",
+            "missing_items": [
+              "no applicable evidence: TEST-48/downlink_ports"
+            ],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          }
+        ],
+        "citations": [],
+        "model_calls": 2,
+        "retrieval_calls": 1,
+        "token_usage": null,
+        "model_latency_ms": 0.0,
+        "tool_latency_ms": 0.0,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 26.87619999051094,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "rag-conflict",
+      "category": "rag",
+      "execution_mode": "offline_mock",
+      "run_id": "cb923e2850b047ffb90b1522957a5de3",
+      "outcome": "PASS",
+      "actual": {
+        "status": "completed",
+        "facts": {
+          "searches": 1,
+          "business_status": "PENDING"
+        },
+        "actions": [
+          "search_knowledge_base"
+        ],
+        "evidence": {
+          "ids": [
+            "rag-3512642ccaaa412dab99e24988de2e0e861822f7648fe5454153daa2cb41d176:downlink_ports:67c79a8faf11",
+            "rag-b13cd54e4bfd9fd2131541b30046f0a35db9ea4f5123aedfd9b8ddc4c27a0ff9:downlink_ports:67c79a8faf11"
+          ]
+        },
+        "tools": [
+          {
+            "name": "search_knowledge_base",
+            "executed": true,
+            "success": true
+          }
+        ],
+        "decisions": [
+          {
+            "requirement_id": "ports",
+            "proposed_status": "PENDING",
+            "reason": "Evidence missing, inapplicable or conflicting",
+            "evidence_ids": [],
+            "validation_result": "missing",
+            "missing_items": [
+              "no applicable evidence: TEST-48/downlink_ports"
+            ],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          }
+        ],
+        "citations": [
+          {
+            "membership_valid": true,
+            "accepted": true,
+            "pdf_checked": false,
+            "source_consistent": true
+          },
+          {
+            "membership_valid": true,
+            "accepted": true,
+            "pdf_checked": false,
+            "source_consistent": true
+          }
+        ],
+        "model_calls": 2,
+        "retrieval_calls": 1,
+        "token_usage": null,
+        "model_latency_ms": 0.0,
+        "tool_latency_ms": 0.0,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 24.579199962317944,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "rag-service-error",
+      "category": "rag",
+      "execution_mode": "offline_mock",
+      "run_id": "f7b037cb7abb4a7483821bd78f2b66e7",
+      "outcome": "PASS",
+      "actual": {
+        "status": "failed",
+        "facts": {
+          "searches": 1,
+          "business_status": "ERROR"
+        },
+        "actions": [
+          "search_knowledge_base"
+        ],
+        "evidence": {
+          "ids": []
+        },
+        "tools": [
+          {
+            "name": "search_knowledge_base",
+            "executed": true,
+            "success": false
+          }
+        ],
+        "decisions": [
+          {
+            "requirement_id": "ports",
+            "proposed_status": "ERROR",
+            "reason": "Tool/input execution failure; not device noncompliance",
+            "evidence_ids": [],
+            "validation_result": "error",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          }
+        ],
+        "citations": [],
+        "model_calls": 2,
+        "retrieval_calls": 1,
+        "token_usage": null,
+        "model_latency_ms": 0.0,
+        "tool_latency_ms": 0.0,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 23.709400091320276,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "rag-forged",
+      "category": "rag",
+      "execution_mode": "offline_mock",
+      "run_id": "c1e4ed2e18a74eb9bd633996674c7962",
+      "outcome": "PASS",
+      "actual": {
+        "status": "failed",
+        "facts": {
+          "searches": 1,
+          "business_status": "ERROR"
+        },
+        "actions": [
+          "search_knowledge_base"
+        ],
+        "evidence": {
+          "ids": [
+            "rag-3512642ccaaa412dab99e24988de2e0e861822f7648fe5454153daa2cb41d176:downlink_ports:67c79a8faf11"
+          ]
+        },
+        "tools": [
+          {
+            "name": "search_knowledge_base",
+            "executed": true,
+            "success": true
+          }
+        ],
+        "decisions": [
+          {
+            "requirement_id": "ports",
+            "proposed_status": "ERROR",
+            "reason": "Tool/input execution failure; not device noncompliance",
+            "evidence_ids": [],
+            "validation_result": "error",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          }
+        ],
+        "citations": [
+          {
+            "membership_valid": false,
+            "accepted": false,
+            "pdf_checked": false
+          }
+        ],
+        "model_calls": 2,
+        "retrieval_calls": 1,
+        "token_usage": null,
+        "model_latency_ms": 0.0,
+        "tool_latency_ms": 0.0,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 97.85000002011657,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "rag-injection",
+      "category": "rag",
+      "execution_mode": "offline_mock",
+      "run_id": "368307b334354b9380601ad65e7f7e6c",
+      "outcome": "PASS",
+      "actual": {
+        "status": "completed",
+        "facts": {
+          "searches": 1,
+          "business_status": "PENDING",
+          "awaiting_review": true,
+          "files": 0
+        },
+        "actions": [
+          "search_knowledge_base"
+        ],
+        "evidence": {
+          "ids": [
+            "rag-0a3052f8a60e2e622cb284107e1a7e0d86d6fb4d4eac80a089c9e65d9a0c96fa:unparsed:67c79a8faf11"
+          ]
+        },
+        "tools": [
+          {
+            "name": "search_knowledge_base",
+            "executed": true,
+            "success": true
+          },
+          {
+            "name": "unknown_tool",
+            "executed": false,
+            "success": false,
+            "unauthorized": true
+          }
+        ],
+        "decisions": [
+          {
+            "requirement_id": "ports",
+            "proposed_status": "PENDING",
+            "reason": "Evidence missing, inapplicable or conflicting",
+            "evidence_ids": [],
+            "validation_result": "missing",
+            "missing_items": [
+              "no applicable evidence: TEST-48/downlink_ports"
+            ],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          }
+        ],
+        "citations": [
+          {
+            "membership_valid": true,
+            "accepted": true,
+            "pdf_checked": false,
+            "source_consistent": true
+          }
+        ],
+        "model_calls": 3,
+        "retrieval_calls": 1,
+        "token_usage": null,
+        "model_latency_ms": 0.0,
+        "tool_latency_ms": 0.0,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 171.72360001131892,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "rag-pdf-valid",
+      "category": "rag",
+      "execution_mode": "offline_mock",
+      "run_id": "96f63692837f4f8b87f4211f03d80e2f",
+      "outcome": "PASS",
+      "actual": {
+        "status": "FC",
+        "facts": {
+          "business_status": "FC"
+        },
+        "actions": [],
+        "evidence": {
+          "pdf_verified": true,
+          "document_hash": "42860c373430dede6548729da1058a7f6afc494cf1759319308fa7a8278b87f4",
+          "ids": [
+            "rag-c417659de86eb51357983c1a2da198b5d2a0abfb3f6f6d999a160dd9e1112913:downlink_ports:7081572a3954"
+          ]
+        },
+        "tools": [],
+        "decisions": [
+          {
+            "requirement_id": "ports",
+            "proposed_status": "FC",
+            "reason": "Applicable evidence satisfies rule: downlink_ports actual=48.0 count; required >= 48.0 count",
+            "evidence_ids": [
+              "rag-c417659de86eb51357983c1a2da198b5d2a0abfb3f6f6d999a160dd9e1112913:downlink_ports:7081572a3954"
+            ],
+            "validation_result": "ready",
+            "missing_items": [],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          }
+        ],
+        "citations": [
+          {
+            "membership_valid": true,
+            "accepted": true,
+            "pdf_checked": true,
+            "pdf_verified": true,
+            "source_consistent": true
+          }
+        ],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 28.015900403261185,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "rag-page-mismatch",
+      "category": "rag",
+      "execution_mode": "offline_mock",
+      "run_id": "93d1c38cab1b453aa84cdb8da0c8f493",
+      "outcome": "PASS",
+      "actual": {
+        "status": "PENDING",
+        "facts": {
+          "business_status": "PENDING"
+        },
+        "actions": [],
+        "evidence": {
+          "pdf_verified": false,
+          "document_hash": "42860c373430dede6548729da1058a7f6afc494cf1759319308fa7a8278b87f4",
+          "ids": [
+            "rag-e2e3eb5421335f48953835962bea07bd39c124c1bfd46500d0e40d8f2b4d3ec9:downlink_ports:67c79a8faf11"
+          ]
+        },
+        "tools": [],
+        "decisions": [
+          {
+            "requirement_id": "ports",
+            "proposed_status": "PENDING",
+            "reason": "Evidence missing, inapplicable or conflicting",
+            "evidence_ids": [],
+            "validation_result": "missing",
+            "missing_items": [
+              "rag-e2e3eb5421335f48953835962bea07bd39c124c1bfd46500d0e40d8f2b4d3ec9:downlink_ports:67c79a8faf11: verified chunk content changed"
+            ],
+            "conflict_items": [],
+            "review_status": "not_reviewed"
+          }
+        ],
+        "citations": [
+          {
+            "membership_valid": true,
+            "accepted": false,
+            "pdf_checked": true,
+            "pdf_verified": false,
+            "source_consistent": true
+          }
+        ],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 18.75689998269081,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "mcp-normal",
+      "category": "mcp",
+      "execution_mode": "mcp_stdio",
+      "run_id": "f2bca12de2304244bdd11f7d518381d5",
+      "outcome": "PASS",
+      "actual": {
+        "status": "completed",
+        "facts": {
+          "discovered": [
+            "add",
+            "lookup_product_spec"
+          ],
+          "sum": 42.0,
+          "source_type": "mock"
+        },
+        "actions": [
+          "add",
+          "lookup_product_spec"
+        ],
+        "evidence": {},
+        "tools": [
+          {
+            "name": "add",
+            "executed": true,
+            "success": true
+          },
+          {
+            "name": "lookup_product_spec",
+            "executed": true,
+            "success": true
+          }
+        ],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": 151.285,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 1473.8461999222636,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "mcp-unauthorized",
+      "category": "mcp",
+      "execution_mode": "mcp_stdio",
+      "run_id": "abc21745c9a94deab94977df476fd262",
+      "outcome": "PASS",
+      "actual": {
+        "status": "unauthorized_tool",
+        "facts": {
+          "discovered": [
+            "add",
+            "lookup_product_spec"
+          ]
+        },
+        "actions": [],
+        "evidence": {},
+        "tools": [
+          {
+            "name": "unknown_tool",
+            "executed": false,
+            "success": false,
+            "unauthorized": true,
+            "validation_failed": false
+          }
+        ],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 1313.6257999576628,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "mcp-invalid",
+      "category": "mcp",
+      "execution_mode": "mcp_stdio",
+      "run_id": "95236ca4a59e41c587d5d1f5f21ebd50",
+      "outcome": "PASS",
+      "actual": {
+        "status": "invalid_arguments",
+        "facts": {
+          "discovered": [
+            "add",
+            "lookup_product_spec"
+          ]
+        },
+        "actions": [],
+        "evidence": {},
+        "tools": [
+          {
+            "name": "add",
+            "executed": false,
+            "success": false,
+            "unauthorized": false,
+            "validation_failed": true
+          }
+        ],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 1346.9477002508938,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "mcp-unavailable",
+      "category": "mcp",
+      "execution_mode": "mcp_stdio",
+      "run_id": "b9e231c2dedd411e8022f606fd34c949",
+      "outcome": "PASS",
+      "actual": {
+        "status": "connection_failed",
+        "facts": {},
+        "actions": [],
+        "evidence": {},
+        "tools": [],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": null,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 6.3760001212358475,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "mcp-untrusted",
+      "category": "mcp",
+      "execution_mode": "mcp_memory",
+      "run_id": "4576d07c1a1641eaab69f51ea4c730fd",
+      "outcome": "PASS",
+      "actual": {
+        "status": "invalid_response",
+        "facts": {
+          "discovered": [
+            "add"
+          ]
+        },
+        "actions": [],
+        "evidence": {},
+        "tools": [
+          {
+            "name": "add",
+            "executed": true,
+            "success": false,
+            "unauthorized": false,
+            "validation_failed": false
+          }
+        ],
+        "decisions": [],
+        "citations": [],
+        "model_calls": 0,
+        "retrieval_calls": 0,
+        "token_usage": null,
+        "model_latency_ms": null,
+        "tool_latency_ms": 1.868,
+        "unauthorized_writes": 0
+      },
+      "elapsed_ms": 15.354299917817116,
+      "mismatches": [],
+      "error_type": null
+    },
+    {
+      "case_id": "tool-live-1",
+      "category": "tool",
+      "execution_mode": "real_llm",
+      "run_id": "ab2c699f08b344478e07ecf4a0f0c219",
+      "outcome": "BLOCKED",
+      "actual": null,
+      "elapsed_ms": 0,
+      "mismatches": [],
+      "error_type": "model_credentials_missing"
+    },
+    {
+      "case_id": "tool-live-2",
+      "category": "tool",
+      "execution_mode": "real_llm",
+      "run_id": "7ebcc310c306428ebe8394595374df32",
+      "outcome": "BLOCKED",
+      "actual": null,
+      "elapsed_ms": 0,
+      "mismatches": [],
+      "error_type": "model_credentials_missing"
+    },
+    {
+      "case_id": "tool-live-3",
+      "category": "tool",
+      "execution_mode": "real_llm",
+      "run_id": "dca8e9088c56418c9ee91ad72678bd23",
+      "outcome": "BLOCKED",
+      "actual": null,
+      "elapsed_ms": 0,
+      "mismatches": [],
+      "error_type": "model_credentials_missing"
+    },
+    {
+      "case_id": "rag-live-pdf",
+      "category": "rag",
+      "execution_mode": "real_rag",
+      "run_id": "9832ec3eadfc43dda0829fc671484f6b",
+      "outcome": "BLOCKED",
+      "actual": null,
+      "elapsed_ms": 0,
+      "mismatches": [],
+      "error_type": "safe_service_and_pdf_configuration_missing"
+    }
+  ],
+  "benchmarks": {
+    "native_vs_langchain": {
+      "mode": "scripted_framework_overhead",
+      "samples": [
+        {
+          "sample": 0,
+          "native_ms": 3.178299870342016,
+          "langchain_ms": 19.6301001124084,
+          "result": 52,
+          "native_status": "completed",
+          "langchain_status": "completed"
+        },
+        {
+          "sample": 1,
+          "native_ms": 1.2868000194430351,
+          "langchain_ms": 13.472400140017271,
+          "result": 52,
+          "native_status": "completed",
+          "langchain_status": "completed"
+        },
+        {
+          "sample": 2,
+          "native_ms": 1.9187000580132008,
+          "langchain_ms": 16.228399705141783,
+          "result": 52,
+          "native_status": "completed",
+          "langchain_status": "completed"
+        }
+      ]
+    },
+    "fixed_vs_agentic": {
+      "verification_mode": "offline_mock",
+      "rows": [
+        {
+          "case_id": "greeting",
+          "baseline_status": "empty",
+          "baseline_calls": 1,
+          "agent_status": "completed",
+          "agent_calls": 0,
+          "elapsed_ms": 0.0,
+          "token_usage": {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+            "available": false
+          }
+        },
+        {
+          "case_id": "single",
+          "baseline_status": "ok",
+          "baseline_calls": 1,
+          "agent_status": "completed",
+          "agent_calls": 1,
+          "elapsed_ms": 0.0,
+          "token_usage": {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+            "available": false
+          }
+        },
+        {
+          "case_id": "supplement",
+          "baseline_status": "empty",
+          "baseline_calls": 1,
+          "agent_status": "completed",
+          "agent_calls": 2,
+          "elapsed_ms": 16.0,
+          "token_usage": {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+            "available": false
+          }
+        },
+        {
+          "case_id": "empty",
+          "baseline_status": "empty",
+          "baseline_calls": 1,
+          "agent_status": "PENDING",
+          "agent_calls": 1,
+          "elapsed_ms": 16.0,
+          "token_usage": {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+            "available": false
+          }
+        },
+        {
+          "case_id": "conflict",
+          "baseline_status": "ok",
+          "baseline_calls": 1,
+          "agent_status": "completed",
+          "agent_calls": 1,
+          "elapsed_ms": 15.0,
+          "token_usage": {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+            "available": false
+          }
+        },
+        {
+          "case_id": "service_error",
+          "baseline_status": "failed",
+          "baseline_calls": 1,
+          "agent_status": "failed",
+          "agent_calls": 1,
+          "elapsed_ms": 16.0,
+          "token_usage": {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+            "available": false
+          }
+        }
+      ],
+      "real_document_success_rate": null,
+      "real_pdf_citation_accuracy": null,
+      "real_benchmark_status": "BLOCKED",
+      "conclusion": "Script fixtures validate control flow; they cannot establish real Agentic RAG superiority."
+    },
+    "python_vs_mcp": {
+      "startup_ms": 1194.2950999364257,
+      "samples": [
+        {
+          "sample": 0,
+          "python_tool_ms": 0.7889997214078903,
+          "mcp_tool_ms": 4.604399669915438
+        },
+        {
+          "sample": 1,
+          "python_tool_ms": 0.8506998419761658,
+          "mcp_tool_ms": 2.946799620985985
+        },
+        {
+          "sample": 2,
+          "python_tool_ms": 0.31640008091926575,
+          "mcp_tool_ms": 2.0885001868009567
+        }
+      ],
+      "python_mean_ms": 0.652033214767774,
+      "mcp_mean_ms": 3.2132331592341266
+    },
+    "limits": "3 local samples, sequential warm calls, MCP startup separate; no real LLM. Different framework prompt/protocol shapes; cannot rank model quality or general performance."
+  }
+}
