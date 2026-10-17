@@ -230,7 +230,9 @@ class RAGClient:
     def retrieve(
         self, query, top_k=None, document_id=None, version_id=None, classification=None
     ) -> RAGSearchResult:
-        start = time.monotonic()
+        # CPython3.11 Windows monotonic can have ~15ms granularity; perf_counter
+        # provides the resolution needed for sub-second logical request budgets.
+        start = time.perf_counter()
         deadline = start + self.settings.task_timeout
         attempts = 0
         metadata = {"verification_mode": self.verification_mode}
@@ -241,7 +243,7 @@ class RAGClient:
                 results=results or [],
                 retrieval_status=status,
                 error=error,
-                elapsed_ms=round((time.monotonic() - start) * 1000, 3),
+                elapsed_ms=round((time.perf_counter() - start) * 1000, 3),
                 retrieval_metadata={**metadata, "attempt_count": attempts},
             )
 
@@ -263,7 +265,7 @@ class RAGClient:
 
         last_error = "network_error"
         for _ in range(self.settings.max_retries + 1):
-            remaining = deadline - time.monotonic()
+            remaining = deadline - time.perf_counter()
             if remaining <= 0:
                 return outcome(error="budget_exceeded")
             attempts += 1
@@ -281,7 +283,7 @@ class RAGClient:
                     timeout=timeout,
                 ) as response:
                     metadata["http_status"] = response.status_code
-                    if time.monotonic() >= deadline:
+                    if time.perf_counter() >= deadline:
                         return outcome(error="budget_exceeded")
                     if response.status_code in {401, 403}:
                         return outcome(error="auth_failed")
@@ -297,7 +299,7 @@ class RAGClient:
                             except ValueError:
                                 delay = 0
                             if 0 < delay < float("inf"):
-                                if delay >= deadline - time.monotonic():
+                                if delay >= deadline - time.perf_counter():
                                     return outcome(error="budget_exceeded")
                                 time.sleep(delay)
                         continue
@@ -308,7 +310,7 @@ class RAGClient:
                         return outcome(error="response_too_large")
                     body = bytearray()
                     for part in response.iter_bytes():
-                        if time.monotonic() >= deadline:
+                        if time.perf_counter() >= deadline:
                             return outcome(error="budget_exceeded")
                         if len(body) + len(part) > self.settings.max_response_bytes:
                             return outcome(error="response_too_large")
@@ -317,7 +319,7 @@ class RAGClient:
                     if type(data) is not dict:
                         raise ValueError("response must be a JSON object")
                     hits, truncated = self._hits(data, request.top_k)
-                    if time.monotonic() >= deadline:
+                    if time.perf_counter() >= deadline:
                         return outcome(error="budget_exceeded")
                     metadata["server_metadata"] = {
                         key: deepcopy(value) for key, value in data.items() if key != "documents"
@@ -330,6 +332,6 @@ class RAGClient:
                 last_error = "network_error"
             except (ValidationError, ValueError, TypeError, UnicodeError):
                 return outcome(error="schema_error")
-        if time.monotonic() >= deadline:
+        if time.perf_counter() >= deadline:
             return outcome(error="budget_exceeded")
         return outcome(error=last_error)

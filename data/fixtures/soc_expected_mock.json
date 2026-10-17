@@ -1,0 +1,22 @@
+{
+  "source_type": "mock",
+  "fixture_version": "mock-soc-v1",
+  "expected_statuses": {
+    "r1": "FC",
+    "r2": "FC",
+    "r3": "NC",
+    "r4": "FC",
+    "r5": "FC",
+    "r6": "PENDING",
+    "r7": "PENDING",
+    "r8": "PENDING",
+    "r9": "PENDING",
+    "r10": "PENDING",
+    "pc": "PC",
+    "pc-1": "FC",
+    "pc-2": "NC",
+    "unknown": "PENDING",
+    "unknown-1": "FC",
+    "unknown-2": "PENDING"
+  }
+}

@@ -49,6 +49,14 @@ class ProposedAction(BaseModel):
     source_type: Literal["mock", "real_rag"] = "mock"
 
 
+class SOCExportPolicy(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    kind: Literal["write_soc_excel_draft"] = "write_soc_excel_draft"
+    output_root: str
+    format_version: Literal["soc-v2"] = "soc-v2"
+    document_status: Literal["DRAFT"] = "DRAFT"
+
+
 class ReviewSnapshot(BaseModel):
     model_config = ConfigDict(extra="forbid")
     run_id: str
@@ -59,3 +67,4 @@ class ReviewSnapshot(BaseModel):
     business_result: WorkflowResult
     configuration: dict[str, str]
     proposed_action: ProposedAction
+    export_policy: SOCExportPolicy | None = None

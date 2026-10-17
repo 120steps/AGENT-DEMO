@@ -9,6 +9,9 @@ description = "Incremental agent engineering learning project"
 readme = "README.md"
 requires-python = ">=3.11,<3.12"
 dependencies = [
+    "fastapi>=0.143,<0.144",
+    "uvicorn>=0.54,<0.55",
+    "openpyxl>=3.1.5,<3.2",
     "mcp>=2.3,<2.4",
     "google-genai>=2.29,<3",
     "langchain>=1.4,<2",

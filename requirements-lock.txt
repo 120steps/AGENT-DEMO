@@ -1,7 +1,6 @@
-# Resolved and installed through 2026-10-17: Windows x64, CPython 3.11.0.
-# External runtime/dev/build packages; project installed separately with pip install -e .
-# Windows snapshot (includes pywin32); not a Linux lock or hash-pinned resolution.
+# Verified Windows x64 / CPython 3.11.0 environment; excludes editable agent-demo.
 aiosqlite==0.22.1
+annotated-doc==0.0.5
 annotated-types==0.8.0
 anyio==4.15.1
 attrs==26.1.0
@@ -12,6 +11,8 @@ click==8.5.0
 colorama==0.4.6
 cryptography==50.0.2
 distro==1.9.0
+et-xmlfile==2.0.0
+fastapi==0.143.3
 filetype==1.2.0
 google-auth==2.61.0
 google-genai==2.29.0
@@ -38,6 +39,7 @@ langgraph-sdk==0.4.6
 langsmith==0.14.7
 mcp==2.3.0
 mcp-types==2.3.0
+openpyxl==3.1.5
 opentelemetry-api==1.45.1
 orjson==3.13.0
 ormsgpack==1.12.2
@@ -45,17 +47,17 @@ packaging==26.3
 pip==26.2.1
 pluggy==1.6.0
 pyasn1==0.6.4
-pyasn1_modules==0.4.2
+pyasn1-modules==0.4.2
 pycparser==3.11
 pydantic==2.14.0
-pydantic_core==2.50.0
-Pygments==2.21.0
-PyJWT==2.15.1
+pydantic-core==2.50.0
+pygments==2.21.0
+pyjwt==2.15.1
 pypdf==6.20.1
 pytest==9.1.1
 python-multipart==0.0.32
 pywin32==312
-PyYAML==6.0.3
+pyyaml==6.0.3
 referencing==0.37.0
 requests==2.34.2
 requests-toolbelt==1.0.0
@@ -68,10 +70,10 @@ sse-starlette==3.5.0
 starlette==1.8.0
 tenacity==9.1.4
 truststore==0.10.4
+typing-extensions==4.16.0
 typing-inspection==0.4.4
-typing_extensions==4.16.0
 urllib3==2.8.0
-uuid_utils==0.17.1
+uuid-utils==0.17.1
 uvicorn==0.54.0
 websockets==16.1.1
 wheel==0.48.0

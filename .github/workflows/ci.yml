@@ -6,7 +6,10 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -22,3 +25,17 @@ jobs:
           python -m ruff format --check .
       - name: Offline evaluation and independent safety gates
         run: python examples/phase08_evaluation.py --output outputs/phase08/ci
+      - name: Actual local HTTP SOC restart acceptance
+        run: python examples/project_acceptance.py
+
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install httpx openpyxl
+      - run: docker build -t agent-demo:ci .
+      - name: Container task persistence and human-review acceptance
+        run: python examples/project_acceptance.py --docker-image agent-demo:ci

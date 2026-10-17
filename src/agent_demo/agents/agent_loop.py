@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
-from concurrent.futures import ThreadPoolExecutor
-from concurrent.futures import TimeoutError as FutureTimeout
 from dataclasses import dataclass
+from math import isfinite
 from time import perf_counter
 from uuid import uuid4
 
+from agent_demo.agents.execution import wait_until
+from agent_demo.agents.tool_calling import ModelReply, ResponseFormatError, ToolCall
 from agent_demo.tools import TOOL_DEFINITIONS, dispatch
 
 
@@ -21,12 +22,17 @@ class LoopLimits:
     max_output_tokens: int = 2048
     estimated_input_tokens: int | None = None
     estimated_output_tokens: int | None = None
+    max_total_tokens: int = 16000
 
     def __post_init__(self):
-        if self.max_model_rounds < 1 or self.max_tool_calls < 1 or self.max_retries < 0:
-            raise ValueError("loop counts must be positive and retries nonnegative")
-        if self.tool_timeout <= 0 or self.task_timeout <= 0:
-            raise ValueError("timeouts must be positive")
+        for name in ("max_model_rounds", "max_tool_calls", "max_output_tokens", "max_total_tokens"):
+            if type(getattr(self, name)) is not int or getattr(self, name) < 1:
+                raise ValueError(f"{name} must be a positive integer")
+        if type(self.max_retries) is not int or self.max_retries < 0:
+            raise ValueError("max_retries must be a nonnegative integer")
+        for value in (self.tool_timeout, self.task_timeout):
+            if type(value) not in (int, float) or not isfinite(value) or value <= 0:
+                raise ValueError("timeouts must be finite positive numbers")
 
 
 @dataclass
@@ -41,6 +47,10 @@ class LoopResult:
 
 def run_agent_loop(client, prompt: str, limits: LoopLimits | None = None, event_sink=None):
     limits = limits or LoopLimits()
+    if hasattr(client, "for_run"):
+        client = client.for_run(
+            max_output_tokens=limits.max_output_tokens, timeout=limits.task_timeout
+        )
     run_id = uuid4().hex
     started = perf_counter()
     events: list[dict] = []
@@ -50,6 +60,9 @@ def run_agent_loop(client, prompt: str, limits: LoopLimits | None = None, event_
         "total_tokens": 0,
         "estimated_cost": None,
         "cost_status": "unavailable",
+        "available": False,
+        "pre_call_estimated_cost": None,
+        "price_source": None,
     }
     history = []
     tool_count = 0
@@ -82,15 +95,33 @@ def run_agent_loop(client, prompt: str, limits: LoopLimits | None = None, event_
         return result("failed", "invalid_prompt")
 
     def model_call(fn):
+        nonlocal round_no
         last_error = None
         for attempt in range(limits.max_retries + 1):
+            if round_no >= limits.max_model_rounds:
+                return None, "max_model_rounds"
+            if elapsed() >= limits.task_timeout:
+                return None, "timeout"
+            round_no += 1
             record("MODEL_REQUEST", execution_status="started", retry_attempt=attempt)
             call_started = perf_counter()
             try:
-                with ThreadPoolExecutor(max_workers=1) as pool:
-                    reply = pool.submit(fn).result(
-                        timeout=max(0.01, limits.task_timeout - elapsed())
-                    )
+                reply = wait_until(fn, started + limits.task_timeout)
+                if not isinstance(reply, ModelReply) or not isinstance(reply.calls, tuple):
+                    raise ResponseFormatError("invalid model response")
+                if not isinstance(reply.text, str) or (not reply.text.strip() and not reply.calls):
+                    raise ResponseFormatError("empty response")
+                if any(
+                    not isinstance(c, ToolCall)
+                    or not isinstance(c.name, str)
+                    or not c.name
+                    or (c.call_id is not None and (not isinstance(c.call_id, str) or not c.call_id))
+                    for c in reply.calls
+                ):
+                    raise ResponseFormatError("invalid tool call")
+                ids = [c.call_id for c in reply.calls if c.call_id is not None]
+                if len(ids) != len(set(ids)):
+                    raise ResponseFormatError("duplicate call IDs")
                 record(
                     "MODEL_RESPONSE",
                     execution_status="received",
@@ -99,11 +130,21 @@ def run_agent_loop(client, prompt: str, limits: LoopLimits | None = None, event_
                     token_usage=getattr(reply, "usage", None),
                 )
                 incoming = getattr(reply, "usage", None) or {}
+                usage["available"] = usage["available"] or bool(incoming)
                 for key in ("input_tokens", "output_tokens", "total_tokens"):
-                    usage[key] += int(incoming.get(key, 0) or 0)
+                    value = incoming.get(key, 0)
+                    if type(value) is int and value >= 0:
+                        usage[key] += value
+                if usage["total_tokens"] >= limits.max_total_tokens:
+                    return None, "max_total_tokens"
                 return reply
-            except FutureTimeout:
-                record("ERROR", execution_status="timeout", error_type="model_timeout")
+            except TimeoutError:
+                record(
+                    "ERROR",
+                    execution_status="timeout",
+                    error_type="model_timeout",
+                    cancellation_confirmed=False,
+                )
                 return None, "timeout"
             except Exception as error:
                 last_error = error
@@ -119,7 +160,6 @@ def run_agent_loop(client, prompt: str, limits: LoopLimits | None = None, event_
             return result("timeout", "task_timeout")
         if round_no >= limits.max_model_rounds:
             return result("budget_exceeded", "max_model_rounds")
-        round_no += 1
         if not history:
             reply = model_call(lambda: client.first(prompt, TOOL_DEFINITIONS))
         else:
@@ -128,7 +168,8 @@ def run_agent_loop(client, prompt: str, limits: LoopLimits | None = None, event_
             )
         if isinstance(reply, tuple):
             reason = reply[1]
-            return result("timeout" if reason == "timeout" else "failed", reason)
+            status = "budget_exceeded" if reason.startswith("max_") else "failed"
+            return result("timeout" if reason == "timeout" else status, reason)
         if reply is None:
             return result("failed", "model_error")
         history.append(reply)
@@ -147,22 +188,22 @@ def run_agent_loop(client, prompt: str, limits: LoopLimits | None = None, event_
                 execution_status="requested",
             )
             tool_started = perf_counter()
-            with ThreadPoolExecutor(max_workers=1) as pool:
-                future = pool.submit(dispatch, call.name, call.arguments)
-                try:
-                    output = future.result(
-                        timeout=min(limits.tool_timeout, max(0.01, limits.task_timeout - elapsed()))
-                    )
-                except FutureTimeout:
-                    record(
-                        "OBSERVATION",
-                        tool_call_id=call.call_id,
-                        tool_name=call.name,
-                        execution_status="timeout",
-                        elapsed_ms=round((perf_counter() - tool_started) * 1000, 3),
-                        error_type="tool_timeout",
-                    )
-                    return result("timeout", "tool_timeout")
+            try:
+                output = wait_until(
+                    lambda call=call: dispatch(call.name, call.arguments),
+                    min(tool_started + limits.tool_timeout, started + limits.task_timeout),
+                )
+            except TimeoutError:
+                record(
+                    "OBSERVATION",
+                    tool_call_id=call.call_id,
+                    tool_name=call.name,
+                    execution_status="timeout",
+                    cancellation_confirmed=False,
+                    elapsed_ms=round((perf_counter() - tool_started) * 1000, 3),
+                    error_type="tool_timeout",
+                )
+                return result("timeout", "tool_timeout")
             outputs.append(output)
             record(
                 "OBSERVATION",

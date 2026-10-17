@@ -1,3 +1,5 @@
+import pytest
+
 from agent_demo.agents.langchain_agent import (
     AgentAnswer,
     add_tool,
@@ -14,12 +16,10 @@ def test_pydantic_answer_and_wrapped_tools_reuse_dispatcher():
 
 
 def test_invalid_tool_arguments_are_rejected_by_wrapper():
-    try:
+    # Pydantic rejects at the schema boundary before Dispatcher; ValidationError
+    # is a ValueError subclass. Do not depend on a later concrete exception name.
+    with pytest.raises(ValueError):
         lookup_product_spec_tool.invoke({"model": "REAL-SW-48"})
-    except Exception as error:
-        assert type(error).__name__ in {"ValueError", "ToolException"}
-    else:
-        raise AssertionError("invalid model must not execute")
 
 
 def test_create_agent_is_the_selected_api(monkeypatch):

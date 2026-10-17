@@ -16,6 +16,12 @@ LangChain 管理消息历史和工具循环；`recursion_limit` 是图步骤上�
 
 ## 运行与验证
 
+### 2026-10-17 控制与对照补齐
+
+`ExecutionGuard`通过实际安装版`wrap_model_call`/`wrap_tool_call`实现模型尝试、工具尝试、输出/累计token、重试和期限；递归步数仅作为额外保护，不等同于业务次数。严格Pydantic Schema在任何类型转换前拒绝bool、字符串数值和额外字段，Middleware继续校验原Dispatcher允许列表。未知工具、非法参数与业务异常返回关联ToolMessage错误，模型仍可在预算内处理；预算/超时终止不会返回成功答案。
+
+统一对照测试覆盖普通回答、同轮多个调用、连续多轮、执行异常、非法结构化输出、有限重试和实际停止等待。使用既有脚本模型与相同业务结果比较工具动作；原Phase8三组Benchmark再次运行，不据此比较真实模型质量。实际实现依据[官方Middleware API](https://reference.langchain.com/python/langchain/agents/middleware)，本机LangChain1.4.4通过回归；本次无Key，没有重新消耗真实API Token。
+
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -q
 .\.venv\Scripts\python.exe -m ruff check .
