@@ -22,6 +22,8 @@ LangChain 管理消息历史和工具循环；`recursion_limit` 是图步骤上�
 
 统一对照测试覆盖普通回答、同轮多个调用、连续多轮、执行异常、非法结构化输出、有限重试和实际停止等待。使用既有脚本模型与相同业务结果比较工具动作；原Phase8三组Benchmark再次运行，不据此比较真实模型质量。实际实现依据[官方Middleware API](https://reference.langchain.com/python/langchain/agents/middleware)，本机LangChain1.4.4通过回归；本次无Key，没有重新消耗真实API Token。
 
+用户随后明确授权整合本地提交，实现版本`ee192a3`已建立，Phase3控制与版本复核收尾完成。新增`--mock`入口可独立运行；本次状态收尾不扩大历史真实模型验证声明。
+
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -q
 .\.venv\Scripts\python.exe -m ruff check .
