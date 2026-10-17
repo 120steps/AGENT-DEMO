@@ -1,10 +1,10 @@
 # AGENT-DEMO — Agent 学习与工程实施路线图
 
 > 版本：v2.0，实施版<br>
-> 更新日期：2026-10-14<br>
-> 当前状态：**Phase 6 BLOCKED — 客户端、Agent Tool、证据业务路径及离线验证完成；缺安全真实服务与资料验收**<br>
-> 当前阶段：**Phase 4–5 已提交并复核 DONE；Phase 6 真实 HTTP、真实 PDF 回查和真实评测未通过；前阶段缺口保留**<br>
-> 下一任务：**提供已授权且不会改变旧项目的 RAG 服务、Bearer、固定设备 PDF 与型号/版本绑定，再执行真实验收。推送未授权。**<br>
+> 更新日期：2026-10-17<br>
+> 当前状态：**Phase 7 DOING — MCP stdio、Agent 集成与50项专项测试通过，统一版本收尾待授权；Phase 6 真实验收仍 BLOCKED**<br>
+> 当前阶段：**独立 MCP 实验收尾；保留 Phase 2/3 缺口及 Phase 6 服务/PDF/真实评测阻碍**<br>
+> 下一任务：**技术验收与交付核查完成，等待授权本阶段本地提交（不推送）；随后汇总 Phase 8，并按条件解除 Phase 6 阻碍。**<br>
 > 唯一进度入口：本文件。后续按本文任务与验收证据推进。<br>
 > 边界：AGENT-DEMO 独立开发；RAG-DEMO 只读检查，未经明确授权不修改。
 
@@ -14,7 +14,14 @@
 
 ### 0.1 已确认的工程事实
 
-截至 2026-10-14 的本地检查（下方旧阶段事实按日期保留）：
+截至 2026-10-17 的本地检查：
+
+- 当前分支 `phase-4`，HEAD `378f948`（`add agent demo introducation`）；本次开始时工作区干净，已包含 Phase 6 提交 `aaf6c8f`。不改变既有历史，不自动推送。
+- 官方 MCP Python SDK 2.3.0 实际安装兼容当前 Python 3.11.0、Pydantic 2.14.0、LangChain 1.4.4。原61个依赖版本未变，新增15项，固定清单76项；本地 stdio 实际协商到 2026-07-28。
+- Phase 7 的50项专项测试通过；完整回归361 passed / 0 failed / 1 skipped（60.19s），包含原Phase0–6的311项通过。真实stdio、脚本模型create_agent→MCP和进程清理验证完成；真实模型Key不可用，未调用LLM，唯一跳过仍为Phase6真实服务/PDF验收。
+- 旧 RAG-DEMO 未启动、未修改，只读 Git 前后干净；Phase 6 继续 BLOCKED。Phase 7 独立于真实 RAG，可完成本地实验，但统一版本收尾尚未获得本阶段提交授权。
+
+以下 2026-10-14 的本地检查作为历史保留：
 
 - 当前分支 `phase-4`，HEAD `9260a54`（`phase 5`），本次开始时工作区干净。Phase 5 已提交；既有 164 项测试在新回归中全部通过，另验证原 2026-10-13 已保存任务仍能核验为 completed。
 - Phase 6 完整 pytest 为 311 passed / 0 failed / 1 skipped；唯一跳过的是安全真实服务/设备 PDF 未配置的 opt-in 验收。HTTP Mock、脚本 Chat Model、TEST PDF、真实本机关闭端口错误检查分别标注，不冒充真实 RAG 请求。
@@ -69,7 +76,7 @@
 | 4 | LangGraph 显式工作流 | DONE | 98 项验证记录保留；实现提交 9e4a8f3，本次复核通过 | 2026-10-13（复核） |
 | 5 | Checkpoint、恢复、人工审核 | DONE | 实现提交 9260a54；164 项回归及既有审核快照兼容复核通过 | 2026-10-14（复核） |
 | 6 | 真实 Agentic RAG | BLOCKED | HTTP/Tool/真实证据路径与离线评测机制完成；311 passed，真实服务/PDF/实测缺失 | — |
-| 7 | MCP 独立实验 | TODO | 本地 MCP Server / Client | — |
+| 7 | MCP 独立实验 | DOING | v2真实stdio与Agent集成、50项专项通过；待授权本地版本 | — |
 | 8 | 评测、安全、可观测性汇总 | TODO | 回归报告和错误诊断 | — |
 | 9 | 最小 API 与部署完善 | TODO | Agent API、容器化、部署验证 | — |
 | 10 | RFP → SOC 毕业项目 | TODO | 可审核、可追溯的 Excel 输出 | — |
@@ -374,12 +381,19 @@ AGENT-DEMO/
 
 **必做任务（选择实施本阶段时）**
 
-- [ ] 理解 Host、Client、Server 及工具发现。
-- [ ] 核实 SDK 版本；先使用本地 stdio，暴露现有规格查询或计算业务函数。
-- [ ] 完成初始化、发现、调用、结果解析与进程退出清理。
-- [ ] 校验工具名称、参数和返回值；发现到工具不代表自动允许执行。
-- [ ] 测试启动失败、调用超时、无效返回和服务断开。
-- [ ] 对比 Python 函数、HTTP API 与 MCP 的职责及开销。
+- [x] 理解 Host、Client、Server 及工具发现；技术文档有架构与时序图。
+- [x] 核实官方稳定 SDK 2.3.0，使用 v2 MCPServer / Client，真实 stdio 暴露既有两工具。
+- [x] 实际 server/discover 协商2026-07-28、发现、调用、结构化/文本结果解析及进程退出清理。
+- [x] 校验工具名称、原参数 Schema、业务结果；Host 允许列表独立于发现集合。
+- [x] 真实测试启动失败/超时、服务退出、调用超时、协议错误、工具错误及无效返回。
+- [x] 实际 create_agent 经 MCP 使用共用工具，Phase 3 原直接工具保持共存；模型为离线脚本，通信为真实 stdio。
+- [x] 对比 Python 函数、HTTP API 与 MCP 的职责、开销、错误和权限。
+- [x] 生成技术文档 `docs/phase07_mcp.md` 和固定阶段总结 `docs/phase07_summary.md`。
+- [ ] 经授权创建本阶段本地 Git 版本，完成统一标准第15节的版本收尾；不推送。
+
+**2026-10-17 实施记录：** 50项专项通过；Client add(15,27)=42、MOCK规格查询、Agent lookup→add(48,4)=52均通过真实stdio运行。SDK内存连接、真实子进程和脚本模型分别标注；无有效模型Key，真实LLM未验证且不冒充。最终回归与版本状态见第16节。
+
+**技术验收结果：** 完整361 passed / 0 failed / 1 skipped；Ruff、格式和pip check通过。阶段DOING仅等待第15节要求的授权本地版本；未自动提交，不推送。
 
 **扩展任务：** 远程 HTTP 传输及认证单独实施，不阻塞本地实验。
 
@@ -516,7 +530,7 @@ AGENT-DEMO/
 - 总结不替代验证报告、接口契约、学习日志或提交授权；已有详情通过链接引用。
 - 生成文档后核查引用、图与代码一致性、验证结果和敏感信息，再按用户授权处理提交。
 
-当前阶段总结：[Phase 0](docs/phase00_summary.md)、[Phase 1](docs/phase01_summary.md)、[Phase 3](docs/phase03_summary.md)、[Phase 4](docs/phase04_summary.md)、[Phase 5](docs/phase05_summary.md)。总结保留各自验收时快照，当前进度以上表为准。
+当前阶段总结：[Phase 0](docs/phase00_summary.md)、[Phase 1](docs/phase01_summary.md)、[Phase 2](docs/phase02_summary.md)、[Phase 3](docs/phase03_summary.md)、[Phase 4](docs/phase04_summary.md)、[Phase 5](docs/phase05_summary.md)、[Phase 6](docs/phase06_summary.md)、[Phase 7](docs/phase07_summary.md)。总结保留各自快照，存在总结不等于当前阶段DONE，实时进度以上表为准。
 
 ## 16. 学习日志
 
@@ -677,6 +691,23 @@ AGENT-DEMO/
 - 下一任务：提供安全独立服务与凭据、已授权固定设备 PDF/绑定/标准答案，完成 opt-in HTTP/PDF 验收及真实对比；Phase 10A 尚不能进入，Phase 7 为独立可选学习实验，不是业务主链依赖。
 - 用户后续确认：目前暂无独立 RAG 服务，先完成开发并保留真实验收 BLOCKED。开发与离线验证已完成；不启动或修改旧 RAG-DEMO，待服务准备后接续真实验收。
 
+### 2026-10-17 — Phase 7 / 官方 MCP v2 stdio 独立实验
+
+- 状态：DOING，本地技术实施与专项验收通过，统一版本收尾待本阶段提交授权；不推送。Phase 6 真实验收状态不变。
+- 核心理解：MCP 是工具发现/执行协议，Host 仍负责授权，SDK 不替代业务校验；模型循环由 LangChain 管理，Server 无需 LLM。
+- 实现：官方 MCPServer / Client，本地 stdio 复用原 add/lookup_product_spec 和 Dispatcher；原 Schema、原业务逻辑、固定允许列表、严格输入和结果校验、独立连接/工具期限、错误分类、完整进程生命周期；薄 StructuredTool 适配和独立 create_agent 入口复用 AgentAnswer。
+- 新增文件：`src/agent_demo/mcp/server.py`、`client.py`、`tool_adapter.py`；三个 Phase 7 examples；`tests/test_phase07_mcp.py`；`docs/phase07_mcp.md`、`docs/phase07_summary.md`。修改 pyproject、requirements-lock、README 及本路线图，合计13个文件。
+- 版本：Python3.11.0/Windows x64、mcp2.3.0、mcp-types2.3.0、pydantic2.14.0、langchain1.4.4、langgraph1.2.14、anyio4.15.1、pywin32 312。PyPI元数据Python>=3.10与当前官方文档3.11+有差异；仅声明本机3.11实际兼容。原61项依赖版本全部保持，新增15项，76项清单适用于Windows，不宣称Linux锁文件。
+- 实际命令：`.venv\Scripts\python.exe -m pip --isolated --disable-pip-version-check install --index-url https://pypi.org/simple --timeout 15 --retries 1 --no-cache-dir "mcp==2.3.0"`；`pip ... install --no-index --no-build-isolation --no-deps -e .`；Phase7 Client和Agent Demo；`-m pytest tests/test_phase07_mcp.py -q`；完整 `-m pytest -q --tb=short --junitxml outputs/phase07/pytest-20261017.xml`；Ruff check/format、pip check。
+- 专项结果：50 passed / 0 failed / 0 skipped（30.68s）。SDK内存连接、原始SDK真实stdio非法调用、调用/启动超时、服务退出、错误回复、脚本模型MCP往返、调用ID、工具授权、stderr日志和进程returncode均验证。完整回归最终结果补记于本段后续核查。
+- 最终完整回归：361 passed / 0 failed / 1 skipped（60.19s）；原311项全部通过，新增50项全部通过。唯一跳过保留Phase6真实RAG/PDF条件。Ruff check、74文件格式检查、pip check通过；34个README/本阶段文档本地链接有效；76项固定依赖一致，旧61项无版本变更；独立Server脚本入口也完成真实Client调用。XML：`outputs/phase07/pytest-20261017.xml`；Git diff/check、敏感跟踪及旧仓库只读状态检查通过。
+- 实际轨迹：协议2026-07-28；Client发现add与lookup_product_spec，add(15,27)=42；Agent脚本phase07-1查MOCK-SW-48→phase07-2 add(48,4)=52→AgentAnswer。原Gemini/GOOGLE进程Key均未配置；没有真实LLM调用。Demo证据 `outputs/phase07/validation-20261017.json`，完整XML同目录，保持忽略。
+- 失败与修复：测试进程观测函数名与v2实际接口不同，改读已安装源码；裸dict强制结构化输出被SDK拒绝，改为dict[str,Any]；SDK连接关闭码初被归为协议错误，增加独立分类；read timeout未约束整个auto探测，增加连接整体期限；随后短工具期限影响冷启动，拆分connect_timeout与timeout，定向与专项回归通过。旧失败不删除、不通过跳过测试掩盖。
+- Git：`phase-4` / `378f948`，本阶段未add/commit/push。旧RAG只读Git前后干净，未启动/导入/调用旧项目。输出、运行库、凭据及虚拟环境未进入跟踪范围。
+- 限制：无真实LLM验收；本地受信命令，不是身份认证/OS沙箱；无远程MCP/Streamable HTTP/OAuth/Inspector；递归限制不是精确工具次数，超时包含清理延迟且不证明远端未执行。Phase2/3及Phase6旧缺口保持。
+- 建议commit：`feat(agent): implement MCP server client and tool integration`。
+- 下一任务：授权本阶段本地版本及完成记录；后续Phase8汇总，同时按路线图补齐Phase2/3与Phase6真实条件。Phase10A进入条件仍未满足。
+
 ## 17. 架构决策记录（ADR）
 
 | ID | 日期 | 决策 | 原因 | 复审点 |
@@ -723,6 +754,15 @@ Phase 6 新增决策（2026-10-14）：
 
 复审点：解除 Phase 6 真实验收阻碍、Phase 10A 正式业务口径、Phase 9 服务身份授权与部署。
 
+Phase 7 新增决策（2026-10-17）：
+
+- ADR-027：选择经安装验证的官方稳定mcp2.3.0（v2），使用MCPServer/Client，不混用v1示例；记录实际现代协议server/discover和2026-07-28，而不伪造initialize握手。
+- ADR-028：仅开放原add和MOCK规格工具，复用Schema/校验/Dispatcher；原始参数在SDK转换前验证，Host授权列表独立于发现结果。Tool annotations仅是提示。
+- ADR-029：固定当前sys.executable启动stdio，单个异步连接贯穿Agent运行；SDK管理子进程，连接与工具期限独立，错误后不盲目重试；测试观察真实进程句柄验证清理。
+- ADR-030：MCP作为独立学习路径，保留Phase3直接调用与Phase6 HTTP；真实通信和脚本模型/真实LLM分开报告；远程认证扩展不阻塞本地实验，Git版本收尾仍按授权执行。
+
+复审点：本地授权版本收尾、Phase8安全/错误汇总、需要跨机器工具时的Streamable HTTP与认证。
+
 ## 18. 官方资料与版本核实
 
 - LangChain Agent：https://docs.langchain.com/oss/python/langchain/agents
@@ -735,4 +775,4 @@ Phase 6 新增决策（2026-10-14）：
 
 本路线制定时核对了 LangChain Agent、LangGraph 持久化与中断文档。其他库在引入阶段再核实官方文档和兼容版本；链接内容更新不代表本地依赖自动升级。
 
-**Phase 4–5 DONE；Phase 6 BLOCKED（开发与离线验证完成，真实服务/PDF/评测未验证）。先解除真实验收阻碍，再推进 Phase 10A；Phase 7 独立可选，提交和推送需按授权执行。**
+**Phase 7 DOING：本地MCP与Agent技术验证完成，待统一版本收尾授权。Phase 6仍BLOCKED，Phase2/3缺口保留；提交/推送按授权执行，真实业务进入Phase10A前须解除证据验收阻碍。**
