@@ -2,9 +2,9 @@
 
 > 版本：v2.0，实施版<br>
 > 更新日期：2026-10-17<br>
-> 当前状态：**Phase 7 DOING — MCP stdio、Agent 集成与50项专项测试通过，统一版本收尾待授权；Phase 6 真实验收仍 BLOCKED**<br>
-> 当前阶段：**独立 MCP 实验收尾；保留 Phase 2/3 缺口及 Phase 6 服务/PDF/真实评测阻碍**<br>
-> 下一任务：**技术验收与交付核查完成，等待授权本阶段本地提交（不推送）；随后汇总 Phase 8，并按条件解除 Phase 6 阻碍。**<br>
+> 当前状态：**Phase 7 DONE — MCP stdio、Agent 集成、回归与授权本地版本完成；Phase 6 真实验收仍 BLOCKED**<br>
+> 当前阶段：**独立 MCP 实验已收尾；保留 Phase 2/3 缺口及 Phase 6 服务/PDF/真实评测阻碍**<br>
+> 下一任务：**Phase 8 先汇总已有评测用例、验证分类和错误；另按路线图补齐 Phase 2/3，并在安全服务及资料就绪后解除 Phase 6 阻碍。不推送。**<br>
 > 唯一进度入口：本文件。后续按本文任务与验收证据推进。<br>
 > 边界：AGENT-DEMO 独立开发；RAG-DEMO 只读检查，未经明确授权不修改。
 
@@ -16,10 +16,10 @@
 
 截至 2026-10-17 的本地检查：
 
-- 当前分支 `phase-4`，HEAD `378f948`（`add agent demo introducation`）；本次开始时工作区干净，已包含 Phase 6 提交 `aaf6c8f`。不改变既有历史，不自动推送。
+- 当前分支 `phase-4`；本次开始时 HEAD `378f948`、工作区干净，已包含 Phase 6 提交 `aaf6c8f`。Phase 7 经用户明确授权形成实现提交 `2f6fd60`，完成记录另提交；不改变既有历史，不推送。
 - 官方 MCP Python SDK 2.3.0 实际安装兼容当前 Python 3.11.0、Pydantic 2.14.0、LangChain 1.4.4。原61个依赖版本未变，新增15项，固定清单76项；本地 stdio 实际协商到 2026-07-28。
 - Phase 7 的50项专项测试通过；完整回归361 passed / 0 failed / 1 skipped（60.19s），包含原Phase0–6的311项通过。真实stdio、脚本模型create_agent→MCP和进程清理验证完成；真实模型Key不可用，未调用LLM，唯一跳过仍为Phase6真实服务/PDF验收。
-- 旧 RAG-DEMO 未启动、未修改，只读 Git 前后干净；Phase 6 继续 BLOCKED。Phase 7 独立于真实 RAG，可完成本地实验，但统一版本收尾尚未获得本阶段提交授权。
+- 旧 RAG-DEMO 未启动、未修改，只读 Git 前后干净；Phase 6 继续 BLOCKED。用户已授权 Phase 7 本地提交及完成记录，不推送；统一版本收尾完成，Phase 7 标记 DONE。
 
 以下 2026-10-14 的本地检查作为历史保留：
 
@@ -76,7 +76,7 @@
 | 4 | LangGraph 显式工作流 | DONE | 98 项验证记录保留；实现提交 9e4a8f3，本次复核通过 | 2026-10-13（复核） |
 | 5 | Checkpoint、恢复、人工审核 | DONE | 实现提交 9260a54；164 项回归及既有审核快照兼容复核通过 | 2026-10-14（复核） |
 | 6 | 真实 Agentic RAG | BLOCKED | HTTP/Tool/真实证据路径与离线评测机制完成；311 passed，真实服务/PDF/实测缺失 | — |
-| 7 | MCP 独立实验 | DOING | v2真实stdio与Agent集成、50项专项通过；待授权本地版本 | — |
+| 7 | MCP 独立实验 | DONE | v2真实stdio、Agent与50项专项通过；授权实现提交2f6fd60 | 2026-10-17 |
 | 8 | 评测、安全、可观测性汇总 | TODO | 回归报告和错误诊断 | — |
 | 9 | 最小 API 与部署完善 | TODO | Agent API、容器化、部署验证 | — |
 | 10 | RFP → SOC 毕业项目 | TODO | 可审核、可追溯的 Excel 输出 | — |
@@ -389,11 +389,11 @@ AGENT-DEMO/
 - [x] 实际 create_agent 经 MCP 使用共用工具，Phase 3 原直接工具保持共存；模型为离线脚本，通信为真实 stdio。
 - [x] 对比 Python 函数、HTTP API 与 MCP 的职责、开销、错误和权限。
 - [x] 生成技术文档 `docs/phase07_mcp.md` 和固定阶段总结 `docs/phase07_summary.md`。
-- [ ] 经授权创建本阶段本地 Git 版本，完成统一标准第15节的版本收尾；不推送。
+- [x] 经用户明确授权创建本阶段实现提交 `2f6fd60`，完成统一标准第15节的版本收尾；完成记录另提交，不推送。
 
 **2026-10-17 实施记录：** 50项专项通过；Client add(15,27)=42、MOCK规格查询、Agent lookup→add(48,4)=52均通过真实stdio运行。SDK内存连接、真实子进程和脚本模型分别标注；无有效模型Key，真实LLM未验证且不冒充。最终回归与版本状态见第16节。
 
-**技术验收结果：** 完整361 passed / 0 failed / 1 skipped；Ruff、格式和pip check通过。阶段DOING仅等待第15节要求的授权本地版本；未自动提交，不推送。
+**最终验收结果：** 完整361 passed / 0 failed / 1 skipped；Ruff、格式和pip check通过。用户随后明确授权本地提交及完成记录，实现提交 `2f6fd60` 已建立，Phase 7 标记 DONE；未推送。真实LLM未验证的限制保留，不影响已通过的本地MCP实验验收。
 
 **扩展任务：** 远程 HTTP 传输及认证单独实施，不阻塞本地实验。
 
@@ -693,7 +693,7 @@ AGENT-DEMO/
 
 ### 2026-10-17 — Phase 7 / 官方 MCP v2 stdio 独立实验
 
-- 状态：DOING，本地技术实施与专项验收通过，统一版本收尾待本阶段提交授权；不推送。Phase 6 真实验收状态不变。
+- 授权前实施状态：DOING，本地技术实施与专项验收通过，统一版本收尾待本阶段提交授权；不推送。Phase 6 真实验收状态不变。
 - 核心理解：MCP 是工具发现/执行协议，Host 仍负责授权，SDK 不替代业务校验；模型循环由 LangChain 管理，Server 无需 LLM。
 - 实现：官方 MCPServer / Client，本地 stdio 复用原 add/lookup_product_spec 和 Dispatcher；原 Schema、原业务逻辑、固定允许列表、严格输入和结果校验、独立连接/工具期限、错误分类、完整进程生命周期；薄 StructuredTool 适配和独立 create_agent 入口复用 AgentAnswer。
 - 新增文件：`src/agent_demo/mcp/server.py`、`client.py`、`tool_adapter.py`；三个 Phase 7 examples；`tests/test_phase07_mcp.py`；`docs/phase07_mcp.md`、`docs/phase07_summary.md`。修改 pyproject、requirements-lock、README 及本路线图，合计13个文件。
@@ -707,6 +707,14 @@ AGENT-DEMO/
 - 限制：无真实LLM验收；本地受信命令，不是身份认证/OS沙箱；无远程MCP/Streamable HTTP/OAuth/Inspector；递归限制不是精确工具次数，超时包含清理延迟且不证明远端未执行。Phase2/3及Phase6旧缺口保持。
 - 建议commit：`feat(agent): implement MCP server client and tool integration`。
 - 下一任务：授权本阶段本地版本及完成记录；后续Phase8汇总，同时按路线图补齐Phase2/3与Phase6真实条件。Phase10A进入条件仍未满足。
+
+#### 2026-10-17 — Phase 7 授权本地提交与完成收尾
+
+- 用户明确授权：“授权本地提交及完成记录，不推送”。复核分支与13个文件，暂存区原为空，无额外用户修改；仅提交既定交付范围。
+- 实现提交：`2f6fd60` — `feat(agent): implement MCP server client and tool integration`。包含代码、50项测试、示例、依赖及技术文档；未提交凭据、虚拟环境、数据库或运行产物。
+- 状态：DONE。更新顶部、总览、版本复选框与两份阶段文档，完成记录另作本地提交；保留此前DOING历史及所有实际验证结果。
+- 验证沿用已完成的361 passed / 0 failed / 1 skipped、Ruff/format/pip check及真实stdio/清理证据。本次仅Git提交和文档状态变化，不声称重新运行完整测试。
+- 下一任务：Phase8先汇总已有评测用例与离线/真实验证分类；Phase2/3缺口及Phase6真实验收继续单独跟踪。未推送，不扩大授权。
 
 ## 17. 架构决策记录（ADR）
 
@@ -775,4 +783,4 @@ Phase 7 新增决策（2026-10-17）：
 
 本路线制定时核对了 LangChain Agent、LangGraph 持久化与中断文档。其他库在引入阶段再核实官方文档和兼容版本；链接内容更新不代表本地依赖自动升级。
 
-**Phase 7 DOING：本地MCP与Agent技术验证完成，待统一版本收尾授权。Phase 6仍BLOCKED，Phase2/3缺口保留；提交/推送按授权执行，真实业务进入Phase10A前须解除证据验收阻碍。**
+**Phase 7 DONE：本地MCP、Agent、回归及授权实现提交2f6fd60完成。Phase 6仍BLOCKED，Phase2/3缺口保留；下一任务Phase8汇总，真实业务进入Phase10A前须解除证据验收阻碍。本次不推送。**
