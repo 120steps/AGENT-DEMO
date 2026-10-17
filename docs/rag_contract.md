@@ -214,3 +214,9 @@ netstat -ano -p TCP
 结果：**32 passed**，Ruff 全部通过；实际安装并执行的解析器为 **pypdf 6.20.1**。测试使用手工构造的有效两页 TEST PDF，真实解析页面并验证内容、哈希、页码、空白归一化、数值不匹配、加密文件及允许路径范围。需要落盘的测试仅写 pytest 临时目录，没有读取旧工程 PDF 或改动旧仓库。
 
 **这证明新工程能够验证调用方给出的 TEST PDF 引用，不证明真实 RAG 的 source/page 已通过回查。** 真实服务原文与授权 PDF 的对应关系仍等待前述 BLOCKED 项解除。实现接口参考 [pypdf 官方文本提取文档](https://pypdf.readthedocs.io/en/stable/user/extract-text.html) 与 [PdfReader API](https://pypdf.readthedocs.io/en/stable/modules/PdfReader.html)。
+
+## 2026-10-17 全阶段审计补记
+
+旧RAG只读核查HEAD仍为`d72c329`，Git工作区干净；未启动、导入、重新索引或调用旧服务。当前进程没有配置RAG URL/Token。用户再次明确“尚未具备，先完成软件和隔离测试，真实验收保留BLOCKED”。因此没有新的真实响应、文档、来源页码或引用通过记录，不改写上述未知项。
+
+SOC应用复用既有HTTP客户端及绑定/PDF核验路径，实际HTTP Mock+TEST PDF通过不代表真实资料通过。发现Windows CPython3.11的monotonic小期限分辨率问题，客户端统一改用perf_counter；原失败XML与修复回归保存于`outputs/completion-audit/`。服务接口契约未被修改。

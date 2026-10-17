@@ -62,10 +62,14 @@ class OperationLedger:
     process crash between publication and recording ``completed``.
     """
 
-    def __init__(self, db_path: Path, output_root: Path):
+    def __init__(self, db_path: Path, output_root: Path, *, artifact_kind="review_json"):
         output_root = Path(os.path.abspath(output_root))
-        if output_root.name != "phase05" or output_root.parent.name != "outputs":
-            raise OperationError("output root must be the project outputs/phase05 directory")
+        allowed = {"review_json": ("phase05", ".json"), "soc_excel": ("soc", ".xlsx")}
+        if artifact_kind not in allowed:
+            raise OperationError("unapproved artifact kind")
+        name, self.suffix = allowed[artifact_kind]
+        if output_root.name != name or output_root.parent.name != "outputs":
+            raise OperationError(f"output root must be the project outputs/{name} directory")
         _no_links(output_root)
         output_root.mkdir(parents=True, exist_ok=True)
         self.output_root = output_root.resolve()
@@ -110,9 +114,9 @@ class OperationLedger:
     def _target(self, operation_id: str, target_path: str | Path) -> Path:
         self._validate_id(operation_id)
         path = Path(target_path)
-        expected = self.output_root / f"{operation_id}.json"
+        expected = self.output_root / f"{operation_id}{self.suffix}"
         if not path.is_absolute():
-            if path != Path(f"{operation_id}.json"):
+            if path != Path(f"{operation_id}{self.suffix}"):
                 raise OperationError("relative targets must be the controlled artifact filename")
             path = self.output_root / path
         # Check lexical segments before resolving: traversal is forbidden even if
@@ -177,19 +181,28 @@ class OperationLedger:
         # alone would permit interleaved transactions on this shared connection.
         with self._lock:
             return self._execute_locked(
-                operation_id, payload, target_path, after_publish=after_publish
+                operation_id, canonical_payload(payload), target_path, after_publish=after_publish
+            )
+
+    def execute_bytes(self, operation_id, content, target_path, *, after_publish=None):
+        """Reuse the same durable intent and recovery for a caller-approved XLSX."""
+        if self.suffix != ".xlsx" or not isinstance(content, bytes):
+            raise OperationError("binary publication is restricted to SOC Excel")
+        with self._lock:
+            return self._execute_locked(
+                operation_id, content, target_path, after_publish=after_publish
             )
 
     def _execute_locked(
         self,
         operation_id: str,
-        payload: dict,
+        payload: bytes,
         target_path: str | Path,
         *,
         after_publish: Callable[[], None] | None = None,
     ) -> dict:
         target = self._target(operation_id, target_path)
-        content = canonical_payload(payload)
+        content = payload
         sha256 = hashlib.sha256(content).hexdigest()
 
         # The intent is durably committed separately from publication so a crash

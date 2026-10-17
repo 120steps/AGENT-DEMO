@@ -196,7 +196,29 @@ MCP stdout 专用于协议，Server 日志写 stderr。默认 Server 由当前�
 
 详见[技术说明](docs/phase08_evaluation.md)、[阶段总结](docs/phase08_summary.md)、[基线报告](eval/reports/phase08_baseline.md)。CI运行离线Evaluation和安全回归，不自动调用付费模型；远端CI本次未验证。
 
-## Git
+## 本次工程整合：SOC、PDF与任务API
+
+全阶段审计见[缺口清单](docs/project_completion_audit.md)。真实RAG、固定版本资料和人工核对样本尚未具备，毕业验收保持BLOCKED；本地软件与MOCK测试可以独立运行。
+
+```powershell
+# 真实启动本机HTTP，自动执行隔离MOCK审核、Excel下载与重启恢复，不需要模型Key。
+.\.venv\Scripts\python.exe examples\project_acceptance.py
+.\.venv\Scripts\python.exe examples\phase03_langchain_agent.py --mock
+
+# 命令行JSON→审核→Excel；每一步的task_id/审核版本均取实际返回值。
+.\.venv\Scripts\python.exe examples\phase10_soc.py --root outputs\soc-demo submit --input data\fixtures\soc_requirements.json
+.\.venv\Scripts\python.exe examples\phase10_soc.py --root outputs\soc-demo run --task-id 实际task_id
+.\.venv\Scripts\python.exe examples\phase10_soc.py --root outputs\soc-demo status --task-id 实际task_id
+
+# 自行运行API前，通过进程环境安全注入AGENT_DEMO_API_TOKENS（身份→随机Token的JSON）。
+.\.venv\Scripts\python.exe -m uvicorn agent_demo.api.app:create_app --factory --host 127.0.0.1 --port 8080 --workers 1
+```
+
+详见[SOC与PDF说明](docs/phase10_soc.md)、[API及容器说明](docs/phase09_api.md)。默认拒绝未批准导出；显式未审核草稿和已批准本地草稿都带DRAFT标记。应用只支持单服务进程、一个任务工作线程；不能把线程停止等待理解为强制取消。
+
+Windows使用经安装验证的`requirements-lock.txt`（80项）；`requirements-linux.txt`为容器构建候选，尚未在Linux验证。本机没有Docker，提供Dockerfile/Compose和CI构建/重启测试，不声称已完成部署验收。RAG真实路径只接受部署方固定的服务和文档绑定，不接受用户指定任意URL或可信Evidence。
+
+### Git操作
 
 提交前检查 `git status --short`、`git ls-files` 和忽略规则。`.env`、虚拟环境、缓存、日志、runtime、outputs、数据库不提交。Phase 0 已经用户授权完成本地提交，尚未推送；后续提交和推送按用户授权执行。
 

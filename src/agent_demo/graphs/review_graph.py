@@ -11,7 +11,7 @@ from langgraph.types import Command, interrupt
 from pydantic import ValidationError
 
 from agent_demo.domain.decisions import WorkflowResult
-from agent_demo.domain.reviews import ReviewResponse, ReviewSnapshot
+from agent_demo.domain.reviews import ReviewResponse, ReviewSnapshot, SOCExportPolicy
 from agent_demo.graphs.compliance_graph import run_workflow
 
 
@@ -49,6 +49,7 @@ class ReviewState(TypedDict, total=False):
     error_type: str | None
     operation_result: dict
     evidence_mode: str
+    retrieval_errors: dict[str, str]
 
 
 def evaluate_requirements(state):
@@ -58,6 +59,7 @@ def evaluate_requirements(state):
         evidences=state.get("evidence_input"),
         configuration=state.get("configuration"),
         evidence_mode=state.get("evidence_mode", "mock"),
+        retrieval_errors=state.get("retrieval_errors", {}),
     )
     return {
         "business_result": result.model_dump(mode="json"),
@@ -67,7 +69,10 @@ def evaluate_requirements(state):
     }
 
 
-def build_review_graph(checkpointer, ledger, *, after_publish=None):
+def build_review_graph(checkpointer, ledger, *, after_publish=None, export_policy=None):
+    if export_policy is not None:
+        export_policy = SOCExportPolicy.model_validate(export_policy).model_dump(mode="json")
+
     def prepare_review(state):
         version = state.get("review_version", 0) + 1
         operation_id = digest(
@@ -97,6 +102,8 @@ def build_review_graph(checkpointer, ledger, *, after_publish=None):
                 source_type=state.get("evidence_mode", "mock"),
             ),
         )
+        if export_policy is not None:
+            snapshot["export_policy"] = deepcopy(export_policy)
         snapshot["snapshot_digest"] = snapshot_digest(snapshot)
         ReviewSnapshot.model_validate(snapshot)
         return {
@@ -157,6 +164,8 @@ def build_review_graph(checkpointer, ledger, *, after_publish=None):
             ReviewSnapshot.model_validate(snapshot)
             response = ReviewResponse.model_validate(state["approval"])
             check_response(snapshot, response)
+            if snapshot.get("export_policy") != export_policy:
+                raise ValueError("approved export scope or format changed; new review required")
             if (
                 response.action != "approve"
                 or snapshot["review_version"] != state["review_version"]
@@ -169,6 +178,7 @@ def build_review_graph(checkpointer, ledger, *, after_publish=None):
                 evidences=state.get("evidence_input"),
                 configuration=state.get("configuration"),
                 evidence_mode=state.get("evidence_mode", "mock"),
+                retrieval_errors=state.get("retrieval_errors", {}),
             ).model_dump(mode="json")
             # Saved Phase 5 snapshots lack the newly optional Evidence provenance
             # fields. Compare validated default-filled business objects, keeping
@@ -261,6 +271,7 @@ def start_review(
     configuration=None,
     run_id=None,
     evidence_mode="mock",
+    retrieval_errors=None,
 ):
     if evidence_mode not in {"mock", "real_rag"}:
         raise ValueError("invalid evidence mode")
@@ -277,6 +288,7 @@ def start_review(
             "review_version": 0,
             "review_history": {},
             "evidence_mode": evidence_mode,
+            "retrieval_errors": deepcopy(retrieval_errors or {}),
         },
         config,
     )

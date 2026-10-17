@@ -1,0 +1,29 @@
+services:
+  agent:
+    build: .
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      AGENT_DEMO_API_TOKENS: ${AGENT_DEMO_API_TOKENS:?Configure owner/token JSON in environment}
+      AGENT_DEMO_RAG_BASE_URL: ${AGENT_DEMO_RAG_BASE_URL:-}
+      AGENT_DEMO_RAG_TOKEN: ${AGENT_DEMO_RAG_TOKEN:-}
+      AGENT_DEMO_RAG_KB: ${AGENT_DEMO_RAG_KB:-default}
+      AGENT_DEMO_RAG_PAGE_SEMANTICS: ${AGENT_DEMO_RAG_PAGE_SEMANTICS:-unknown}
+      AGENT_DEMO_LIVE_RAG_CONFIRM_READONLY: ${AGENT_DEMO_LIVE_RAG_CONFIRM_READONLY:-0}
+      AGENT_DEMO_SOC_BINDINGS: ${AGENT_DEMO_SOC_BINDINGS:-}
+      AGENT_DEMO_PDF_ROOT: /app/data/private
+    volumes:
+      - soc-runtime:/app/runtime
+      - soc-outputs:/app/outputs
+      - ./data/private:/app/data/private:ro
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+volumes:
+  soc-runtime:
+  soc-outputs:

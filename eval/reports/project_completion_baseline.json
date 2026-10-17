@@ -1,0 +1,438 @@
+{
+  "executed_at_utc": "2026-10-17T10:46:08.374746+00:00",
+  "git_commit": "9cea41793c55a7bbfe45b4594511c61c681b15d4",
+  "git_worktree_dirty": true,
+  "python": "3.11.0",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "dependencies": {
+    "fastapi": "0.143.3",
+    "openpyxl": "3.1.5",
+    "uvicorn": "0.54.0",
+    "langchain": "1.4.4",
+    "langgraph": "1.2.14",
+    "langgraph-checkpoint-sqlite": "3.1.2",
+    "pydantic": "2.14.0",
+    "mcp": "2.3.0",
+    "google-genai": "2.29.0",
+    "pypdf": "6.20.1"
+  },
+  "source_sha256": {
+    "requirements-lock.txt": "45eee64e29f860d4adab462ec413aba15fc619f27a4faa168a99930ae7361032",
+    "requirements-linux.txt": "7937251581904d2fadcbe43617caefc12b2d486f1dd49f9f9cb7203704584a85",
+    "data/fixtures/soc_requirements.json": "3b3c794532a3c315c4cf564381e8b020cdd6f429c948ca21f4693e97dec7f0cd",
+    "data/fixtures/soc_expected_mock.json": "1de4f7c60f6a0468a4d01dae85980728de4126ae600813483a1b33efc9bd7de4",
+    "eval/agent_test_cases.json": "76b832a1f5c0bcb28c435ef779b910f51a95b317eb0dbca856f40b6a8cf19dee",
+    "src/agent_demo/soc/service.py": "682f54782a92f1e69410681cc2b374b80942ffc0ef0bbe6d7e6d6c6d56d1f956",
+    "src/agent_demo/soc/excel.py": "8c1aeae5f86d6c73be3c6983ca18ec3c861766d043380737d64e92604fca93cc",
+    "src/agent_demo/soc/rfp.py": "e9891d01b3adf97296fe06fd81c997a2917fc2db3e1f3f175efae797ce323bbd",
+    "src/agent_demo/api/app.py": "9153b7c57d049123ca03f248b4df731adcd05d72fba5bbf2dbe4288d1c531c72",
+    "src/agent_demo/agents/agent_loop.py": "68434b2da1a00b29274a4da21f85ae596081dad9ddaebe1743d57e076dd96c75",
+    "src/agent_demo/agents/langchain_agent.py": "c77de589a2b807298d16fe0db8be30c3bf9103e259add02d9f5054512952b3b4",
+    "examples/project_acceptance.py": "9fb9bae4213c64e2a0acf65d642f58e24901d51ea98458a3d88769bef0d034bd"
+  },
+  "pytest": {
+    "passed": 439,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 1,
+    "collected": 440,
+    "elapsed_seconds": 104.453,
+    "evidence": "outputs/completion-audit/final-regression.xml"
+  },
+  "initial_pytest": {
+    "passed": 394,
+    "failed": 1,
+    "skipped": 1,
+    "elapsed_seconds": 137.41,
+    "evidence": "outputs/completion-audit/baseline.xml"
+  },
+  "local_http_acceptance": {
+    "status": "PASS",
+    "mode": "local_http_mock",
+    "checks": [
+      {
+        "check": "submit_202",
+        "passed": true
+      },
+      {
+        "check": "awaiting_review",
+        "passed": true
+      },
+      {
+        "check": "unapproved_export_denied",
+        "passed": true
+      },
+      {
+        "check": "other_owner_denied",
+        "passed": true
+      },
+      {
+        "check": "restart_same_review",
+        "passed": true
+      },
+      {
+        "check": "modify_accepted",
+        "passed": true
+      },
+      {
+        "check": "new_review_version",
+        "passed": true
+      },
+      {
+        "check": "stale_approval_denied",
+        "passed": true
+      },
+      {
+        "check": "approved_completed",
+        "passed": true
+      },
+      {
+        "check": "xlsx_download",
+        "passed": true
+      },
+      {
+        "check": "duplicate_approval",
+        "passed": true
+      },
+      {
+        "check": "idempotent_bytes",
+        "passed": true
+      },
+      {
+        "check": "completed_restart_export",
+        "passed": true
+      },
+      {
+        "check": "16_rows_statuses",
+        "passed": true
+      },
+      {
+        "check": "literal_cells",
+        "passed": true
+      },
+      {
+        "check": "approved_draft",
+        "passed": true
+      },
+      {
+        "check": "reject_cancelled",
+        "passed": true
+      },
+      {
+        "check": "reject_export_denied",
+        "passed": true
+      }
+    ],
+    "task_id": "bf92aab622a64d1b819e692b98692b51",
+    "review_version": 2,
+    "real_business": "BLOCKED",
+    "limitations": [
+      "MOCK evidence only",
+      "not formal customer publication"
+    ]
+  },
+  "offline_evaluation_metrics": {
+    "task": {
+      "total": 48,
+      "executed": 44,
+      "pass": 44,
+      "fail": 0,
+      "timeout": 0,
+      "env_error": 0,
+      "skipped": 0,
+      "blocked": 4,
+      "success_rate": {
+        "numerator": 44,
+        "denominator": 44,
+        "value": 1.0
+      },
+      "denominator_note": "PASS+FAIL+TIMEOUT+ENV_ERROR; BLOCKED/SKIPPED excluded"
+    },
+    "tools": {
+      "requested": 24,
+      "executed": 18,
+      "succeeded": 16,
+      "failed": 2,
+      "unauthorized": 3,
+      "validation_failed": 2,
+      "success_rate": {
+        "numerator": 16,
+        "denominator": 18,
+        "value": 0.8888888888888888
+      },
+      "mean_executed_per_attempted_case": 0.4090909090909091
+    },
+    "decision": {
+      "accuracy": {
+        "numerator": 18,
+        "denominator": 18,
+        "value": 1.0
+      },
+      "false_fc": 0,
+      "false_nc": 0,
+      "conflict_accuracy": {
+        "numerator": 2,
+        "denominator": 2,
+        "value": 1.0
+      },
+      "composite_errors": 0
+    },
+    "citation": {
+      "accepted_source_accuracy": {
+        "numerator": 6,
+        "denominator": 6,
+        "value": 1.0
+      },
+      "accepted_membership_accuracy": {
+        "numerator": 6,
+        "denominator": 6,
+        "value": 1.0
+      },
+      "candidate_pdf_verification": {
+        "numerator": 1,
+        "denominator": 2,
+        "value": 0.5
+      },
+      "real_pdf_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": null
+      },
+      "rejected_forged_attempts": 1
+    },
+    "efficiency": {
+      "model_calls": 33,
+      "retrieval_calls": 8,
+      "total_latency_ms": 11067.168,
+      "mean_latency_ms": 251.52653636707163,
+      "model_latency_ms": 47.858000000000004,
+      "tool_latency_ms": 192.505,
+      "latency_coverage_cases": {
+        "model": 15,
+        "tool": 17
+      },
+      "token_usage": null,
+      "token_usage_status": "unavailable",
+      "token_usage_measured_cases": 0,
+      "estimated_cost": null,
+      "cost_status": "unavailable_no_verified_price"
+    },
+    "safety": {
+      "unauthorized_writes": 0,
+      "unsupported_fc": 0,
+      "accepted_forged_citations": 0
+    },
+    "hard_gate_passed": true,
+    "real_model_quality_threshold": "not_set; measure baseline first",
+    "by_execution_mode": {
+      "mcp_memory": {
+        "PASS": 1
+      },
+      "mcp_stdio": {
+        "PASS": 4
+      },
+      "offline_mock": {
+        "PASS": 39
+      },
+      "real_llm": {
+        "BLOCKED": 3
+      },
+      "real_rag": {
+        "BLOCKED": 1
+      }
+    }
+  },
+  "benchmarks": {
+    "native_vs_langchain": {
+      "mode": "scripted_framework_overhead",
+      "samples": [
+        {
+          "sample": 0,
+          "native_ms": 1.8841996788978577,
+          "langchain_ms": 20.862600300461054,
+          "result": 52,
+          "native_status": "completed",
+          "langchain_status": "completed"
+        },
+        {
+          "sample": 1,
+          "native_ms": 1.6726995818316936,
+          "langchain_ms": 17.78039988130331,
+          "result": 52,
+          "native_status": "completed",
+          "langchain_status": "completed"
+        },
+        {
+          "sample": 2,
+          "native_ms": 1.350299920886755,
+          "langchain_ms": 19.82790045440197,
+          "result": 52,
+          "native_status": "completed",
+          "langchain_status": "completed"
+        }
+      ]
+    },
+    "fixed_vs_agentic": {
+      "verification_mode": "offline_mock",
+      "rows": [
+        {
+          "case_id": "greeting",
+          "baseline_status": "empty",
+          "baseline_calls": 1,
+          "agent_status": "completed",
+          "agent_calls": 0,
+          "elapsed_ms": 0.0,
+          "token_usage": {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+            "available": false
+          }
+        },
+        {
+          "case_id": "single",
+          "baseline_status": "ok",
+          "baseline_calls": 1,
+          "agent_status": "completed",
+          "agent_calls": 1,
+          "elapsed_ms": 16.0,
+          "token_usage": {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+            "available": false
+          }
+        },
+        {
+          "case_id": "supplement",
+          "baseline_status": "empty",
+          "baseline_calls": 1,
+          "agent_status": "completed",
+          "agent_calls": 2,
+          "elapsed_ms": 15.0,
+          "token_usage": {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+            "available": false
+          }
+        },
+        {
+          "case_id": "empty",
+          "baseline_status": "empty",
+          "baseline_calls": 1,
+          "agent_status": "PENDING",
+          "agent_calls": 1,
+          "elapsed_ms": 16.0,
+          "token_usage": {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+            "available": false
+          }
+        },
+        {
+          "case_id": "conflict",
+          "baseline_status": "ok",
+          "baseline_calls": 1,
+          "agent_status": "completed",
+          "agent_calls": 1,
+          "elapsed_ms": 16.0,
+          "token_usage": {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+            "available": false
+          }
+        },
+        {
+          "case_id": "service_error",
+          "baseline_status": "failed",
+          "baseline_calls": 1,
+          "agent_status": "failed",
+          "agent_calls": 1,
+          "elapsed_ms": 0.0,
+          "token_usage": {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+            "available": false
+          }
+        }
+      ],
+      "real_document_success_rate": null,
+      "real_pdf_citation_accuracy": null,
+      "real_benchmark_status": "BLOCKED",
+      "conclusion": "Script fixtures validate control flow; they cannot establish real Agentic RAG superiority."
+    },
+    "python_vs_mcp": {
+      "startup_ms": 1434.3181997537613,
+      "samples": [
+        {
+          "sample": 0,
+          "python_tool_ms": 0.46869972720742226,
+          "mcp_tool_ms": 3.92700033262372
+        },
+        {
+          "sample": 1,
+          "python_tool_ms": 0.6701000966131687,
+          "mcp_tool_ms": 2.291100099682808
+        },
+        {
+          "sample": 2,
+          "python_tool_ms": 0.3733998164534569,
+          "mcp_tool_ms": 2.1124999038875103
+        }
+      ],
+      "python_mean_ms": 0.504066546758016,
+      "mcp_mean_ms": 2.776866778731346
+    },
+    "limits": "3 local samples, sequential warm calls, MCP startup separate; no real LLM. Different framework prompt/protocol shapes; cannot rank model quality or general performance."
+  },
+  "core_evaluation_evidence": "outputs\\phase08\\20261017T104232Z-b2125c92\\results.json",
+  "http_evidence": "outputs\\completion-acceptance\\430c3358a0ee4facb033b9267f6fad64\\acceptance.json",
+  "mock_excel_sha256": "a353372babecb132d8e79e591947fca42e023f29ef8599de2adeed580da3ada4",
+  "excel_readback": {
+    "requirement_rows": 16,
+    "internal_links_verified": 10,
+    "unicode_preserved": true,
+    "literal_text_only": true,
+    "rendered_sheets": [
+      "SOC",
+      "Evidence",
+      "Review"
+    ]
+  },
+  "external_validation": {
+    "real_llm": "BLOCKED: no credentials; not called",
+    "real_rag": "BLOCKED: no authorized safe service/PDF; not called",
+    "real_product_documents": "Unknown / not provided",
+    "real_rfp_coverage": null,
+    "docker_linux": "BLOCKED: Docker unavailable",
+    "remote_ci": "not_executed",
+    "formal_customer_release": "not_authorized/not_performed"
+  },
+  "rag_repository": {
+    "head": "d72c329",
+    "working_tree_clean": true,
+    "started_or_modified": false
+  },
+  "sample_scope": "44 scripted/control cases and 18 local HTTP checks are separate, overlapping scopes; not real SOC quality",
+  "stage_status": {
+    "phase2": "DOING",
+    "phase3": "DOING",
+    "phase6": "BLOCKED",
+    "phase8": "DONE local scope only",
+    "phase9": "BLOCKED",
+    "phase10": "BLOCKED"
+  },
+  "limitations": [
+    "single service process and one task worker; no distributed lease",
+    "only fixed authorized RAG document version and limited literal extraction",
+    "PDF clause structure manually confirmed; no OCR/general NLP",
+    "all exported workbooks remain DRAFT",
+    "thread/HTTP wait expiry does not prove cancellation",
+    "Linux dependency list unverified; remote CI not run",
+    "no commit/push in this integration task"
+  ]
+}

@@ -10,6 +10,8 @@ from agent_demo.config import ModelSettings
 class GeminiClient:
     def __init__(self, settings: ModelSettings, sdk_client=None):
         self.model = settings.model
+        self.max_output_tokens = 2048
+        self.timeout_ms = 30000
         self.sdk = sdk_client or genai.Client(
             api_key=settings.api_key,
             http_options=types.HttpOptions(
@@ -20,8 +22,15 @@ class GeminiClient:
     def close(self):
         self.sdk.close()
 
-    @staticmethod
-    def _config(definitions):
+    def for_run(self, *, max_output_tokens, timeout):
+        from copy import copy
+
+        client = copy(self)
+        client.max_output_tokens = max_output_tokens
+        client.timeout_ms = max(1, int(timeout * 1000))
+        return client
+
+    def _config(self, definitions):
         declarations = [
             types.FunctionDeclaration(
                 name=definition["name"],
@@ -31,6 +40,7 @@ class GeminiClient:
             for definition in definitions
         ]
         return types.GenerateContentConfig(
+            http_options=types.HttpOptions(timeout=self.timeout_ms),
             tools=[types.Tool(function_declarations=declarations)],
             automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
             tool_config=types.ToolConfig(
@@ -42,7 +52,7 @@ class GeminiClient:
                 "After receiving results, explain them faithfully; never fabricate tool results."
             ),
             temperature=0,
-            max_output_tokens=2048,
+            max_output_tokens=self.max_output_tokens,
         )
 
     @staticmethod
@@ -117,7 +127,10 @@ class GeminiClient:
                         prior_response.id = prior_call.call_id
                     prior_parts.append(types.Part(function_response=prior_response))
                 contents.append(types.Content(role="user", parts=prior_parts))
-        contents.append(types.Content(role="user", parts=responses))
+        # Loop history already contains each completed call/result pair. The
+        # Phase 1 finish path supplies an unpaired last reply instead.
+        if not isinstance(history[-1], tuple):
+            contents.append(types.Content(role="user", parts=responses))
         return self._parse(
             self.sdk.models.generate_content(
                 model=self.model,
