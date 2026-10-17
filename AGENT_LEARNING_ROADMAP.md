@@ -675,6 +675,7 @@ AGENT-DEMO/
 - 限制：实际 HTTP、真实设备文档页码回查、真实模型自主检索与真实评测未执行。数值提取仅支持明确规格行；人工 DocumentBinding 必须确认型号、版本、配置及授权，不能自证资料厂商真实性。超时停止等待不等于取消；token 事后预算不撤销已计费调用。历史 Phase 3 缺口继续保留。
 - 建议 commit：`feat(agent): integrate bounded RAG retrieval with verified evidence workflows`。
 - 下一任务：提供安全独立服务与凭据、已授权固定设备 PDF/绑定/标准答案，完成 opt-in HTTP/PDF 验收及真实对比；Phase 10A 尚不能进入，Phase 7 为独立可选学习实验，不是业务主链依赖。
+- 用户后续确认：目前暂无独立 RAG 服务，先完成开发并保留真实验收 BLOCKED。开发与离线验证已完成；不启动或修改旧 RAG-DEMO，待服务准备后接续真实验收。
 
 ## 17. 架构决策记录（ADR）
 
