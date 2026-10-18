@@ -1,8 +1,8 @@
 # AGENT-DEMO
 
-这是从原生工具调用逐步学习受控 Agent 工作流的独立 Python 工程。现有原生 Agent Loop、LangChain Agent、LangGraph 业务判断、持久化恢复与人工审核、HTTP Agentic RAG 适配，以及独立 MCP stdio 工具实验。Phase 6 真实 RAG/PDF/模型评测保持 BLOCKED；Phase 2/3 既有验收缺口保留，当前准确进度见路线图。Web API 和正式 SOC Excel 尚未实现。
+这是从原生工具调用逐步学习受控 Agent 工作流的独立 Python 工程。现有原生 Agent Loop、LangChain Agent、LangGraph 业务判断、持久化恢复与人工审核、HTTP Agentic RAG 适配、独立 MCP stdio 实验、统一评测，以及本机 SOC API、PDF 文本定位和受审核保护的 Excel 草稿导出。Phase 2/3 控制缺口已经补齐；Phase 6、9、10 的真实资料、业务或 Docker 验收仍有 BLOCKED，准确进度见路线图。当前不发布正式客户 SOC 文件。
 
-第一次接触本项目，建议先读 [工程入门：整体框架、重要模块与逐步实现过程](docs/project_guide.md)，其中包含业务例子、源码阅读顺序、常用模板和无需密钥的运行命令。
+第一次接触本项目，建议先读 [初学者完整指南：总体工作流、重要模块与上手实践](docs/project_handbook.md)，其中包含完整业务例子、数据流、源码地图、常用模板、逐阶段演进、无需密钥的运行命令及亲手审核导出教程。[旧版工程入门](docs/project_guide.md) 保留为历史快照。
 
 学习顺序和唯一进度入口见 [AGENT_LEARNING_ROADMAP.md](AGENT_LEARNING_ROADMAP.md)。旧 RAG 工程的静态接口调查见 [docs/rag_contract.md](docs/rag_contract.md)。
 
@@ -12,7 +12,7 @@
 
 当前选择 CPython 3.11（本机为 3.11.0）、Windows 10 x64。本机只有这一套真实解释器；`py -0p` 未发现注册版本，因此使用 `python`，不依赖 `py` 启动器。
 
-Phase 0 于 2026-10-10 查询过 FastAPI、LangChain、LangGraph、Pydantic 和 pytest 的发布元数据，其 Python 要求包含 3.11。后续阶段已经实际安装并验证 LangChain、LangGraph、Pydantic、模型 SDK、SQLite Checkpointer 和 RAG 客户端依赖；当前声明见 `pyproject.toml`，实际固定版本见 `requirements-lock.txt`。FastAPI 服务仍属于后续阶段。
+Phase 0 于 2026-10-10 查询过 FastAPI、LangChain、LangGraph、Pydantic 和 pytest 的发布元数据，其 Python 要求包含 3.11。后续阶段已经实际安装并验证 LangChain、LangGraph、Pydantic、模型 SDK、SQLite Checkpointer、RAG 客户端、FastAPI 和 openpyxl；当前声明见 `pyproject.toml`，实际固定版本见 `requirements-lock.txt`。本机 API 已验证，Docker/Linux 部署仍待验收。
 
 3.11.0 是较早补丁版本；当前不改动全局 Python。以后升级到新的 3.11 补丁版本时应重建独立环境并重跑检查。`pyproject.toml` 暂限定 3.11 系列，其他系列未验证。
 
