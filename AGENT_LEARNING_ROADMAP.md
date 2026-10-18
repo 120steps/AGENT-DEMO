@@ -2,9 +2,9 @@
 
 > 版本：v2.0，实施版<br>
 > 更新日期：2026-10-17<br>
-> 当前状态：**全阶段整合DOING；本地SOC/API/PDF软件可运行，真实毕业及Docker验收BLOCKED**<br>
-> 当前阶段：**Phase2/3控制补齐；16行MOCK SOC、真实本机HTTP重启及审核导出通过；Phase6真实条件仍缺失**<br>
-> 下一任务：**核查本次整合版本；提供安全RAG、固定版本产品资料、真实RFP及10–20条人工核对要求，在Docker环境完成实际部署与最终验收。不推送、不发布客户文件。**<br>
+> 当前状态：**本地工程整合与授权版本收尾完成；真实毕业及Docker验收BLOCKED**<br>
+> 当前阶段：**Phase2/3控制补齐并完成版本验收；16行MOCK SOC、本机HTTP重启及审核导出通过，实现提交ee192a3；Phase6真实条件仍缺失**<br>
+> 下一任务：**提供安全RAG、固定版本产品资料、真实RFP及10–20条人工核对要求，在Docker环境完成实际部署与最终验收。不推送、不发布客户文件。**<br>
 > 唯一进度入口：本文件。后续按本文任务与验收证据推进。<br>
 > 边界：AGENT-DEMO 独立开发；RAG-DEMO 只读检查，未经明确授权不修改。
 
@@ -18,7 +18,7 @@
 
 - 本次全阶段整合起点为`phase-4 / 9cea417`，工作区干净。完整审计见`docs/project_completion_audit.md`。用户明确同意“尚未具备，先完成软件和隔离测试，真实验收保留BLOCKED”，因此允许在保留真实前提的同时实施Phase9/10本地软件；不将MOCK写成毕业通过。
 - 初始394 passed / 1 failed / 1 skipped；失败为Windows低分辨率期限判断，改用perf_counter修复，保留原失败XML。原生Loop超时等待、SDK输出配置、消息重复回传和LangChain独立预算/类型边界已补齐，实际新回归见最新日志。
-- 增加SOC应用、文本PDF定位与人工确认、受审核范围绑定的XLSX草稿、任务归属/限流/有界队列API。实际本机HTTP18项验收通过，含两次进程重启、修改重审和重复下载字节核对。真实设备/RAG/RFP与容器部署未验证，尚未自动提交本次修改。
+- 增加SOC应用、文本PDF定位与人工确认、受审核范围绑定的XLSX草稿、任务归属/限流/有界队列API。实际本机HTTP18项验收通过，含两次进程重启、修改重审和重复下载字节核对。用户随后明确授权整合本地提交及完成记录，41文件实现提交`ee192a3`已创建；完成记录另提交。真实设备/RAG/RFP与容器部署未验证，不推送。
 
 以下为Phase8收尾时的同日记录：
 
@@ -83,8 +83,8 @@
 |---|---|---|---|---|
 | 0 | 仓库、环境、RAG 契约摸底 | DONE | 可安装工程、离线测试、接口调查及本地提交已完成 | 2026-10-10 |
 | 1 | 原生 Tool Calling | DONE | 单轮闭环、42 项测试、真实验证及授权本地提交完成 | 2026-10-10 |
-| 2 | 原生 Agent Loop | DOING | 历史版本保留；本次补齐实际等待/输出配置/消息重复，待整合版本 | — |
-| 3 | LangChain 标准 Agent | DOING | 本次补齐独立预算/期限/严格Schema及同题对照，待整合版本 | — |
+| 2 | 原生 Agent Loop | DONE | 控制缺口补齐、439项整合回归及实现版本ee192a3；历史真实LLM记录保留，本次未重跑LLM | 2026-10-17（补齐复核） |
+| 3 | LangChain 标准 Agent | DONE | 独立预算/期限/Schema及同题对照通过，实现版本ee192a3；历史真实记录保留 | 2026-10-17（补齐复核） |
 | 4 | LangGraph 显式工作流 | DONE | 98 项验证记录保留；实现提交 9e4a8f3，本次复核通过 | 2026-10-13（复核） |
 | 5 | Checkpoint、恢复、人工审核 | DONE | 实现提交 9260a54；164 项回归及既有审核快照兼容复核通过 | 2026-10-14（复核） |
 | 6 | 真实 Agentic RAG | BLOCKED | HTTP/Tool/真实证据路径与离线评测机制完成；311 passed，真实服务/PDF/实测缺失 | — |
@@ -296,6 +296,8 @@ AGENT-DEMO/
 
 **2026-10-10 实际结果：** 主环境 46 passed，Ruff check/format 通过，Phase 2 Mock 三轮通过；真实 Gemini 多步任务完成 `lookup_product_spec → add → final`，退出码 0，最终回答 52。CI 文件已建立，GitHub runner 尚未单独执行。技术细节见 [Phase 2 文档](docs/phase02_agent_loop.md)，阶段总结见 [docs/phase02_summary.md](docs/phase02_summary.md)。
 
+**2026-10-17 Phase2补齐收尾：** 实际等待、预算/重试、输出配置和消息去重通过新增专项及439项整合回归，原生多步Demo成功；用户明确授权后实现提交`ee192a3`已建立，Phase2标记DONE。真实模型依据2026-10-10历史记录；本次SDK协议与控制修复完成离线验证，没有新Key，不声称新版本重新通过真实API。
+
 ## 7. Phase 3 — LangChain 标准 Agent
 
 **学习问题：** 框架负责哪些控制逻辑，哪些仍由应用负责？
@@ -314,6 +316,8 @@ AGENT-DEMO/
 **验收：** 两种实现均完成核心任务；非法工具和错误参数不会绕过业务边界；不要求真实模型输出逐字相同或轨迹顺序完全一致。
 
 **2026-10-10 实际结果：** `langchain==1.4.4`、`langchain-google-genai==4.4.0` 已安装并锁定；主环境 49 passed，Ruff/format/pip check 通过。真实 Gemini LangChain Agent 完成 MOCK-SW-48 查询与总端口计算，Pydantic 输出为 52，退出码 0。阶段总结见 [docs/phase03_summary.md](docs/phase03_summary.md)，技术说明见 [docs/phase03_langchain_agent.md](docs/phase03_langchain_agent.md)。仅剩本地提交授权，暂不标记 DONE。
+
+**2026-10-17 Phase3补齐收尾：** 独立Middleware次数/期限/token控制、严格Schema、关联错误、同题对照及439项整合回归通过；新离线Demo返回52。实现提交`ee192a3`已按用户授权建立，Phase3标记DONE；历史真实Gemini记录不覆盖，本次没有重新验证真实模型质量或调用兼容性。
 
 ## 8. Phase 4 — LangGraph 显式工作流与业务模型
 
@@ -783,6 +787,15 @@ AGENT-DEMO/
 - 收尾补充：SOC CLI真实执行submit/run/status/review/export/重复export共6命令成功，证据`outputs/completion-cli/f54ef099227f4e61b25f4d6adb997e4d/cli-validation.json`；最终Ruff格式106文件通过、72个本地链接有效、80项固定版本及基线源码Hash匹配。41个交付文件未暂存，无敏感跟踪；本次只读复核旧RAG仍干净。
 - 下一任务：核查本次整合版本，准备真实条件和Docker环境，执行Phase6、10A/10B真实逐条核验及9B容器恢复，再进行10C毕业验收；不将软件/MOCK通过写成全部DONE。
 
+#### 2026-10-17 — 全阶段整合授权本地提交与版本收尾
+
+- 用户明确授权：“授权本次整合本地提交及完成记录，不推送”。再次核对phase-4/9cea417、41个文件与原空暂存区；实际变更与授权清单一致，没有额外用户修改。
+- 实现提交：`ee192a3` — `feat: integrate controlled SOC workflow API and project acceptance`，41文件、3953行新增/121行删除。包含控制修复、SOC/API/PDF、测试、依赖、部署材料和报告；没有凭据、运行数据库、日志或生成产物。
+- 版本收尾：Phase2/3此前仅剩本次控制补齐后的可追踪版本，现标记DONE；439项回归、新增44项、44/44可执行评测、18/18本机HTTP及6个CLI命令为本次技术证据。阶段总结追加本次复核，不覆盖原快照。真实LLM依据历史记录，本次无Key，未冒充新真实调用。
+- Phase6、9、10继续BLOCKED；真实4用例、真实设备资料/RFP、Docker/Linux及远端CI仍未验证，M3/M4和毕业验收不宣称完成。
+- 本次收尾仅提交和文档状态变化，不重复完整pytest、真实请求或付费调用。暂存差异/敏感路径/报告源码Hash复核通过；基线保留运行时9cea417/dirty和当时DOING状态，不追改为提交后的元数据。
+- 完成记录另提交；旧RAG保持只读，没有push或客户文件发布。下一任务为准备真实资料/安全服务及Docker环境，按既定验收逐项推进。
+
 ## 17. 架构决策记录（ADR）
 
 | ID | 日期 | 决策 | 原因 | 复审点 |
@@ -856,7 +869,7 @@ Phase 8 新增决策（2026-10-17）：
 - ADR-039：PDF先保留完整页面及定位候选，人工显式映射Schema与父子要求；未覆盖候选需说明排除，未知布局/单位/真实规格不由LLM或关键词补造。通用语义抽取与OCR不冒充已实现。
 - ADR-040：FastAPI采用本地单服务进程、单任务工作线程与有界队列；支持身份归属、取消语义和恢复，不提前构建分布式平台。Docker/Linux/远端CI只有材料和可运行检查脚本，缺环境不标通过；Windows80项与Linux候选分别说明。
 
-复审点：本次授权版本、真实产品资料及RFP覆盖率、容器实际恢复、后续生产身份/调度边界。
+复审点：真实产品资料及RFP覆盖率、容器实际恢复、后续生产身份/调度边界。
 
 ## 18. 官方资料与版本核实
 
@@ -870,4 +883,4 @@ Phase 8 新增决策（2026-10-17）：
 
 本路线制定时核对了 LangChain Agent、LangGraph 持久化与中断文档。其他库在引入阶段再核实官方文档和兼容版本；链接内容更新不代表本地依赖自动升级。
 
-**本次全阶段整合：Phase2/3控制已补齐待版本；Phase9/10本地软件与MOCK验收通过，真实RAG/产品资料/RFP及Docker/Linux验收仍BLOCKED。Phase8本地DONE历史保留；不宣称毕业通过，不发布客户文件，不推送。**
+**本地整合版本ee192a3已授权提交，Phase2/3补齐复核DONE；Phase9/10本地软件与MOCK验收通过，真实RAG/产品资料/RFP及Docker/Linux验收仍BLOCKED。Phase8本地DONE历史保留；不宣称毕业通过，不发布客户文件，不推送。**

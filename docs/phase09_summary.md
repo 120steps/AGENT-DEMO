@@ -2,6 +2,8 @@
 
 日期2026-10-17。状态BLOCKED：9A本地软件已验证，9B实际容器/Linux验收缺Docker；未达到整个Phase9完成标准。当前进度见[路线图](../AGENT_LEARNING_ROADMAP.md)。
 
+本地实现已按用户授权提交为`ee192a3`，完成记录另提交；未推送。形成版本不解除真实业务、容器与远端CI的验收阻碍。
+
 ## 1. 做了什么
 
 增加[FastAPI入口](../src/agent_demo/api/app.py)，提供任务、状态、审核、恢复、取消、Excel获取和PDF候选确认；复用[SOCService](../src/agent_demo/soc/service.py)、原业务图及Checkpoint。提供Dockerfile、Compose、隔离构建上下文及CI。
